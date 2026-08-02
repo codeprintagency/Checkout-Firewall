@@ -1,0 +1,51 @@
+@import url("checkout-firewall-tokens.css");
+.cf-turnstile-panel,
+.cf-challenge-panel {
+	box-sizing: border-box;
+	width: 100%;
+	margin: 16px 0;
+	padding: 16px;
+	border: 1px solid var(--cf-signal-challenge);
+	border-radius: 0;
+	background: var(--cf-paper-raised);
+	box-shadow: none;
+	color: var(--cf-ink);
+	font: 400 14.5px/1.55 var(--cf-sans);
+	text-align: left;
+}
+.cf-turnstile-panel[hidden], .cf-challenge-panel[hidden] { display: none; }
+.cf-turnstile-panel h3, .cf-challenge-panel h3 { margin: 0 0 9px; color: var(--cf-ink); font: 500 17px/1.35 var(--cf-sans); }
+.cf-turnstile-panel p, .cf-challenge-panel p { margin: 0 0 12px; }
+.cf-turnstile-panel__privacy { font-size: 12px; }
+.cf-turnstile-panel__widget { max-width: 100%; min-height: 65px; overflow: hidden; }
+.cf-turnstile-panel__status { margin-top: 9px !important; font-family: var(--cf-mono); font-size: 12px; color: var(--cf-signal-challenge); }
+.cf-challenge-panel__privacy { font-size: 12px; }
+.cf-challenge-panel__widget { max-width: 100%; min-height: 65px; overflow: hidden; }
+.cf-challenge-panel__status { margin-top: 9px !important; font-family: var(--cf-mono); font-size: 12px; color: var(--cf-signal-challenge); }
+.cf-challenge-panel__retry {
+	min-height: 40px;
+	padding: 8px 14px;
+	border: 1px solid var(--cf-ink);
+	border-radius: 0;
+	background: var(--cf-ink);
+	color: var(--cf-paper-raised);
+	font: 500 14px/1.4 var(--cf-sans);
+	cursor: pointer;
+}
+.cf-challenge-panel__retry:hover { background: var(--cf-ink-deep); }
+.cf-challenge-panel__retry:disabled { cursor: wait; opacity: 0.65; }
+.cf-challenge-panel__retry:focus-visible { outline: 2px solid var(--cf-signal-block); outline-offset: 3px; }
+.cf-challenge-panel altcha-widget { display: block; max-width: 100%; }
+.cf-turnstile-panel :focus-visible { outline: 2px solid var(--cf-signal-block); outline-offset: 3px; }
+@media (max-width: 320px) { .cf-turnstile-panel { padding: 12px; } }
+@media (prefers-reduced-motion: reduce) { .cf-turnstile-panel, .cf-turnstile-panel * { scroll-behavior: auto !important; transition: none !important; animation: none !important; } }
+.cf-checkout-honeypot {
+	position: absolute !important;
+	left: -10000px !important;
+	top: auto !important;
+	width: 1px !important;
+	height: 1px !important;
+	overflow: hidden !important;
+	opacity: 0 !important;
+	pointer-events: none !important;
+}

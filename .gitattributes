@@ -1,0 +1,11 @@
+# Preserve every packaged runtime byte so a fresh clone reproduces the
+# submitted WordPress.org ZIP exactly, including third-party line endings.
+* -text
+
+.gitattributes text eol=lf
+.gitignore text eol=lf
+CONTRIBUTING.md text eol=lf
+LICENSE.md text eol=lf
+README.md text eol=lf
+SECURITY.md text eol=lf
+scripts/*.php text eol=lf

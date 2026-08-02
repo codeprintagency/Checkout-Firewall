@@ -1,0 +1,15 @@
+Checkout Firewall includes the Freemius WordPress SDK 2.13.4.
+
+Copyright (c) 2015–2026 Freemius, Inc.
+Licensed under the GNU General Public License, version 3 only.
+The complete license text is included at vendor/freemius/wordpress-sdk/LICENSE.txt.
+
+Checkout Firewall also bundles IBM Plex Sans and IBM Plex Mono font files.
+Their SIL Open Font License is included at assets/fonts/OFL.txt.
+
+Checkout Firewall also bundles ALTCHA widget 3.2.1 for the private local
+proof-of-work browser check.
+
+Copyright (c) 2023–2026 ALTCHA.org
+Licensed under the MIT License.
+The complete license text is included at assets/vendor/altcha/LICENSE.txt.
