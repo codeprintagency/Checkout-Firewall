@@ -90,8 +90,6 @@ final class SupportSnapshot {
 		$recaptcha        = new RecaptchaConfig();
 		$recaptcha_keys   = $recaptcha->credentials();
 		$challenges       = new ChallengeConfig( $turnstile, $recaptcha );
-		$provider         = CommercialBootstrap::provider();
-		$entitlement      = $provider->entitlement();
 		$code_type        = CommercialBootstrap::config()->code_type();
 		$proxy_mode       = ( new ClientIpResolver() )->configured_mode();
 		$emergency_active = ( new EmergencyMode() )->is_active();
@@ -115,7 +113,7 @@ final class SupportSnapshot {
 			'format'           => self::FORMAT,
 			'generated_at_gmt' => gmdate( 'Y-m-d\TH:i:s\Z' ),
 			'plugin'           => array(
-				'version'        => defined( 'CWF_VERSION' ) ? (string) CWF_VERSION : 'unknown',
+				'version'        => defined( 'CHECKOUT_FIREWALL_VERSION' ) ? (string) CHECKOUT_FIREWALL_VERSION : 'unknown',
 				'code_type'      => in_array( $code_type, array( 'free', 'premium' ), true ) ? $code_type : 'free',
 				'schema_version' => Schema::VERSION,
 			),
@@ -149,9 +147,8 @@ final class SupportSnapshot {
 			'schedules'        => $this->schedules(),
 			'storage'          => $this->storage(),
 			'commercial'       => array(
-				'configured'        => CommercialBootstrap::config()->is_configured(),
-				'connected'         => $this->connected(),
-				'entitlement_state' => in_array( $entitlement->state(), array( 'free', 'active_paid', 'expired', 'cancelled', 'invalid', 'missing', 'unconfigured', 'provider_error' ), true ) ? $entitlement->state() : 'provider_error',
+				'configured' => CommercialBootstrap::config()->is_configured(),
+				'connected'  => $this->connected(),
 			),
 		);
 	}

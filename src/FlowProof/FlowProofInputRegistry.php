@@ -15,28 +15,27 @@ use Codeprint\CheckoutFirewall\Checkout\CheckoutSurface;
 final class FlowProofInputRegistry {
 	private bool $classic_present = false;
 	/**
-	 * Exact untrusted Classic field value.
-	 *
-	 * @var mixed
+	 * Normalized Classic field value.
 	 */
-	private $classic_value;
+	private ?string $classic_value = null;
+	private bool $classic_invalid  = false;
 	/**
 	 * Exact untrusted Store API values by order ID.
 	 *
-	 * @var array<int,array{present:bool,value:mixed}>
+	 * @var array<int,array{present:bool,invalid:bool,value:?string}>
 	 */
 	private array $orders = array();
 
 	/**
-	 * Record one exact untrusted field value.
+	 * Record one normalized field value.
 	 *
-	 * @param mixed $value Exact untrusted field value.
 	 * @throws \InvalidArgumentException When Store API context has no order ID.
 	 */
-	public function record( CheckoutContext $context, $value, bool $present ): void {
+	public function record( CheckoutContext $context, ?string $value, bool $present, bool $invalid = false ): void {
 		if ( CheckoutSurface::CLASSIC === $context->surface() ) {
 			$this->classic_present = $present;
 			$this->classic_value   = $value;
+			$this->classic_invalid = $invalid;
 			return;
 		}
 		$order_id = $context->order_id();
@@ -45,6 +44,7 @@ final class FlowProofInputRegistry {
 		}
 		$this->orders[ $order_id ] = array(
 			'present' => $present,
+			'invalid' => $invalid,
 			'value'   => $value,
 		);
 	}
@@ -52,12 +52,13 @@ final class FlowProofInputRegistry {
 	/**
 	 * Read the exact value associated with a checkout context.
 	 *
-	 * @return array{present:bool,value:mixed}
+	 * @return array{present:bool,invalid:bool,value:?string}
 	 */
 	public function read( CheckoutContext $context ): array {
 		if ( CheckoutSurface::CLASSIC === $context->surface() ) {
 			return array(
 				'present' => $this->classic_present,
+				'invalid' => $this->classic_invalid,
 				'value'   => $this->classic_value,
 			);
 		}
@@ -65,6 +66,7 @@ final class FlowProofInputRegistry {
 		return null === $order_id || ! isset( $this->orders[ $order_id ] )
 			? array(
 				'present' => false,
+				'invalid' => false,
 				'value'   => null,
 			)
 			: $this->orders[ $order_id ];

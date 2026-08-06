@@ -20,24 +20,25 @@ use Codeprint\CheckoutFirewall\Protection\ClientIpResolver;
 use Codeprint\CheckoutFirewall\Protection\TrustedExemptionStore;
 use Codeprint\CheckoutFirewall\Recaptcha\RecaptchaConfig;
 use Codeprint\CheckoutFirewall\Security\KeyStore;
+use Codeprint\CheckoutFirewall\Security\RequestNormalizer;
 use Codeprint\CheckoutFirewall\Support\Health;
 use Codeprint\CheckoutFirewall\Turnstile\TurnstileConfig;
 
 final class AdminActionController {
-	public const NONCE_PREFIX = 'cwf_admin_';
+	public const NONCE_PREFIX = 'checkout_firewall_admin_';
 	private const ACTIONS     = array(
-		'start'     => 'cwf_start_emergency',
-		'stop'      => 'cwf_stop_emergency',
-		'block'     => 'cwf_create_block',
-		'unblock'   => 'cwf_release_block',
-		'settings'  => 'cwf_save_operations',
-		'health'    => 'cwf_run_health',
-		'rotate'    => 'cwf_rotate_key',
-		'uninstall' => 'cwf_save_uninstall',
-		'observe'   => 'cwf_enable_observe',
-		'standard'  => 'cwf_enable_standard',
-		'trust'     => 'cwf_create_exemption',
-		'untrust'   => 'cwf_remove_exemption',
+		'start'     => 'checkout_firewall_start_emergency',
+		'stop'      => 'checkout_firewall_stop_emergency',
+		'block'     => 'checkout_firewall_create_block',
+		'unblock'   => 'checkout_firewall_release_block',
+		'settings'  => 'checkout_firewall_save_operations',
+		'health'    => 'checkout_firewall_run_health',
+		'rotate'    => 'checkout_firewall_rotate_key',
+		'uninstall' => 'checkout_firewall_save_uninstall',
+		'observe'   => 'checkout_firewall_enable_observe',
+		'standard'  => 'checkout_firewall_enable_standard',
+		'trust'     => 'checkout_firewall_create_exemption',
+		'untrust'   => 'checkout_firewall_remove_exemption',
 	);
 
 	private EmergencyMode $mode;
@@ -274,7 +275,7 @@ final class AdminActionController {
 
 	public function uninstall(): void {
 		$this->authorize( self::ACTIONS['uninstall'] );
-		if ( defined( 'CWF_DELETE_DATA_ON_UNINSTALL' ) && true === CWF_DELETE_DATA_ON_UNINSTALL ) {
+		if ( defined( 'CHECKOUT_FIREWALL_DELETE_DATA_ON_UNINSTALL' ) && true === CHECKOUT_FIREWALL_DELETE_DATA_ON_UNINSTALL ) {
 			$this->redirect( 'privacy', 'uninstall_constant' );
 		}
 		$choice = $this->post_string( 'uninstall_data', 16 );
@@ -284,7 +285,7 @@ final class AdminActionController {
 		if ( 'delete' === $choice && 'DELETE' !== $this->post_string( 'confirmation', 16 ) ) {
 			$this->redirect( 'privacy', 'confirmation_required' );
 		}
-		self::write( 'cwf_delete_data_on_uninstall', 'delete' === $choice ? '1' : '0' );
+		self::write( 'checkout_firewall_delete_data_on_uninstall', 'delete' === $choice ? '1' : '0' );
 		$this->redirect( 'privacy', 'uninstall_saved' );
 	}
 
@@ -293,14 +294,14 @@ final class AdminActionController {
 	}
 
 	private function authorize( string $action, int $row_id = 0 ): void {
-		if ( 'POST' !== strtoupper( (string) ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) || ! current_user_can( 'manage_woocommerce' ) ) {
+		if ( 'POST' !== RequestNormalizer::request_method() || ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html__( 'You are not allowed to manage Checkout Firewall.', 'checkout-firewall' ), '', array( 'response' => 403 ) );
 		}
 		check_admin_referer( self::nonce_action( $action, $row_id ) );
 	}
 
 	private function authorize_exemption( string $id ): void {
-		if ( 'POST' !== strtoupper( (string) ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) || ! current_user_can( 'manage_woocommerce' ) || 1 !== preg_match( '/^[a-f0-9]{32}$/D', $id ) ) {
+		if ( 'POST' !== RequestNormalizer::request_method() || ! current_user_can( 'manage_woocommerce' ) || 1 !== preg_match( '/^[a-f0-9]{32}$/D', $id ) ) {
 			wp_die( esc_html__( 'You are not allowed to manage Checkout Firewall.', 'checkout-firewall' ), '', array( 'response' => 403 ) );
 		}
 		check_admin_referer( self::exemption_nonce_action( $id ) );
@@ -311,9 +312,8 @@ final class AdminActionController {
 	}
 
 	private function post_string( string $key, int $limit ): string {
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Each caller authorizes before reading.
-		$value = isset( $_POST[ $key ] ) && is_string( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : '';
-		return strlen( $value ) <= $limit ? $value : '';
+		$value = 'proxy_cidrs' === $key ? RequestNormalizer::post_textarea( $key, $limit ) : RequestNormalizer::post( $key, $limit );
+		return $value['invalid'] || null === $value['value'] ? '' : $value['value'];
 	}
 
 	private function post_int( string $key ): int {
@@ -324,9 +324,9 @@ final class AdminActionController {
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'       => CheckoutFirewallPage::SLUG,
-					'view'       => $view,
-					'cwf_status' => sanitize_key( $status ),
+					'page'                     => CheckoutFirewallPage::SLUG,
+					'view'                     => $view,
+					'checkout_firewall_status' => sanitize_key( $status ),
 				),
 				admin_url( 'admin.php' )
 			)

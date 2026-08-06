@@ -64,7 +64,7 @@ final class ChallengeCandidateProvider {
 		if ( ! $input['present'] ) {
 			return $candidates;
 		}
-		if ( ! is_string( $input['token'] ) || ! is_string( $input['state'] ) || '' === $input['token'] || '' === $input['state']
+		if ( $input['invalid'] || null === $input['token'] || null === $input['state'] || '' === $input['token'] || '' === $input['state']
 			|| strlen( $input['token'] ) > LocalProofService::MAX_PAYLOAD || strlen( $input['state'] ) > self::MAX_STATE
 		) {
 			return $this->invalid( $candidates, 'invalid_input' );

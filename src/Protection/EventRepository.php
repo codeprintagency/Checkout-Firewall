@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\Protection;
 
+// phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Every SQL identifier comes from the closed, prefix-validated TableNames registry; all data values use wpdb placeholders.
+
 use Codeprint\CheckoutFirewall\Checkout\CheckoutContext;
 use Codeprint\CheckoutFirewall\Data\IdentifierType;
 use Codeprint\CheckoutFirewall\Database\TableNames;
@@ -21,11 +23,9 @@ final class EventRepository {
 	private const RECIPE_VERSION          = 2;
 	private const OBSERVED_RECIPE_VERSION = 3;
 	private string $table;
-	private EventRetentionState $retention;
 
-	public function __construct( ?TableNames $tables = null, ?EventRetentionState $retention = null ) {
-		$this->table     = ( $tables ?? TableNames::from_wordpress() )->get( 'events' );
-		$this->retention = $retention ?? new EventRetentionState();
+	public function __construct( ?TableNames $tables = null ) {
+		$this->table = ( $tables ?? TableNames::from_wordpress() )->get( 'events' );
 	}
 
 	/**
@@ -48,16 +48,14 @@ final class EventRepository {
 		$bucket               = $now - ( $now % self::BUCKET_SECONDS );
 		$gateway              = substr( sanitize_key( $context->gateway_id() ), 0, 64 );
 		$hint                 = isset( $identity['display_hint'] ) && is_string( $identity['display_hint'] ) ? substr( $identity['display_hint'], 0, 191 ) : null;
-		$retention            = $observed ? 0 : $this->retention->days();
 		$recipe               = $observed ? self::OBSERVED_RECIPE_VERSION : self::RECIPE_VERSION;
 		$metadata             = $observed ? '{"observed_only":true}' : null;
 		$metadata_placeholder = $observed ? '%s' : 'NULL';
-		$material             = pack( 'n', $recipe ) . pack( 'n', $retention ) . "\0" . $result->reason() . "\0" . $result->action() . "\0" . $identity['identifier_hash'] . "\0" . $gateway . "\0" . (string) $bucket;
+		$material             = pack( 'n', $recipe ) . "\0" . $result->reason() . "\0" . $result->action() . "\0" . $identity['identifier_hash'] . "\0" . $gateway . "\0" . (string) $bucket;
 		$event_key            = hash_hmac( 'sha256', $material, (string) $identity['identifier_hash'], true );
 		$arguments            = array(
 			$event_key,
 			$recipe,
-			$retention,
 			(int) $identity['key_version'],
 			$identity['key_fingerprint'],
 			$result->reason(),
@@ -77,7 +75,7 @@ final class EventRepository {
 		// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Recipe-specific metadata adds one value and placeholder together.
 		$sql = $wpdb->prepare(
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Internal table identifier; values use placeholders.
-			"INSERT INTO `{$this->table}` (event_key,recipe_version,retention_days,key_version,key_fingerprint,reason_code,action,identifier_type,identifier_hash,display_hint,gateway_id,bucket_start_gmt,bucket_seconds,event_count,first_seen_gmt,last_seen_gmt,metadata) VALUES (%s,%d,%d,%d,%s,%s,%s,%d,%s,%s,%s,%s,%d,1,%s,%s,{$metadata_placeholder}) ON DUPLICATE KEY UPDATE event_count = event_count + 1, last_seen_gmt = GREATEST(last_seen_gmt, VALUES(last_seen_gmt)), display_hint = COALESCE(display_hint, VALUES(display_hint))",
+			"INSERT INTO `{$this->table}` (event_key,recipe_version,key_version,key_fingerprint,reason_code,action,identifier_type,identifier_hash,display_hint,gateway_id,bucket_start_gmt,bucket_seconds,event_count,first_seen_gmt,last_seen_gmt,metadata) VALUES (%s,%d,%d,%s,%s,%s,%d,%s,%s,%s,%s,%d,1,%s,%s,{$metadata_placeholder}) ON DUPLICATE KEY UPDATE event_count = event_count + 1, last_seen_gmt = GREATEST(last_seen_gmt, VALUES(last_seen_gmt)), display_hint = COALESCE(display_hint, VALUES(display_hint))",
 			...$arguments
 		);
 		if ( false === $wpdb->query( $sql ) ) { // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -95,7 +93,7 @@ final class EventRepository {
 	public function page( ?string $before_time = null, ?int $before_id = null, int $limit = 51 ): array {
 		global $wpdb;
 		$limit = max( 1, min( 51, $limit ) );
-		$where = ' WHERE retention_days <> 90 AND last_seen_gmt >= %s';
+		$where = ' WHERE last_seen_gmt >= %s';
 		$args  = array( gmdate( 'Y-m-d H:i:s', time() - \Codeprint\CheckoutFirewall\Operations\RetentionPolicy::event_seconds() ) );
 		if ( null !== $before_time && null !== $before_id && self::valid_date( $before_time ) && $before_id > 0 ) {
 			$where .= ' AND (last_seen_gmt < %s OR (last_seen_gmt = %s AND id < %d))';
@@ -128,7 +126,7 @@ final class EventRepository {
 	public function summary( int $limit = 1000 ): array {
 		global $wpdb;
 		$limit = max( 1, min( 1000, $limit ) );
-		$sql   = "SELECT recipe_version,action,identifier_type,identifier_hash,event_count,metadata FROM `{$this->table}` WHERE retention_days <> 90 AND last_seen_gmt >= %s ORDER BY last_seen_gmt DESC,id DESC LIMIT %d";
+		$sql   = "SELECT recipe_version,action,identifier_type,identifier_hash,event_count,metadata FROM `{$this->table}` WHERE last_seen_gmt >= %s ORDER BY last_seen_gmt DESC,id DESC LIMIT %d";
 		$rows  = $wpdb->get_results( $wpdb->prepare( $sql, gmdate( 'Y-m-d H:i:s', time() - \Codeprint\CheckoutFirewall\Operations\RetentionPolicy::event_seconds() ), $limit + 1 ), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Bounded indexed operational summary.
 		if ( ! is_array( $rows ) || '' !== $wpdb->last_error ) {
 			throw new \RuntimeException( 'Checkout Firewall event summary read failed.' );

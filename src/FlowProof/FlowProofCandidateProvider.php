@@ -47,13 +47,17 @@ final class FlowProofCandidateProvider {
 		}
 
 		$input = $this->inputs->read( $context );
+		if ( $input['invalid'] ) {
+			$candidates[] = self::candidate( DecisionAction::BLOCK, ReasonCode::FLOW_PROOF_INVALID, 'invalid' );
+			return $candidates;
+		}
 		if ( ! $input['present'] || '' === $input['value'] || null === $input['value'] ) {
 			if ( null === $this->turnstile || ! $this->turnstile->has( $context ) ) {
 				$candidates[] = self::candidate( DecisionAction::CHALLENGE, ReasonCode::FLOW_PROOF_MISSING, 'missing' );
 			}
 			return $candidates;
 		}
-		if ( ! is_string( $input['value'] ) || strlen( $input['value'] ) > FlowProofService::MAX_TOKEN_SIZE ) {
+		if ( strlen( $input['value'] ) > FlowProofService::MAX_TOKEN_SIZE ) {
 			$candidates[] = self::candidate( DecisionAction::BLOCK, ReasonCode::FLOW_PROOF_INVALID, 'invalid' );
 			return $candidates;
 		}

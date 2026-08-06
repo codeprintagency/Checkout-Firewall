@@ -35,18 +35,19 @@ final class TurnstileSettingsPage {
 		if ( 'woocommerce_page_' . self::SLUG !== $hook ) {
 			return;
 		}
-		wp_enqueue_style( 'checkout-firewall-admin', plugins_url( 'assets/css/checkout-firewall-admin.css', CWF_PLUGIN_FILE ), array(), CWF_VERSION );
-		wp_enqueue_script( 'checkout-firewall-turnstile-admin', plugins_url( 'assets/js/checkout-turnstile-admin.js', CWF_PLUGIN_FILE ), array(), CWF_VERSION, true );
+		wp_enqueue_style( 'checkout-firewall-admin', plugins_url( 'assets/css/checkout-firewall-admin.css', CHECKOUT_FIREWALL_PLUGIN_FILE ), array(), CHECKOUT_FIREWALL_VERSION );
+		wp_enqueue_script( 'checkout-firewall-turnstile-admin', plugins_url( 'assets/js/checkout-turnstile-admin.js', CHECKOUT_FIREWALL_PLUGIN_FILE ), array(), CHECKOUT_FIREWALL_VERSION, true );
 	}
 
 	public function render(): void {
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			return;
 		}
-		$credentials = $this->config->credentials();
-		$status      = isset( $_GET['cwf_status'] ) && is_string( $_GET['cwf_status'] ) ? sanitize_key( wp_unslash( $_GET['cwf_status'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only status slug.
-		$conflict    = $this->conflicts->active_slug();
-		$test_pair   = TurnstileConfig::is_test_pair( $credentials );
+		$credentials  = $this->config->credentials();
+		$status_input = \Codeprint\CheckoutFirewall\Security\RequestNormalizer::query( 'checkout_firewall_status', 64, '/^[a-z0-9_-]+$/D' );
+		$status       = $status_input['invalid'] || null === $status_input['value'] ? '' : $status_input['value'];
+		$conflict     = $this->conflicts->active_slug();
+		$test_pair    = TurnstileConfig::is_test_pair( $credentials );
 		?>
 		<div class="wrap cf-admin">
 			<header class="cf-admin__header"><p class="cf-eyebrow"><?php esc_html_e( 'CHECKOUT FIREWALL', 'checkout-firewall' ); ?></p><h1><?php esc_html_e( 'Turnstile recovery', 'checkout-firewall' ); ?></h1><p><?php esc_html_e( 'Ask for an extra check only when local checkout protection needs it.', 'checkout-firewall' ); ?></p></header>
@@ -62,10 +63,10 @@ final class TurnstileSettingsPage {
 				<div class="cf-card__heading"><div><p class="cf-eyebrow"><?php echo $test_pair ? esc_html__( 'TEST KEYS · NOT FOR PRODUCTION', 'checkout-firewall' ) : ( $this->config->is_active() ? esc_html__( 'VERIFIED · ACTIVE', 'checkout-firewall' ) : esc_html__( 'SETUP REQUIRED', 'checkout-firewall' ) ); ?></p><h2 id="cf-turnstile-title"><?php esc_html_e( 'Cloudflare Turnstile', 'checkout-firewall' ); ?></h2></div></div>
 				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 					<input type="hidden" name="action" value="<?php echo esc_attr( TurnstileSettingsController::SAVE_ACTION ); ?>" /><?php wp_nonce_field( TurnstileSettingsController::NONCE_ACTION ); ?>
-					<label for="cwf-site-key"><?php esc_html_e( 'Site key', 'checkout-firewall' ); ?></label><input id="cwf-site-key" name="site_key" type="text" maxlength="128" value="<?php echo esc_attr( $credentials['site_key'] ); ?>" autocomplete="off" required <?php wp_readonly( defined( 'CWF_TURNSTILE_SITE_KEY' ) ); ?> />
-					<label for="cwf-secret-key"><?php esc_html_e( 'Secret key', 'checkout-firewall' ); ?></label><input id="cwf-secret-key" name="secret_key" type="password" maxlength="256" value="" autocomplete="new-password" placeholder="<?php echo defined( 'CWF_TURNSTILE_SECRET_KEY' ) ? esc_attr__( 'Configured in wp-config.php', 'checkout-firewall' ) : ( '' === $credentials['secret_key'] ? esc_attr__( 'Required', 'checkout-firewall' ) : esc_attr__( 'Saved — leave blank to keep it', 'checkout-firewall' ) ); ?>" <?php wp_readonly( defined( 'CWF_TURNSTILE_SECRET_KEY' ) ); ?> />
-					<?php if ( defined( 'CWF_TURNSTILE_SITE_KEY' ) || defined( 'CWF_TURNSTILE_SECRET_KEY' ) ) : ?>
-						<p class="cf-help" id="cwf-key-source"><?php esc_html_e( 'Read-only keys are supplied by wp-config.php and are never copied into WordPress options.', 'checkout-firewall' ); ?></p>
+					<label for="cf-site-key"><?php esc_html_e( 'Site key', 'checkout-firewall' ); ?></label><input id="cf-site-key" name="site_key" type="text" maxlength="128" value="<?php echo esc_attr( $credentials['site_key'] ); ?>" autocomplete="off" required <?php wp_readonly( defined( 'CHECKOUT_FIREWALL_TURNSTILE_SITE_KEY' ) ); ?> />
+					<label for="cf-secret-key"><?php esc_html_e( 'Secret key', 'checkout-firewall' ); ?></label><input id="cf-secret-key" name="secret_key" type="password" maxlength="256" value="" autocomplete="new-password" placeholder="<?php echo defined( 'CHECKOUT_FIREWALL_TURNSTILE_SECRET_KEY' ) ? esc_attr__( 'Configured in wp-config.php', 'checkout-firewall' ) : ( '' === $credentials['secret_key'] ? esc_attr__( 'Required', 'checkout-firewall' ) : esc_attr__( 'Saved — leave blank to keep it', 'checkout-firewall' ) ); ?>" <?php wp_readonly( defined( 'CHECKOUT_FIREWALL_TURNSTILE_SECRET_KEY' ) ); ?> />
+					<?php if ( defined( 'CHECKOUT_FIREWALL_TURNSTILE_SITE_KEY' ) || defined( 'CHECKOUT_FIREWALL_TURNSTILE_SECRET_KEY' ) ) : ?>
+						<p class="cf-help" id="cf-key-source"><?php esc_html_e( 'Read-only keys are supplied by wp-config.php and are never copied into WordPress options.', 'checkout-firewall' ); ?></p>
 					<?php endif; ?>
 					<p class="cf-help"><?php esc_html_e( 'Keys are stored without autoload. Saving a change disables recovery until it is verified again.', 'checkout-firewall' ); ?></p>
 					<p class="cf-help"><?php esc_html_e( 'Express-payment recovery is not yet tested for this store. If a payment sheet is interrupted, use the standard checkout button.', 'checkout-firewall' ); ?></p>

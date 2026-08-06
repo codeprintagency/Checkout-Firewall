@@ -16,7 +16,7 @@ use Codeprint\CheckoutFirewall\Security\KeyStore;
 use Codeprint\CheckoutFirewall\Turnstile\TurnstileConfig;
 
 final class ChallengeCoordinator {
-	public const SESSION_KEY    = 'cwf_challenge_pending_v1';
+	public const SESSION_KEY    = 'checkout_firewall_challenge_pending_v1';
 	public const ACTION         = 'checkout_firewall_checkout';
 	public const TTL            = 300;
 	public const MAX_ATTEMPTS   = 5;

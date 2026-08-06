@@ -16,34 +16,33 @@ final class TurnstileInputRegistry {
 	/**
 	 * Inputs keyed by checkout surface/order.
 	 *
-	 * @var array<string,array{token:mixed,state:mixed,present:bool}>
+	 * @var array<string,array{token:?string,state:?string,present:bool,invalid:bool}>
 	 */
 	private array $values = array();
 
 	/**
-	 * Record exact untrusted checkout input.
-	 *
-	 * @param mixed $token Untrusted token.
-	 * @param mixed $state Untrusted state.
+	 * Record normalized checkout input.
 	 */
-	public function record( CheckoutContext $context, $token, $state, bool $present ): void {
+	public function record( CheckoutContext $context, ?string $token, ?string $state, bool $present, bool $invalid = false ): void {
 		$this->values[ $this->key( $context ) ] = array(
 			'token'   => $token,
 			'state'   => $state,
 			'present' => $present,
+			'invalid' => $invalid,
 		);
 	}
 
 	/**
 	 * Read exact input for one evaluation context.
 	 *
-	 * @return array{token:mixed,state:mixed,present:bool}
+	 * @return array{token:?string,state:?string,present:bool,invalid:bool}
 	 */
 	public function read( CheckoutContext $context ): array {
 		return $this->values[ $this->key( $context ) ] ?? array(
 			'token'   => null,
 			'state'   => null,
 			'present' => false,
+			'invalid' => false,
 		);
 	}
 

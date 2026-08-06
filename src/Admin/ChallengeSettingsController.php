@@ -11,6 +11,7 @@ namespace Codeprint\CheckoutFirewall\Admin;
 
 use Codeprint\CheckoutFirewall\Challenge\ChallengeConfig;
 use Codeprint\CheckoutFirewall\Operations\EmergencyMode;
+use Codeprint\CheckoutFirewall\Security\RequestNormalizer;
 use Codeprint\CheckoutFirewall\Recaptcha\RecaptchaConfig;
 use Codeprint\CheckoutFirewall\Recaptcha\SiteverifyClient;
 use Codeprint\CheckoutFirewall\Support\Health;
@@ -18,10 +19,10 @@ use Codeprint\CheckoutFirewall\Turnstile\SiteverifyResult;
 use Codeprint\CheckoutFirewall\Turnstile\TurnstileConfig;
 
 final class ChallengeSettingsController {
-	public const SELECT_ACTION = 'cwf_select_challenge';
-	public const SAVE_ACTION   = 'cwf_save_recaptcha';
-	public const VERIFY_ACTION = 'cwf_verify_recaptcha';
-	public const NONCE_ACTION  = 'cwf_challenge_settings';
+	public const SELECT_ACTION = 'checkout_firewall_select_challenge';
+	public const SAVE_ACTION   = 'checkout_firewall_save_recaptcha';
+	public const VERIFY_ACTION = 'checkout_firewall_verify_recaptcha';
+	public const NONCE_ACTION  = 'checkout_firewall_challenge_settings';
 
 	private ChallengeConfig $challenges;
 	private RecaptchaConfig $recaptcha;
@@ -47,7 +48,8 @@ final class ChallengeSettingsController {
 			$this->redirect( 'emergency_active' );
 		}
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified by authorize() before exact scalar read.
-		$provider = isset( $_POST['challenge_provider'] ) && is_string( $_POST['challenge_provider'] ) ? sanitize_key( wp_unslash( $_POST['challenge_provider'] ) ) : '';
+		$provider_input = RequestNormalizer::post( 'challenge_provider', 32 );
+		$provider       = $provider_input['invalid'] || null === $provider_input['value'] ? '' : sanitize_key( $provider_input['value'] );
 		try {
 			$this->challenges->select( $provider );
 			$this->redirect( 'challenge_selected' );
@@ -62,12 +64,15 @@ final class ChallengeSettingsController {
 			$this->redirect( 'emergency_active' );
 		}
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Verified by authorize() before exact scalar reads.
-		if ( isset( $_POST['remove'] ) && '1' === wp_unslash( $_POST['remove'] ) ) {
+		$remove = RequestNormalizer::post( 'remove', 1 );
+		if ( ! $remove['invalid'] && '1' === $remove['value'] ) {
 			$this->recaptcha->remove();
 			$this->redirect( 'recaptcha_removed' );
 		}
-		$site   = isset( $_POST['site_key'] ) && is_string( $_POST['site_key'] ) ? wp_unslash( $_POST['site_key'] ) : '';
-		$secret = isset( $_POST['secret_key'] ) && is_string( $_POST['secret_key'] ) ? wp_unslash( $_POST['secret_key'] ) : null;
+		$site_input   = RequestNormalizer::post( 'site_key', 256 );
+		$secret_input = RequestNormalizer::post( 'secret_key', 256 );
+		$site         = $site_input['invalid'] || null === $site_input['value'] ? '' : $site_input['value'];
+		$secret       = $secret_input['invalid'] ? null : $secret_input['value'];
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		try {
 			$this->recaptcha->save( $site, $secret );
@@ -80,7 +85,8 @@ final class ChallengeSettingsController {
 	public function verify(): void {
 		$this->authorize();
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified by authorize() before exact scalar read.
-		$token       = isset( $_POST['health_token'] ) && is_string( $_POST['health_token'] ) ? wp_unslash( $_POST['health_token'] ) : '';
+		$token_input = RequestNormalizer::post( 'health_token', 2048 );
+		$token       = $token_input['invalid'] || null === $token_input['value'] ? '' : $token_input['value'];
 		$credentials = $this->recaptcha->credentials();
 		$host        = TurnstileConfig::current_hostname();
 		$result      = $this->client->verify( $token, $credentials['secret_key'], $host );
@@ -101,7 +107,7 @@ final class ChallengeSettingsController {
 	}
 
 	private function authorize(): void {
-		if ( 'POST' !== strtoupper( (string) ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) || ! current_user_can( 'manage_woocommerce' ) ) {
+		if ( 'POST' !== RequestNormalizer::request_method() || ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html__( 'You are not allowed to manage Checkout Firewall.', 'checkout-firewall' ), '', array( 'response' => 403 ) );
 		}
 		check_admin_referer( self::NONCE_ACTION );
@@ -111,9 +117,9 @@ final class ChallengeSettingsController {
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'       => CheckoutFirewallPage::SLUG,
-					'view'       => 'settings',
-					'cwf_status' => sanitize_key( $status ),
+					'page'                     => CheckoutFirewallPage::SLUG,
+					'view'                     => 'settings',
+					'checkout_firewall_status' => sanitize_key( $status ),
 				),
 				admin_url( 'admin.php' )
 			)

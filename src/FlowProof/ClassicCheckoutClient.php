@@ -41,16 +41,16 @@ final class ClassicCheckoutClient {
 
 		wp_register_script(
 			self::CORE_SCRIPT,
-			plugins_url( 'assets/js/checkout-flow-proof-core.js', CWF_PLUGIN_FILE ),
+			plugins_url( 'assets/js/checkout-flow-proof-core.js', CHECKOUT_FIREWALL_PLUGIN_FILE ),
 			array(),
-			CWF_VERSION,
+			CHECKOUT_FIREWALL_VERSION,
 			true
 		);
 		wp_enqueue_script(
 			self::SCRIPT,
-			plugins_url( 'assets/js/checkout-flow-proof-classic.js', CWF_PLUGIN_FILE ),
+			plugins_url( 'assets/js/checkout-flow-proof-classic.js', CHECKOUT_FIREWALL_PLUGIN_FILE ),
 			array( 'jquery', 'wc-checkout', self::CORE_SCRIPT ),
-			CWF_VERSION,
+			CHECKOUT_FIREWALL_VERSION,
 			true
 		);
 		wp_add_inline_script(

@@ -14,7 +14,7 @@ use Codeprint\CheckoutFirewall\Turnstile\TurnstileConfig;
 use Codeprint\CheckoutFirewall\Turnstile\TurnstileConflictDetector;
 
 final class ChallengeConfig {
-	public const OPTION    = 'cwf_challenge_provider';
+	public const OPTION    = 'checkout_firewall_challenge_provider';
 	public const LOCAL     = 'local';
 	public const TURNSTILE = 'turnstile';
 	public const RECAPTCHA = 'recaptcha';

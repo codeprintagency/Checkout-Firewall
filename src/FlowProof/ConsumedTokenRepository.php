@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\FlowProof;
 
+// phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- The token table is resolved from the closed, prefix-validated TableNames registry and all proof values are prepared.
+
 use Codeprint\CheckoutFirewall\Database\TableNames;
 
 final class ConsumedTokenRepository {

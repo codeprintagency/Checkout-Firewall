@@ -12,19 +12,19 @@ namespace Codeprint\CheckoutFirewall\Decision;
 final class ReasonCatalog {
 	public const VERSION = 1;
 	/**
-	 * Request-local entitled Premium reasons.
+	 * Request-local extension reasons.
 	 *
 	 * @var array<string,array{action:string,explanation:\Closure():string}>
 	 */
-	private static array $premium = array();
+	private static array $extensions = array();
 
-	public static function register_premium( string $reason, string $action, callable $explanation ): bool {
-		if ( 1 === count( self::$premium ) || 1 !== preg_match( '/^[A-Z][A-Z0-9_]{0,63}$/D', $reason )
+	public static function register_extension( string $reason, string $action, callable $explanation ): bool {
+		if ( 1 === count( self::$extensions ) || 1 !== preg_match( '/^[A-Z][A-Z0-9_]{0,63}$/D', $reason )
 			|| self::has( $reason ) || ! in_array( $action, array( DecisionAction::ALLOW, DecisionAction::CHALLENGE, DecisionAction::BLOCK ), true )
 		) {
 			return false;
 		}
-		self::$premium[ $reason ] = array(
+		self::$extensions[ $reason ] = array(
 			'action'      => $action,
 			'explanation' => \Closure::fromCallable( $explanation ),
 		);
@@ -62,13 +62,13 @@ final class ReasonCatalog {
 	}
 
 	public static function has( string $reason ): bool {
-		return isset( self::actions()[ $reason ] ) || isset( self::$premium[ $reason ] );
+		return isset( self::actions()[ $reason ] ) || isset( self::$extensions[ $reason ] );
 	}
 
 	public static function action( string $reason ): string {
 		$actions = self::actions();
-		if ( isset( self::$premium[ $reason ] ) ) {
-			return self::$premium[ $reason ]['action'];
+		if ( isset( self::$extensions[ $reason ] ) ) {
+			return self::$extensions[ $reason ]['action'];
 		}
 		if ( ! isset( $actions[ $reason ] ) ) {
 			throw new \InvalidArgumentException( 'Unknown checkout decision reason.' );
@@ -119,8 +119,8 @@ final class ReasonCatalog {
 			case ReasonCode::INTERNAL_ERROR_FAIL_OPEN:
 				return __( 'Checkout Firewall encountered an internal error and failed open.', 'checkout-firewall' );
 			default:
-				if ( isset( self::$premium[ $reason ] ) ) {
-					$explanation = ( self::$premium[ $reason ]['explanation'] )();
+				if ( isset( self::$extensions[ $reason ] ) ) {
+					$explanation = ( self::$extensions[ $reason ]['explanation'] )();
 					if ( '' !== $explanation && strlen( $explanation ) <= 512 ) {
 						return $explanation;
 					}
@@ -146,7 +146,7 @@ final class ReasonCatalog {
 		if ( ReasonCode::CHECKOUT_ALLOWED === $reason ) {
 			return 0;
 		}
-		if ( isset( self::$premium[ $reason ] ) ) {
+		if ( isset( self::$extensions[ $reason ] ) ) {
 			return 1;
 		}
 
@@ -157,7 +157,7 @@ final class ReasonCatalog {
 		return count( ReasonCode::all() ) - (int) $position + 1;
 	}
 
-	public static function clear_premium_for_test(): void {
-		self::$premium = array();
+	public static function clear_extensions_for_test(): void {
+		self::$extensions = array();
 	}
 }

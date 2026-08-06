@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\FlowProof;
 
 final class FlowProofService {
-	public const PREFIX         = 'cwf1';
+	public const PREFIX         = 'cfwp1';
 	public const ACTION         = 'checkout';
 	public const TTL_SECONDS    = 300;
 	public const FUTURE_SKEW    = 30;

@@ -15,7 +15,7 @@ use Codeprint\CheckoutFirewall\FlowProof\CartBinding;
 use Codeprint\CheckoutFirewall\Security\KeyStore;
 
 final class ChallengeCoordinator {
-	public const SESSION_KEY    = 'cwf_turnstile_pending_v1';
+	public const SESSION_KEY    = 'checkout_firewall_turnstile_pending_v1';
 	public const ACTION         = 'checkout_firewall_checkout';
 	public const TTL            = 300;
 	public const MAX_ATTEMPTS   = 5;

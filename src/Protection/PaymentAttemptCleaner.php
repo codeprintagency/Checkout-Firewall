@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\Protection;
 
+// phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Explicit purge uses only WordPress/WooCommerce-owned metadata table properties and fixed plugin meta keys.
+
 use Codeprint\CheckoutFirewall\Data\IdentifierType;
 use Codeprint\CheckoutFirewall\Operations\RetentionPolicy;
 

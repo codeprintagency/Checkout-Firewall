@@ -1,6 +1,6 @@
 <?php
 /**
- * Single-assignment bridge between the shared page and an entitled Premium UI.
+ * Bounded presentation bridge for separately packaged extensions.
  *
  * @package Codeprint\CheckoutFirewall
  */
@@ -9,16 +9,16 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\Admin;
 
-final class PremiumAdminPresenterRegistry {
-	private static ?PremiumAdminPresenter $presenter = null;
+final class AdminExtensionRegistry {
+	private static ?AdminExtensionPresenter $presenter = null;
 	/**
-	 * Bounded Premium presenter extensions.
+	 * Bounded presenter extensions.
 	 *
-	 * @var list<PremiumAdminPresenter>
+	 * @var list<AdminExtensionPresenter>
 	 */
 	private static array $extensions = array();
 
-	public static function assign( PremiumAdminPresenter $presenter ): bool {
+	public static function assign( AdminExtensionPresenter $presenter ): bool {
 		if ( null !== self::$presenter ) {
 			return false;
 		}
@@ -26,7 +26,7 @@ final class PremiumAdminPresenterRegistry {
 		return true;
 	}
 
-	public static function extend( PremiumAdminPresenter $presenter ): bool {
+	public static function extend( AdminExtensionPresenter $presenter ): bool {
 		if ( count( self::$extensions ) >= 2 ) {
 			return false;
 		}

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\Database;
 
+// phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Cleaner identifiers are restricted to the closed TableNames registry and private column/status allowlists; every data value is prepared.
+
 use Codeprint\CheckoutFirewall\Support\Health;
 use Codeprint\CheckoutFirewall\Operations\RetentionPolicy;
 
@@ -30,51 +32,7 @@ final class Cleaner {
 
 	public function events(): bool {
 		$this->reset_budget();
-		$table   = $this->tables->get( 'events' );
-		$backlog = $this->delete_events_by_class( $table, 90, gmdate( 'Y-m-d H:i:s', time() - ( 90 * DAY_IN_SECONDS ) ), 2500 );
-		if ( ! $this->budget_exhausted() ) {
-			$backlog = $this->delete_events_by_class( $table, 0, gmdate( 'Y-m-d H:i:s', time() - RetentionPolicy::event_seconds() ), 2000 ) || $backlog;
-		}
-		if ( ! $this->budget_exhausted() ) {
-			$backlog = $this->delete_unknown_event_classes( $table, gmdate( 'Y-m-d H:i:s', time() - RetentionPolicy::event_seconds() ) ) || $backlog;
-		}
-		return $backlog || $this->budget_exhausted();
-	}
-
-	private function delete_events_by_class( string $table, int $retention_days, string $cutoff, int $class_limit ): bool {
-		global $wpdb;
-		$last_batch_full = false;
-		$class_started   = $this->affected_rows;
-		while ( ! $this->budget_exhausted() && $this->affected_rows - $class_started < $class_limit ) {
-			$limit = min( self::BATCH_SIZE, self::ROW_LIMIT - $this->affected_rows, $class_limit - ( $this->affected_rows - $class_started ) );
-			if ( $limit < 1 ) {
-				return true;
-			}
-			$ids = $this->timed_get_col( $wpdb->prepare( "SELECT id FROM `{$table}` WHERE retention_days = %d AND last_seen_gmt < %s ORDER BY last_seen_gmt,id LIMIT %d", $retention_days, $cutoff, $limit ) );
-			if ( array() === $ids ) {
-				return false;
-			}
-			$this->delete_ids( $table, $ids );
-			$last_batch_full = count( $ids ) === $limit;
-			if ( ! $last_batch_full ) {
-				return false;
-			}
-		}
-		return $last_batch_full || $this->affected_rows - $class_started >= $class_limit;
-	}
-
-	private function delete_unknown_event_classes( string $table, string $cutoff ): bool {
-		global $wpdb;
-		$limit = min( self::BATCH_SIZE, self::ROW_LIMIT - $this->affected_rows );
-		if ( $limit < 1 ) {
-			return true;
-		}
-		$ids = $this->timed_get_col( $wpdb->prepare( "SELECT id FROM `{$table}` WHERE retention_days NOT IN (0,90) AND last_seen_gmt < %s ORDER BY last_seen_gmt,id LIMIT %d", $cutoff, $limit ) );
-		if ( array() === $ids ) {
-			return false;
-		}
-		$this->delete_ids( $table, $ids );
-		return count( $ids ) === $limit;
+		return $this->delete_before( $this->tables->get( 'events' ), 'last_seen_gmt', gmdate( 'Y-m-d H:i:s', time() - RetentionPolicy::event_seconds() ) );
 	}
 
 	public function counters(): bool {

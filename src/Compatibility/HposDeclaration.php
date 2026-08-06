@@ -14,7 +14,7 @@ final class HposDeclaration {
 		$class = '\\Automattic\\WooCommerce\\Utilities\\FeaturesUtil';
 
 		if ( class_exists( $class ) ) {
-			$class::declare_compatibility( 'custom_order_tables', CWF_PLUGIN_FILE, true );
+			$class::declare_compatibility( 'custom_order_tables', CHECKOUT_FIREWALL_PLUGIN_FILE, true );
 		}
 	}
 }

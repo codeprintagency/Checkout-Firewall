@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\Protection;
 
+// phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- The table identifier is resolved from the closed, prefix-validated TableNames registry; all counter values are prepared.
+
 use Codeprint\CheckoutFirewall\Data\CounterType;
 use Codeprint\CheckoutFirewall\Database\TableNames;
 

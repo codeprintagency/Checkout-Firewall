@@ -9,12 +9,14 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\Security;
 
+// phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Key-reference inspections use only the closed, prefix-validated TableNames registry and contain no request-derived identifiers.
+
 use Codeprint\CheckoutFirewall\Data\IdentifierType;
 use Codeprint\CheckoutFirewall\Database\TableNames;
 
 // phpcs:disable WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode,WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- Base64 is safe option serialization for random binary key bytes, not code obfuscation.
 final class KeyStore {
-	public const OPTION               = 'cwf_hmac_keys';
+	public const OPTION               = 'checkout_firewall_hmac_keys';
 	public const BLOCK_ANCHOR_CONTEXT = 'checkout-firewall/block-anchor/v1';
 	private const FLOW_PROOF_CONTEXTS = array(
 		'checkout-firewall/flow-proof/sign/v1',
@@ -34,10 +36,6 @@ final class KeyStore {
 		'checkout-firewall/challenge/local-key-signature/v1',
 		'checkout-firewall/challenge/recaptcha-config/v1',
 		'checkout-firewall/checkout-evidence/sign/v1',
-	);
-	private const EXTENSION_CONTEXTS  = array(
-		'checkout-firewall/pro-alert-secret/v1',
-		'checkout-firewall/pro-policy-preview/v1',
 	);
 
 	/**
@@ -255,19 +253,16 @@ final class KeyStore {
 	}
 
 	/**
-	 * Derive one closed, versioned local Premium-support key.
+	 * Derive one closed, versioned key for a caller-owned allowlist.
 	 *
-	 * This format-neutral primitive remains in both artifacts. Premium feature
-	 * code is stripped from Free packages; this exact inert context allowlist is
-	 * shared so paired artifacts can preserve and purge the same local data.
-	 *
+	 * @param list<string> $allowed_contexts Exact contexts owned by the caller.
 	 * @return array{key_version:int,key_fingerprint:string,material:string}
 	 * @throws \InvalidArgumentException When the context is not allowlisted.
 	 * @throws \OutOfBoundsException When the selected version is unavailable.
 	 */
-	public function derive_extension_key( string $context, ?int $version = null ): array {
-		if ( ! in_array( $context, self::EXTENSION_CONTEXTS, true ) ) {
-			throw new \InvalidArgumentException( 'Unsupported extension key context.' );
+	public function derive_scoped_key( string $context, array $allowed_contexts, ?int $version = null ): array {
+		if ( array() === $allowed_contexts || ! in_array( $context, $allowed_contexts, true ) ) {
+			throw new \InvalidArgumentException( 'Unsupported scoped key context.' );
 		}
 		$record  = $this->load();
 		$version = $version ?? (int) $record['identifier_keys']['current_version'];

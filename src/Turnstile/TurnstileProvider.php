@@ -59,7 +59,7 @@ final class TurnstileProvider {
 		if ( ! $input['present'] || ! $this->config->is_active() || $this->conflicts->has_conflict() ) {
 			return $candidates;
 		}
-		if ( ! is_string( $input['token'] ) || ! is_string( $input['state'] )
+		if ( $input['invalid'] || null === $input['token'] || null === $input['state']
 			|| '' === $input['token'] || strlen( $input['token'] ) > SiteverifyClient::MAX_TOKEN
 			|| '' === $input['state'] || strlen( $input['state'] ) > self::MAX_STATE
 		) {

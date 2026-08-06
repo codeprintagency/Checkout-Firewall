@@ -35,6 +35,10 @@ final class CheckoutEvidenceProvider {
 		if ( ! $input['present'] ) {
 			return $candidates;
 		}
+		if ( $input['invalid'] ) {
+			$this->state->mark( $context, 'evidence_malformed' );
+			return $candidates;
+		}
 		try {
 			$reason = $this->service->classify( $input['token'], $input['field'], $input['value'], CartBinding::from_woocommerce() );
 			if ( '' !== $reason ) {

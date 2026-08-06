@@ -26,8 +26,6 @@ use Codeprint\CheckoutFirewall\Challenge\LocalProofService;
 use Codeprint\CheckoutFirewall\Compatibility\Requirements;
 use Codeprint\CheckoutFirewall\Commercial\CommercialAccountController;
 use Codeprint\CheckoutFirewall\Commercial\CommercialBootstrap;
-use Codeprint\CheckoutFirewall\Commercial\PremiumRegistrar;
-use Codeprint\CheckoutFirewall\Commercial\PremiumRuntimeContext;
 use Codeprint\CheckoutFirewall\Database\Migrator;
 use Codeprint\CheckoutFirewall\Database\Schema;
 use Codeprint\CheckoutFirewall\Enforcement\CheckoutGuard;
@@ -46,7 +44,6 @@ use Codeprint\CheckoutFirewall\Protection\CounterRepository;
 use Codeprint\CheckoutFirewall\Protection\CheckoutSignalState;
 use Codeprint\CheckoutFirewall\Protection\DecisionEventRecorder;
 use Codeprint\CheckoutFirewall\Protection\EventRepository;
-use Codeprint\CheckoutFirewall\Protection\EventRetentionState;
 use Codeprint\CheckoutFirewall\Protection\GatewayHealth;
 use Codeprint\CheckoutFirewall\Protection\GatewayObservationState;
 use Codeprint\CheckoutFirewall\Protection\IdentityRegistry;
@@ -88,7 +85,7 @@ final class Plugin {
 		self::$booted = true;
 
 		try {
-			wp_prime_option_caches( array( Migrator::DATABASE_VERSION_OPTION, 'cwf_plugin_version', CleanupScheduler::VERSION_OPTION, EmergencyMode::OPTION, OperatingMode::OPTION ) );
+			wp_prime_option_caches( array( Migrator::DATABASE_VERSION_OPTION, 'checkout_firewall_plugin_version', CleanupScheduler::VERSION_OPTION, EmergencyMode::OPTION, OperatingMode::OPTION ) );
 
 			$failure = Requirements::runtime_failure();
 			if ( null !== $failure ) {
@@ -122,7 +119,6 @@ final class Plugin {
 			$exemption_state   = new TrustedExemptionState();
 			$exemption_store->register();
 			$gateway_observations  = new GatewayObservationState();
-			$event_retention       = new EventRetentionState();
 			$health                = new GatewayHealth( $counters, $identities, $gateway_observations );
 			$turnstile_config      = new TurnstileConfig();
 			$recaptcha_config      = new RecaptchaConfig();
@@ -136,7 +132,7 @@ final class Plugin {
 			$incident_state        = new FreeIncidentState();
 			$incident_mailer       = new FreeIncidentMailer( $incident_state, $mailer );
 			$incident_observer     = new FreeIncidentObserver( $counters, $incident_state, $incident_mailer );
-			$shared_events         = new EventRepository( null, $event_retention );
+			$shared_events         = new EventRepository();
 			$feedback              = new PaymentFeedback( $counters, $blocks, $health, $operating, $exemption_matcher, $shared_events, $incident_observer );
 			$local_challenge       = new LocalProofService();
 			$challenges            = new ChallengeCoordinator( $challenge_config, $local_challenge );
@@ -169,10 +165,6 @@ final class Plugin {
 			$guard  = new CheckoutGuard( null, null, $events, $challenges, $operating );
 			( new ClassicCheckoutAdapter( $guard, $proof_inputs, $identities, $feedback, null, $challenge_inputs, $evidence_inputs ) )->register();
 			( new StoreApiCheckoutAdapter( $guard, $proof_inputs, $identities, $feedback, null, $challenge_inputs, $evidence_inputs ) )->register();
-			PremiumRegistrar::register(
-				CommercialBootstrap::provider(),
-				new PremiumRuntimeContext( $verified, $turnstile_verified, $velocity_observations, $turnstile_config, $turnstile_conflicts, $emergency, $gateway_observations, $event_retention, $challenge_config )
-			);
 		} catch ( \Throwable $exception ) {
 			SafeLogger::exception( 'runtime_boot_failed', $exception );
 			if ( is_admin() ) {
@@ -220,7 +212,7 @@ final class Plugin {
 			return;
 		}
 
-		Migrator::write_option( 'cwf_plugin_version', CWF_VERSION );
+		Migrator::write_option( 'checkout_firewall_plugin_version', CHECKOUT_FIREWALL_VERSION );
 		CleanupScheduler::register();
 		if ( class_exists( '\\ActionScheduler' ) && \ActionScheduler::is_initialized() ) {
 			CleanupScheduler::ensure_schedules();

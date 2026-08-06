@@ -10,8 +10,6 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Lifecycle;
 
 use Codeprint\CheckoutFirewall\Compatibility\Requirements;
-use Codeprint\CheckoutFirewall\Commercial\CodeType;
-use Codeprint\CheckoutFirewall\Commercial\PackageArbitrator;
 use Codeprint\CheckoutFirewall\Database\Migrator;
 use Codeprint\CheckoutFirewall\Scheduler\CleanupScheduler;
 use Codeprint\CheckoutFirewall\Security\KeyStore;
@@ -29,16 +27,13 @@ final class Activator {
 			self::abort( Requirements::MULTISITE_UNSUPPORTED );
 		}
 
-		$code_type = defined( 'CWF_CODE_TYPE' ) && is_string( CWF_CODE_TYPE ) ? CWF_CODE_TYPE : CodeType::FREE;
-		PackageArbitrator::prepare_activation( $code_type );
-
 		$failure = Requirements::activation_failure();
 		if ( null !== $failure ) {
 			self::abort( $failure );
 		}
 
 		try {
-			$fresh    = Migrator::installed_version() < 1 && false === get_option( 'cwf_plugin_version', false );
+			$fresh    = Migrator::installed_version() < 1 && false === get_option( 'checkout_firewall_plugin_version', false );
 			$migrator = new Migrator();
 			if ( ! $migrator->migrate() ) {
 				self::abort( 'schema_unhealthy' );
@@ -54,8 +49,8 @@ final class Activator {
 			if ( $fresh ) {
 				( new OperatingMode() )->initialize_fresh();
 			}
-			Migrator::write_option( 'cwf_plugin_version', CWF_VERSION );
-			add_option( 'cwf_delete_data_on_uninstall', false, '', false );
+			Migrator::write_option( 'checkout_firewall_plugin_version', CHECKOUT_FIREWALL_VERSION );
+			add_option( 'checkout_firewall_delete_data_on_uninstall', false, '', false );
 
 			if ( class_exists( '\\ActionScheduler' )
 				&& \ActionScheduler::is_initialized()

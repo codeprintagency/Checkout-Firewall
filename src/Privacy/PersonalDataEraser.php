@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\Privacy;
 
+// phpcs:disable PluginCheck.Security.DirectDB.UnescapedDBParameter -- Erasure table identifiers come only from the closed TableNames registry; hashes, types, limits, and row IDs are prepared and bounded.
+
 use Codeprint\CheckoutFirewall\Data\IdentifierType;
 use Codeprint\CheckoutFirewall\Database\TableNames;
 use Codeprint\CheckoutFirewall\Protection\PaymentAttemptCleaner;

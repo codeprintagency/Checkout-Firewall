@@ -51,9 +51,9 @@ final class TurnstileClassicClient {
 	}
 
 	public static function register_assets(): void {
-		wp_register_script( self::CORE, plugins_url( 'assets/js/checkout-turnstile-core.js', CWF_PLUGIN_FILE ), array(), CWF_VERSION, true );
-		wp_register_script( self::CLIENT, plugins_url( 'assets/js/checkout-turnstile-classic.js', CWF_PLUGIN_FILE ), array( 'jquery', 'wc-checkout', self::CORE ), CWF_VERSION, true );
-		wp_register_style( 'checkout-firewall-turnstile-checkout', plugins_url( 'assets/css/checkout-firewall-checkout.css', CWF_PLUGIN_FILE ), array(), CWF_VERSION );
+		wp_register_script( self::CORE, plugins_url( 'assets/js/checkout-turnstile-core.js', CHECKOUT_FIREWALL_PLUGIN_FILE ), array(), CHECKOUT_FIREWALL_VERSION, true );
+		wp_register_script( self::CLIENT, plugins_url( 'assets/js/checkout-turnstile-classic.js', CHECKOUT_FIREWALL_PLUGIN_FILE ), array( 'jquery', 'wc-checkout', self::CORE ), CHECKOUT_FIREWALL_VERSION, true );
+		wp_register_style( 'checkout-firewall-turnstile-checkout', plugins_url( 'assets/css/checkout-firewall-checkout.css', CHECKOUT_FIREWALL_PLUGIN_FILE ), array(), CHECKOUT_FIREWALL_VERSION );
 	}
 
 	/**

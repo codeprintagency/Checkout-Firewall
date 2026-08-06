@@ -26,7 +26,7 @@ use Codeprint\CheckoutFirewall\Turnstile\TurnstileConfig;
 use Codeprint\CheckoutFirewall\Turnstile\TurnstileConflictDetector;
 
 final class HealthReport {
-	public const OPTION = 'cwf_admin_health_snapshot';
+	public const OPTION = 'checkout_firewall_admin_health_snapshot';
 
 	/**
 	 * Run and store the bounded local health snapshot.

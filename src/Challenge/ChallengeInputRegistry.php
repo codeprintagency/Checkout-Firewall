@@ -16,28 +16,30 @@ final class ChallengeInputRegistry {
 	/**
 	 * Surface-keyed untrusted inputs.
 	 *
-	 * @var array<string,array{token:mixed,state:mixed,present:bool}>
+	 * @var array<string,array{token:?string,state:?string,present:bool,invalid:bool}>
 	 */
 	private array $values = array();
 
-	public function record( CheckoutContext $context, mixed $token, mixed $state, bool $present ): void {
+	public function record( CheckoutContext $context, ?string $token, ?string $state, bool $present, bool $invalid = false ): void {
 		$this->values[ $this->key( $context ) ] = array(
 			'token'   => $token,
 			'state'   => $state,
 			'present' => $present,
+			'invalid' => $invalid,
 		);
 	}
 
 	/**
 	 * Read one surface's untrusted input.
 	 *
-	 * @return array{token:mixed,state:mixed,present:bool}
+	 * @return array{token:?string,state:?string,present:bool,invalid:bool}
 	 */
 	public function read( CheckoutContext $context ): array {
 		return $this->values[ $this->key( $context ) ] ?? array(
 			'token'   => null,
 			'state'   => null,
 			'present' => false,
+			'invalid' => false,
 		);
 	}
 

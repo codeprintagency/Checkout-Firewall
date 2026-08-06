@@ -9,10 +9,12 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\Protection;
 
+use Codeprint\CheckoutFirewall\Security\RequestNormalizer;
+
 final class ClientIpResolver {
-	public const MODE_OPTION       = 'cwf_proxy_mode';
-	public const HEADER_OPTION     = 'cwf_proxy_header';
-	public const CIDRS_OPTION      = 'cwf_trusted_proxy_cidrs';
+	public const MODE_OPTION       = 'checkout_firewall_proxy_mode';
+	public const HEADER_OPTION     = 'checkout_firewall_proxy_header';
+	public const CIDRS_OPTION      = 'checkout_firewall_trusted_proxy_cidrs';
 	public const MODE_AUTOMATIC    = 'automatic';
 	public const MODE_MANUAL       = 'manual';
 	private const MAX_CHAIN        = 16;
@@ -112,15 +114,14 @@ final class ClientIpResolver {
 	 * @param array<string,mixed>|null $server Server values.
 	 */
 	public function edge_status( ?array $server = null ): string {
-		$server = $server ?? $_SERVER;
-		$remote = $this->address( $server['REMOTE_ADDR'] ?? null );
+		$remote = $this->address( $this->server_value( $server, 'REMOTE_ADDR' ) );
 		if ( null === $remote ) {
 			return 'unknown';
 		}
 		if ( ! $this->in_any_cidr( $remote, self::CLOUDFLARE_CIDRS ) ) {
 			return 'direct';
 		}
-		return null === $this->address( $server['HTTP_CF_CONNECTING_IP'] ?? null ) ? 'cloudflare_header_missing' : 'cloudflare';
+		return null === $this->address( $this->server_value( $server, 'HTTP_CF_CONNECTING_IP' ) ) ? 'cloudflare_header_missing' : 'cloudflare';
 	}
 
 	/**
@@ -129,15 +130,14 @@ final class ClientIpResolver {
 	 * @param array<string,mixed>|null $server Server values.
 	 */
 	public function resolve( ?array $server = null ): ?string {
-		$server = $server ?? $_SERVER;
-		$remote = $this->address( $server['REMOTE_ADDR'] ?? null );
+		$remote = $this->address( $this->server_value( $server, 'REMOTE_ADDR' ) );
 		if ( null === $remote ) {
 			return null;
 		}
 
 		$mode = $this->configured_mode();
 		if ( self::MODE_AUTOMATIC === $mode ) {
-			return 'cloudflare' === $this->edge_status( $server ) ? $this->address( $server['HTTP_CF_CONNECTING_IP'] ?? null ) ?? $remote : $remote;
+			return 'cloudflare' === $this->edge_status( $server ) ? $this->address( $this->server_value( $server, 'HTTP_CF_CONNECTING_IP' ) ) ?? $remote : $remote;
 		}
 		if ( self::MODE_MANUAL !== $mode ) {
 			return $remote;
@@ -151,7 +151,7 @@ final class ClientIpResolver {
 		if ( ! in_array( $header, array( 'HTTP_X_FORWARDED_FOR', 'HTTP_X_REAL_IP' ), true ) ) {
 			return $remote;
 		}
-		$value = $server[ $header ] ?? null;
+		$value = $this->server_value( $server, $header );
 		if ( ! is_string( $value ) || '' === $value || strlen( $value ) > self::MAX_BYTES ) {
 			return $remote;
 		}
@@ -181,6 +181,19 @@ final class ClientIpResolver {
 	}
 
 	/**
+	 * Resolve a supplied test value or normalize the live server value.
+	 *
+	 * @param array<string,mixed>|null $server Supplied server map.
+	 */
+	private function server_value( ?array $server, string $key ): mixed {
+		if ( null !== $server ) {
+			return $server[ $key ] ?? null;
+		}
+		$input = RequestNormalizer::server( $key, self::MAX_BYTES );
+		return $input['invalid'] ? null : $input['value'];
+	}
+
+	/**
 	 * Normalize the retired explicit Direct/Cloudflare choices into automatic mode.
 	 */
 	private static function normalize_mode( string $mode ): ?string {
@@ -196,10 +209,14 @@ final class ClientIpResolver {
 	 * @param mixed $value Candidate address.
 	 */
 	private function address( $value ): ?string {
-		if ( ! is_string( $value ) || '' === $value || trim( $value ) !== $value || false !== strpbrk( $value, "[]%\r\n\t " ) ) {
+		if ( ! is_string( $value ) ) {
 			return null;
 		}
-		$packed = inet_pton( $value );
+		$clean = sanitize_text_field( wp_unslash( $value ) );
+		if ( wp_unslash( $value ) !== $clean || '' === $clean || trim( $clean ) !== $clean || false !== strpbrk( $clean, "[]%\r\n\t " ) ) {
+			return null;
+		}
+		$packed = inet_pton( $clean );
 		if ( false === $packed ) {
 			return null;
 		}

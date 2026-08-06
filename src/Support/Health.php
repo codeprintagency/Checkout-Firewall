@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Support;
 
 final class Health {
-	public const OPTION = 'cwf_health_state';
+	public const OPTION = 'checkout_firewall_health_state';
 	private const LIMIT = 20;
 
 	public static function record( string $component, string $code ): void {

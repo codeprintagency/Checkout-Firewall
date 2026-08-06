@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Operations;
 
 final class RetentionPolicy {
-	public const EVENT_OPTION   = 'cwf_event_retention_days';
-	public const HISTORY_OPTION = 'cwf_block_history_retention_days';
-	public const HINT_OPTION    = 'cwf_block_hint_retention_days';
+	public const EVENT_OPTION   = 'checkout_firewall_event_retention_days';
+	public const HISTORY_OPTION = 'checkout_firewall_block_history_retention_days';
+	public const HINT_OPTION    = 'checkout_firewall_block_hint_retention_days';
 
 	public static function event_seconds(): int {
 		return self::days( self::EVENT_OPTION, array( 1, 3, 7 ), 7 ) * DAY_IN_SECONDS;

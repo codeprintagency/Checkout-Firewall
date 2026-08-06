@@ -13,9 +13,9 @@ use Codeprint\CheckoutFirewall\Support\Health;
 use Codeprint\CheckoutFirewall\Support\SafeLogger;
 
 final class AttackStartMailer {
-	public const ENABLED_OPTION   = 'cwf_attack_email_enabled';
-	public const RECIPIENT_OPTION = 'cwf_attack_email_recipient';
-	public const STATE_OPTION     = 'cwf_attack_email_state';
+	public const ENABLED_OPTION   = 'checkout_firewall_attack_email_enabled';
+	public const RECIPIENT_OPTION = 'checkout_firewall_attack_email_recipient';
+	public const STATE_OPTION     = 'checkout_firewall_attack_email_state';
 	public const HOOK             = 'checkout_firewall_send_attack_start_email';
 
 	public function register(): void {

@@ -22,8 +22,8 @@ use Codeprint\CheckoutFirewall\Decision\DecisionResult;
 use Codeprint\CheckoutFirewall\Decision\ReasonCode;
 
 final class PaymentFeedback {
-	public const META_KEY        = '_cwf_m4_payment_attempt';
-	public const EXPIRY_META_KEY = '_cwf_m4_payment_attempt_expires_at';
+	public const META_KEY        = '_checkout_firewall_m4_payment_attempt';
+	public const EXPIRY_META_KEY = '_checkout_firewall_m4_payment_attempt_expires_at';
 	private CounterRepository $counters;
 	private BlockRepository $blocks;
 	private GatewayHealth $health;

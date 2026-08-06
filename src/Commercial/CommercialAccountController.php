@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Commercial;
 
 final class CommercialAccountController {
-	public const ACTION = 'cwf_connect_freemius';
+	public const ACTION = 'checkout_firewall_connect_freemius';
 
 	public function register(): void {
 		add_action( 'admin_post_' . self::ACTION, array( $this, 'connect' ) );
@@ -29,7 +29,7 @@ final class CommercialAccountController {
 				unset( $exception );
 			}
 		}
-		wp_safe_redirect( admin_url( 'admin.php?page=checkout-firewall&view=privacy&cwf_status=licensing_unavailable' ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=checkout-firewall&view=privacy&checkout_firewall_status=licensing_unavailable' ) );
 		exit;
 	}
 }

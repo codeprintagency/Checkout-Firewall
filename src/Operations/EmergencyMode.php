@@ -16,7 +16,7 @@ use Codeprint\CheckoutFirewall\Turnstile\TurnstileConfig;
 use Codeprint\CheckoutFirewall\Turnstile\TurnstileConflictDetector;
 
 final class EmergencyMode {
-	public const OPTION      = 'cwf_emergency_mode';
+	public const OPTION      = 'checkout_firewall_emergency_mode';
 	public const EXPIRE_HOOK = 'checkout_firewall_expire_emergency';
 	public const GROUP       = 'checkout-firewall';
 	public const DURATIONS   = array( 3600, 14400, 43200, 86400 );

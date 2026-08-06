@@ -16,23 +16,24 @@ final class CheckoutEvidenceInputRegistry {
 	/**
 	 * Surface-keyed untrusted evidence inputs.
 	 *
-	 * @var array<string,array{token:mixed,field:mixed,value:mixed,present:bool}>
+	 * @var array<string,array{token:?string,field:?string,value:?string,present:bool,invalid:bool}>
 	 */
 	private array $values = array();
 
-	public function record( CheckoutContext $context, mixed $token, mixed $field, mixed $value, bool $present ): void {
+	public function record( CheckoutContext $context, ?string $token, ?string $field, ?string $value, bool $present, bool $invalid = false ): void {
 		$this->values[ $this->key( $context ) ] = array(
 			'token'   => $token,
 			'field'   => $field,
 			'value'   => $value,
 			'present' => $present,
+			'invalid' => $invalid,
 		);
 	}
 
 	/**
 	 * Read one surface's untrusted evidence.
 	 *
-	 * @return array{token:mixed,field:mixed,value:mixed,present:bool}
+	 * @return array{token:?string,field:?string,value:?string,present:bool,invalid:bool}
 	 */
 	public function read( CheckoutContext $context ): array {
 		return $this->values[ $this->key( $context ) ] ?? array(
@@ -40,6 +41,7 @@ final class CheckoutEvidenceInputRegistry {
 			'field'   => null,
 			'value'   => null,
 			'present' => false,
+			'invalid' => false,
 		);
 	}
 

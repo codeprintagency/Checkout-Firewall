@@ -9,10 +9,12 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\Admin;
 
+use Codeprint\CheckoutFirewall\Security\RequestNormalizer;
+
 use Codeprint\CheckoutFirewall\Operations\FreeIncidentState;
 
 final class FreeIncidentNotice {
-	public const ACTION = 'cwf_dismiss_free_incident';
+	public const ACTION = 'checkout_firewall_dismiss_free_incident';
 
 	public function __construct( private FreeIncidentState $state ) {}
 
@@ -38,7 +40,8 @@ final class FreeIncidentNotice {
 	}
 
 	public function dismiss(): void {
-		$id = isset( $_POST['incident_id'] ) && is_string( $_POST['incident_id'] ) ? sanitize_key( wp_unslash( $_POST['incident_id'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified below.
+		$input = RequestNormalizer::post( 'incident_id', 64, '/^[a-z0-9_-]+$/D' );
+		$id    = $input['invalid'] || null === $input['value'] ? '' : $input['value'];
 		if ( ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html__( 'You are not allowed to manage Checkout Firewall.', 'checkout-firewall' ), '', array( 'response' => 403 ) );
 		}

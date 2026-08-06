@@ -9,8 +9,10 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\Admin;
 
+use Codeprint\CheckoutFirewall\Security\RequestNormalizer;
+
 final class SupportExportController {
-	public const ACTION    = 'cwf_download_support_snapshot';
+	public const ACTION    = 'checkout_firewall_download_support_snapshot';
 	public const MAX_BYTES = 65536;
 
 	public function register(): void {
@@ -18,7 +20,7 @@ final class SupportExportController {
 	}
 
 	public function download(): void {
-		$method = isset( $_SERVER['REQUEST_METHOD'] ) && is_string( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : '';
+		$method = RequestNormalizer::request_method();
 		if ( 'POST' !== $method || ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html__( 'You are not allowed to download this snapshot.', 'checkout-firewall' ), '', array( 'response' => 403 ) );
 		}

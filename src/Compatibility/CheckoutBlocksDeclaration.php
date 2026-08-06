@@ -14,7 +14,7 @@ final class CheckoutBlocksDeclaration {
 		$class = '\\Automattic\\WooCommerce\\Utilities\\FeaturesUtil';
 
 		if ( class_exists( $class ) ) {
-			$class::declare_compatibility( 'cart_checkout_blocks', CWF_PLUGIN_FILE, true );
+			$class::declare_compatibility( 'cart_checkout_blocks', CHECKOUT_FIREWALL_PLUGIN_FILE, true );
 		}
 	}
 }

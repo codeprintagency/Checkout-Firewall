@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Operations;
 
 final class FreeIncidentState {
-	public const OPTION         = 'cwf_free_incident_state';
+	public const OPTION         = 'checkout_firewall_free_incident_state';
 	public const QUIET_SECONDS  = 3600;
 	public const NOTICE_SECONDS = 604800;
 

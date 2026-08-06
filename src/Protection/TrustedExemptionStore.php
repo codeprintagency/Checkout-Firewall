@@ -14,7 +14,7 @@ use Codeprint\CheckoutFirewall\Operations\IdentityMasker;
 use Codeprint\CheckoutFirewall\Security\KeyStore;
 
 final class TrustedExemptionStore {
-	public const OPTION    = 'cwf_trusted_exemptions';
+	public const OPTION    = 'checkout_firewall_trusted_exemptions';
 	public const MAX_ROWS  = 100;
 	public const REASONS   = array( 'office_network', 'wholesale_customer', 'vip_customer', 'testing' );
 	public const DURATIONS = array( 86400, 604800, 2592000 );

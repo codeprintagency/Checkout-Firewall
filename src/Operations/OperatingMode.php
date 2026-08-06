@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Operations;
 
 final class OperatingMode {
-	public const OPTION         = 'cwf_operating_mode';
+	public const OPTION         = 'checkout_firewall_operating_mode';
 	public const OBSERVE        = 'observe';
 	public const STANDARD       = 'standard';
 	public const REVIEW_SECONDS = 7 * DAY_IN_SECONDS;

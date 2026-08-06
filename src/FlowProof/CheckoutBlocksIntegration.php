@@ -25,25 +25,25 @@ final class CheckoutBlocksIntegration implements IntegrationInterface {
 	public function initialize(): void {
 		wp_register_script(
 			self::CORE_HANDLE,
-			plugins_url( 'assets/js/checkout-flow-proof-core.js', CWF_PLUGIN_FILE ),
+			plugins_url( 'assets/js/checkout-flow-proof-core.js', CHECKOUT_FIREWALL_PLUGIN_FILE ),
 			array(),
-			CWF_VERSION,
+			CHECKOUT_FIREWALL_VERSION,
 			true
 		);
 		ChallengeClassicClient::register_assets();
 		wp_register_script(
 			self::CHALLENGE_HANDLE,
-			plugins_url( 'assets/js/checkout-challenge-blocks.js', CWF_PLUGIN_FILE ),
+			plugins_url( 'assets/js/checkout-challenge-blocks.js', CHECKOUT_FIREWALL_PLUGIN_FILE ),
 			array( 'wp-api-fetch', 'wp-data', 'wc-blocks-data-store', 'wc-blocks-checkout-events', 'wc-settings', 'checkout-firewall-challenge-core' ),
-			CWF_VERSION,
+			CHECKOUT_FIREWALL_VERSION,
 			true
 		);
 		wp_enqueue_style( 'checkout-firewall-checkout' );
 		wp_register_script(
 			self::HANDLE,
-			plugins_url( 'assets/js/checkout-flow-proof-blocks.js', CWF_PLUGIN_FILE ),
+			plugins_url( 'assets/js/checkout-flow-proof-blocks.js', CHECKOUT_FIREWALL_PLUGIN_FILE ),
 			array( 'wp-data', 'wc-blocks-data-store', 'wc-settings', self::CORE_HANDLE ),
-			CWF_VERSION,
+			CHECKOUT_FIREWALL_VERSION,
 			true
 		);
 	}
@@ -79,9 +79,9 @@ final class CheckoutBlocksIntegration implements IntegrationInterface {
 			'refreshLeadMs'     => 60000,
 			'challengeEndpoint' => rest_url( ChallengeEndpoint::NAMESPACE . ChallengeEndpoint::ROUTE ),
 			'challengeStrings'  => ChallengeClassicClient::script_strings(),
-			'localScript'       => plugins_url( 'assets/vendor/altcha/altcha.js', CWF_PLUGIN_FILE ),
-			'localWorker'       => plugins_url( 'assets/vendor/altcha/pbkdf2.js', CWF_PLUGIN_FILE ),
-			'localStyle'        => plugins_url( 'assets/vendor/altcha/altcha.css', CWF_PLUGIN_FILE ),
+			'localScript'       => plugins_url( 'assets/vendor/altcha/altcha.js', CHECKOUT_FIREWALL_PLUGIN_FILE ),
+			'localWorker'       => plugins_url( 'assets/vendor/altcha/pbkdf2.js', CHECKOUT_FIREWALL_PLUGIN_FILE ),
+			'localStyle'        => plugins_url( 'assets/vendor/altcha/altcha.css', CHECKOUT_FIREWALL_PLUGIN_FILE ),
 			'language'          => strtolower( substr( determine_locale(), 0, 2 ) ),
 		);
 	}

@@ -41,9 +41,9 @@ final class ChallengeClassicClient {
 	}
 
 	public static function register_assets(): void {
-		wp_register_script( self::CORE, plugins_url( 'assets/js/checkout-challenge-core.js', CWF_PLUGIN_FILE ), array(), CWF_VERSION, true );
-		wp_register_script( self::CLIENT, plugins_url( 'assets/js/checkout-challenge-classic.js', CWF_PLUGIN_FILE ), array( 'jquery', 'wc-checkout', self::CORE ), CWF_VERSION, true );
-		wp_register_style( self::STYLE, plugins_url( 'assets/css/checkout-firewall-checkout.css', CWF_PLUGIN_FILE ), array(), CWF_VERSION );
+		wp_register_script( self::CORE, plugins_url( 'assets/js/checkout-challenge-core.js', CHECKOUT_FIREWALL_PLUGIN_FILE ), array(), CHECKOUT_FIREWALL_VERSION, true );
+		wp_register_script( self::CLIENT, plugins_url( 'assets/js/checkout-challenge-classic.js', CHECKOUT_FIREWALL_PLUGIN_FILE ), array( 'jquery', 'wc-checkout', self::CORE ), CHECKOUT_FIREWALL_VERSION, true );
+		wp_register_style( self::STYLE, plugins_url( 'assets/css/checkout-firewall-checkout.css', CHECKOUT_FIREWALL_PLUGIN_FILE ), array(), CHECKOUT_FIREWALL_VERSION );
 	}
 
 	/**
@@ -57,9 +57,9 @@ final class ChallengeClassicClient {
 			'tokenField'  => self::TOKEN_FIELD,
 			'stateField'  => self::STATE_FIELD,
 			'mount'       => 'cf-challenge-classic',
-			'localScript' => plugins_url( 'assets/vendor/altcha/altcha.js', CWF_PLUGIN_FILE ),
-			'localWorker' => plugins_url( 'assets/vendor/altcha/pbkdf2.js', CWF_PLUGIN_FILE ),
-			'localStyle'  => plugins_url( 'assets/vendor/altcha/altcha.css', CWF_PLUGIN_FILE ),
+			'localScript' => plugins_url( 'assets/vendor/altcha/altcha.js', CHECKOUT_FIREWALL_PLUGIN_FILE ),
+			'localWorker' => plugins_url( 'assets/vendor/altcha/pbkdf2.js', CHECKOUT_FIREWALL_PLUGIN_FILE ),
+			'localStyle'  => plugins_url( 'assets/vendor/altcha/altcha.css', CHECKOUT_FIREWALL_PLUGIN_FILE ),
 			'language'    => strtolower( substr( determine_locale(), 0, 2 ) ),
 			'strings'     => self::script_strings(),
 		);

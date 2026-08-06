@@ -18,6 +18,7 @@ use Codeprint\CheckoutFirewall\FlowProof\FlowProofInputRegistry;
 use Codeprint\CheckoutFirewall\FlowProof\CheckoutEvidenceInputRegistry;
 use Codeprint\CheckoutFirewall\Protection\IdentityRegistry;
 use Codeprint\CheckoutFirewall\Protection\PaymentFeedback;
+use Codeprint\CheckoutFirewall\Security\RequestNormalizer;
 use Codeprint\CheckoutFirewall\Support\SafeLogger;
 use Codeprint\CheckoutFirewall\Turnstile\TurnstileInputRegistry;
 
@@ -88,26 +89,35 @@ final class StoreApiCheckoutAdapter {
 				? $extensions['checkout-firewall']
 				: array();
 			$present    = array_key_exists( 'flow_proof', $namespace );
-			$this->proof_inputs->record( $context, $present ? $namespace['flow_proof'] : null, $present );
+			$proof      = RequestNormalizer::text( $present ? $namespace['flow_proof'] : null, \Codeprint\CheckoutFirewall\FlowProof\FlowProofService::MAX_TOKEN_SIZE, false );
+			$this->proof_inputs->record( $context, $proof['value'], $present, $proof['invalid'] );
 			if ( null !== $this->challenge_inputs ) {
 				$token_present = array_key_exists( 'challenge_token', $namespace );
 				$state_present = array_key_exists( 'challenge_state', $namespace );
-				$this->challenge_inputs->record( $context, $token_present ? $namespace['challenge_token'] : null, $state_present ? $namespace['challenge_state'] : null, $token_present || $state_present );
+				$token         = RequestNormalizer::text( $token_present ? $namespace['challenge_token'] : null, \Codeprint\CheckoutFirewall\Challenge\LocalProofService::MAX_PAYLOAD, false );
+				$state         = RequestNormalizer::text( $state_present ? $namespace['challenge_state'] : null, \Codeprint\CheckoutFirewall\Challenge\ChallengeCandidateProvider::MAX_STATE, false );
+				$this->challenge_inputs->record( $context, $token['value'], $state['value'], $token_present || $state_present, $token['invalid'] || $state['invalid'] );
 			}
 			if ( null !== $this->evidence_inputs ) {
 				$evidence_present = array_key_exists( 'evidence_token', $namespace );
 				$name_present     = array_key_exists( 'honeypot_field', $namespace );
 				$value_present    = array_key_exists( 'honeypot_value', $namespace );
-				$this->evidence_inputs->record( $context, $evidence_present ? $namespace['evidence_token'] : null, $name_present ? $namespace['honeypot_field'] : null, $value_present ? $namespace['honeypot_value'] : null, $evidence_present || $name_present || $value_present );
+				$evidence         = RequestNormalizer::text( $evidence_present ? $namespace['evidence_token'] : null, \Codeprint\CheckoutFirewall\FlowProof\CheckoutEvidenceService::MAX_TOKEN, false );
+				$name             = RequestNormalizer::text( $name_present ? $namespace['honeypot_field'] : null, 40, false, '/^checkout_firewall_hp_[a-f0-9]{16}$/D' );
+				$value            = RequestNormalizer::text( $value_present ? $namespace['honeypot_value'] : null, 256, false );
+				$this->evidence_inputs->record( $context, $evidence['value'], $name['value'], $value['value'], $evidence_present || $name_present || $value_present, $evidence['invalid'] || $name['invalid'] || $value['invalid'] );
 			}
 			if ( null !== $this->turnstile_inputs ) {
 				$token_present = array_key_exists( 'turnstile_token', $namespace );
 				$state_present = array_key_exists( 'turnstile_state', $namespace );
+				$token         = RequestNormalizer::text( $token_present ? $namespace['turnstile_token'] : null, \Codeprint\CheckoutFirewall\Turnstile\SiteverifyClient::MAX_TOKEN, false );
+				$state         = RequestNormalizer::text( $state_present ? $namespace['turnstile_state'] : null, \Codeprint\CheckoutFirewall\Turnstile\TurnstileProvider::MAX_STATE, false );
 				$this->turnstile_inputs->record(
 					$context,
-					$token_present ? $namespace['turnstile_token'] : null,
-					$state_present ? $namespace['turnstile_state'] : null,
-					$token_present || $state_present
+					$token['value'],
+					$state['value'],
+					$token_present || $state_present,
+					$token['invalid'] || $state['invalid']
 				);
 			}
 			if ( null !== $this->identities ) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Disabled-until-Premium request-local gateway outcome snapshots.
+ * Request-local gateway outcome snapshots for extension observers.
  *
  * @package Codeprint\CheckoutFirewall
  */
@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Protection;
 
 final class GatewayObservationState {
-	private bool $enabled = false;
 	/**
 	 * Sanitized gateway snapshots.
 	 *
@@ -24,10 +23,6 @@ final class GatewayObservationState {
 	 */
 	private array $listeners = array();
 
-	public function enable(): void {
-		$this->enabled = true;
-	}
-
 	/** Register one bounded read-only observation listener. */
 	public function listen( callable $listener ): bool {
 		if ( count( $this->listeners ) >= 1 ) {
@@ -38,12 +33,12 @@ final class GatewayObservationState {
 	}
 
 	/**
-	 * Record a snapshot only after Premium enables the seam.
+	 * Record a normalized request-local snapshot.
 	 *
 	 * @param array{success:int,decline:int,other:int,outage:bool} $snapshot Gateway totals.
 	 */
 	public function record( string $gateway, array $snapshot ): void {
-		if ( ! $this->enabled || array( 'success', 'decline', 'other', 'outage' ) !== array_keys( $snapshot )
+		if ( array( 'success', 'decline', 'other', 'outage' ) !== array_keys( $snapshot )
 			|| ! is_int( $snapshot['success'] ) || $snapshot['success'] < 0
 			|| ! is_int( $snapshot['decline'] ) || $snapshot['decline'] < 0
 			|| ! is_int( $snapshot['other'] ) || $snapshot['other'] < 0
@@ -71,6 +66,6 @@ final class GatewayObservationState {
 	 */
 	public function read( string $gateway ): ?array {
 		$gateway = substr( sanitize_key( $gateway ), 0, 64 );
-		return $this->enabled && '' !== $gateway ? ( $this->snapshots[ $gateway ] ?? null ) : null;
+		return '' !== $gateway ? ( $this->snapshots[ $gateway ] ?? null ) : null;
 	}
 }

@@ -13,10 +13,10 @@ use Codeprint\CheckoutFirewall\Security\KeyStore;
 use Codeprint\CheckoutFirewall\Turnstile\TurnstileConfig;
 
 final class RecaptchaConfig {
-	public const SITE_OPTION         = 'cwf_recaptcha_site_key';
-	public const SECRET_OPTION       = 'cwf_recaptcha_secret_key';
-	public const ENABLED_OPTION      = 'cwf_recaptcha_enabled';
-	public const VERIFICATION_OPTION = 'cwf_recaptcha_verification';
+	public const SITE_OPTION         = 'checkout_firewall_recaptcha_site_key';
+	public const SECRET_OPTION       = 'checkout_firewall_recaptcha_secret_key';
+	public const ENABLED_OPTION      = 'checkout_firewall_recaptcha_enabled';
+	public const VERIFICATION_OPTION = 'checkout_firewall_recaptcha_verification';
 	public const CONFIG_CONTEXT      = 'checkout-firewall/challenge/recaptcha-config/v1';
 
 	private KeyStore $keys;
@@ -31,8 +31,8 @@ final class RecaptchaConfig {
 	 * @return array{site_key:string,secret_key:string}
 	 */
 	public function credentials(): array {
-		$site   = defined( 'CWF_RECAPTCHA_SITE_KEY' ) ? CWF_RECAPTCHA_SITE_KEY : get_option( self::SITE_OPTION, '' );
-		$secret = defined( 'CWF_RECAPTCHA_SECRET_KEY' ) ? CWF_RECAPTCHA_SECRET_KEY : get_option( self::SECRET_OPTION, '' );
+		$site   = defined( 'CHECKOUT_FIREWALL_RECAPTCHA_SITE_KEY' ) ? CHECKOUT_FIREWALL_RECAPTCHA_SITE_KEY : get_option( self::SITE_OPTION, '' );
+		$secret = defined( 'CHECKOUT_FIREWALL_RECAPTCHA_SECRET_KEY' ) ? CHECKOUT_FIREWALL_RECAPTCHA_SECRET_KEY : get_option( self::SECRET_OPTION, '' );
 		return array(
 			'site_key'   => self::normalize( $site, 128 ),
 			'secret_key' => self::normalize( $secret, 256 ),
@@ -56,18 +56,18 @@ final class RecaptchaConfig {
 	}
 
 	public function save( string $site_key, ?string $secret_key ): void {
-		$site_key = defined( 'CWF_RECAPTCHA_SITE_KEY' ) ? self::normalize( CWF_RECAPTCHA_SITE_KEY, 128 ) : self::normalize( $site_key, 128 );
+		$site_key = defined( 'CHECKOUT_FIREWALL_RECAPTCHA_SITE_KEY' ) ? self::normalize( CHECKOUT_FIREWALL_RECAPTCHA_SITE_KEY, 128 ) : self::normalize( $site_key, 128 );
 		if ( '' === $site_key ) {
 			throw new \InvalidArgumentException( 'reCAPTCHA site key is invalid.' );
 		}
 		$secret = null;
-		if ( ! defined( 'CWF_RECAPTCHA_SECRET_KEY' ) && null !== $secret_key && '' !== trim( $secret_key ) ) {
+		if ( ! defined( 'CHECKOUT_FIREWALL_RECAPTCHA_SECRET_KEY' ) && null !== $secret_key && '' !== trim( $secret_key ) ) {
 			$secret = self::normalize( $secret_key, 256 );
 			if ( '' === $secret ) {
 				throw new \InvalidArgumentException( 'reCAPTCHA secret key is invalid.' );
 			}
 		}
-		if ( ! defined( 'CWF_RECAPTCHA_SITE_KEY' ) ) {
+		if ( ! defined( 'CHECKOUT_FIREWALL_RECAPTCHA_SITE_KEY' ) ) {
 			self::write_option( self::SITE_OPTION, $site_key );
 		}
 		if ( null !== $secret ) {

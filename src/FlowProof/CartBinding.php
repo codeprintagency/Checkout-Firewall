@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\FlowProof;
 
+use Codeprint\CheckoutFirewall\Security\RequestNormalizer;
+
 final class CartBinding {
 	private string $host;
 	private string $session_source;
@@ -114,9 +116,8 @@ final class CartBinding {
 	 * @throws \RuntimeException When no session identity is available.
 	 */
 	private static function build_session_source( object $session ): string {
-		$cart_token = isset( $_SERVER['HTTP_CART_TOKEN'] ) && is_string( $_SERVER['HTTP_CART_TOKEN'] )
-			? wc_clean( wp_unslash( $_SERVER['HTTP_CART_TOKEN'] ) )
-			: '';
+		$cart_input = RequestNormalizer::server( 'HTTP_CART_TOKEN', 4096 );
+		$cart_token = $cart_input['invalid'] || null === $cart_input['value'] ? '' : wc_clean( $cart_input['value'] );
 		$utility    = '\\Automattic\\WooCommerce\\StoreApi\\Utilities\\CartTokenUtils';
 		if ( '' !== $cart_token && class_exists( $utility ) && $utility::validate_cart_token( $cart_token ) ) {
 			$payload = $utility::get_cart_token_payload( $cart_token );

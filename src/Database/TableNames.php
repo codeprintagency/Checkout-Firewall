@@ -11,10 +11,10 @@ namespace Codeprint\CheckoutFirewall\Database;
 
 final class TableNames {
 	private const SUFFIXES = array(
-		'events'          => 'cwf_events',
-		'counters'        => 'cwf_counters',
-		'blocks'          => 'cwf_blocks',
-		'consumed_tokens' => 'cwf_consumed_tokens',
+		'events'          => 'checkout_firewall_events',
+		'counters'        => 'checkout_firewall_counters',
+		'blocks'          => 'checkout_firewall_blocks',
+		'consumed_tokens' => 'checkout_firewall_consumed_tokens',
 	);
 
 	private string $prefix;

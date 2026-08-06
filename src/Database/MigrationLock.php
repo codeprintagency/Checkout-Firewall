@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Database;
 
 final class MigrationLock {
-	public const OPTION         = 'cwf_migration_lock';
+	public const OPTION         = 'checkout_firewall_migration_lock';
 	private const LEASE_SECONDS = 1800;
 
 	private ?string $owned_value = null;

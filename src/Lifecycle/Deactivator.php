@@ -20,8 +20,5 @@ final class Deactivator {
 	public static function deactivate( $network_wide = false ): void {
 		unset( $network_wide );
 		CleanupScheduler::unschedule();
-		if ( function_exists( 'as_unschedule_all_actions' ) ) {
-			as_unschedule_all_actions( 'checkout_firewall_pro_alert_delivery', array(), 'checkout-firewall-pro-alerts' );
-		}
 	}
 }

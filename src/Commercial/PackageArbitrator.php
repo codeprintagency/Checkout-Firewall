@@ -22,11 +22,4 @@ final class PackageArbitrator {
 		$active = is_array( $active_plugins ) ? $active_plugins : array();
 		return self::FREE_BASENAME !== $current_basename || ! in_array( self::PREMIUM_BASENAME, $active, true );
 	}
-
-	public static function prepare_activation( string $code_type ): void {
-		if ( CodeType::PREMIUM !== CodeType::normalize( $code_type ) || ! function_exists( 'deactivate_plugins' ) ) {
-			return;
-		}
-		deactivate_plugins( self::FREE_BASENAME, true, false );
-	}
 }

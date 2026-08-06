@@ -11,17 +11,20 @@ namespace Codeprint\CheckoutFirewall\Commercial;
 
 final class CommercialUpgradePage {
 	private object $sdk;
-	private EntitlementProvider $provider;
+	/** Premium plan label resolver supplied only by the Premium package.
+	 *
+	 * @var (\Closure():string)|null
+	 */
+	private static ?\Closure $current_plan = null;
 
-	public function __construct( object $sdk, EntitlementProvider $provider ) {
-		$this->sdk      = $sdk;
-		$this->provider = $provider;
+	public function __construct( object $sdk ) {
+		$this->sdk = $sdk;
 	}
 
 	/**
 	 * Register only the supported Freemius pricing-template filter.
 	 */
-	public static function register( object $sdk, EntitlementProvider $provider ): bool {
+	public static function register( object $sdk ): bool {
 		if ( ! method_exists( $sdk, 'add_filter' )
 			|| ! method_exists( $sdk, 'checkout_url' )
 			|| ! method_exists( $sdk, 'get_account_url' )
@@ -29,10 +32,19 @@ final class CommercialUpgradePage {
 			return false;
 		}
 
-		$page = new self( $sdk, $provider );
+		$page = new self( $sdk );
 		$sdk->add_filter( 'templates/pricing.php', array( $page, 'render' ), 10, 1 );
 		add_action( 'admin_enqueue_scripts', array( $page, 'assets' ) );
 		return true;
+	}
+
+	/** Register a separately packaged plan-label resolver. */
+	public static function set_current_plan_resolver( callable $resolver ): void {
+		self::$current_plan = \Closure::fromCallable( $resolver );
+	}
+
+	public static function reset_for_test(): void {
+		self::$current_plan = null;
 	}
 
 	/**
@@ -47,9 +59,9 @@ final class CommercialUpgradePage {
 
 		wp_enqueue_style(
 			'checkout-firewall-upgrade',
-			plugins_url( 'assets/css/checkout-firewall-upgrade.css', CWF_PLUGIN_FILE ),
+			plugins_url( 'assets/css/checkout-firewall-upgrade.css', CHECKOUT_FIREWALL_PLUGIN_FILE ),
 			array(),
-			CWF_VERSION
+			CHECKOUT_FIREWALL_VERSION
 		);
 		wp_dequeue_script( 'freemius-pricing' );
 		wp_dequeue_script( 'fs-postmessage' );
@@ -66,10 +78,8 @@ final class CommercialUpgradePage {
 				return $original;
 			}
 
-			$entitlement = $this->provider->entitlement();
-			$current     = Entitlement::ACTIVE_PAID === $entitlement->state() && $entitlement->allows_premium()
-				? $entitlement->plan()
-				: '';
+			$current     = null === self::$current_plan ? '' : (string) ( self::$current_plan )();
+			$current     = in_array( $current, array( 'pro', 'business', 'agency' ), true ) ? $current : '';
 			$plans       = $this->plans( $current );
 			$account_url = (string) $this->sdk->get_account_url();
 			if ( 3 !== count( $plans ) || '' === $account_url ) {
@@ -164,7 +174,7 @@ final class CommercialUpgradePage {
 			__( 'Premium feature labels and active-plan visibility throughout the plugin', 'checkout-firewall' ),
 		);
 		$free_items     = array(
-			__( 'Seven-day Observe Mode for evaluating protection before enforcing it', 'checkout-firewall' ),
+			__( 'Observe Mode for evaluating protection before enforcing it', 'checkout-firewall' ),
 			__( 'Standard enforcement and time-boxed Emergency Mode', 'checkout-firewall' ),
 			__( 'Checkout-flow proof, randomized honeypot, and timing signals', 'checkout-firewall' ),
 			__( 'Local velocity and repeated payment-failure controls', 'checkout-firewall' ),
@@ -181,10 +191,10 @@ final class CommercialUpgradePage {
 		<div class="wrap cf-upgrade">
 			<section class="cf-upgrade__hero" aria-labelledby="cf-upgrade-title">
 				<p class="cf-upgrade__eyebrow"><?php esc_html_e( 'Free vs Premium', 'checkout-firewall' ); ?></p>
-				<h1 id="cf-upgrade-title"><?php esc_html_e( 'All paid plans include the complete Premium feature set. Choose a plan based only on how many stores you protect.', 'checkout-firewall' ); ?></h1>
+				<h1 id="cf-upgrade-title"><?php esc_html_e( 'Premium is a separately downloaded replacement plugin. Every paid plan includes its complete feature set; choose only by store count.', 'checkout-firewall' ); ?></h1>
 				<div class="cf-upgrade__contrast">
 					<div><strong><?php esc_html_e( 'FREE — YOU DIRECT IT', 'checkout-firewall' ); ?></strong><p><?php esc_html_e( 'Local checkout protection with fixed rules. It enforces what you configure, and you decide when to escalate — Emergency Mode is a switch you throw yourself.', 'checkout-firewall' ); ?></p></div>
-					<div><strong><?php esc_html_e( 'PREMIUM — IT ADAPTS', 'checkout-firewall' ); ?></strong><p><?php esc_html_e( 'The same local engine, plus automatic escalation and recovery, distributed-abuse detection, 90-day analytics, alerts, and policy transfer — so you are not watching the log at 2am.', 'checkout-firewall' ); ?></p></div>
+					<div><strong><?php esc_html_e( 'PREMIUM — IT ADAPTS', 'checkout-firewall' ); ?></strong><p><?php esc_html_e( 'The separate Premium plugin replaces Free and adds automatic escalation and recovery, distributed-abuse detection, 90-day analytics, alerts, and policy transfer.', 'checkout-firewall' ); ?></p></div>
 				</div>
 				<p class="cf-upgrade__fine-print"><?php esc_html_e( 'The Premium engine stays local and deterministic. It does not use remote fraud scoring, does not inspect card data, and never disables a payment gateway.', 'checkout-firewall' ); ?></p>
 			</section>
@@ -221,11 +231,11 @@ final class CommercialUpgradePage {
 						</article>
 					<?php endforeach; ?>
 				</div>
-				<p class="cf-upgrade__note"><?php esc_html_e( 'Business and Agency do not unlock anything Pro lacks — they lower the cost per store. Recognised local, development, and staging installs do not consume production activations.', 'checkout-firewall' ); ?></p>
+				<p class="cf-upgrade__note"><?php esc_html_e( 'Pro, Business, and Agency include the same separate Premium plugin; Business and Agency only lower the cost per store. Recognised local, development, and staging installs do not consume production activations.', 'checkout-firewall' ); ?></p>
 			</section>
 
 			<section class="cf-upgrade__section" aria-labelledby="cf-upgrade-premium-features">
-				<header class="cf-upgrade__section-heading"><h2 id="cf-upgrade-premium-features"><?php esc_html_e( 'What every paid plan adds', 'checkout-firewall' ); ?></h2><p><?php esc_html_e( 'Everything in Free, plus all of the below', 'checkout-firewall' ); ?></p></header>
+				<header class="cf-upgrade__section-heading"><h2 id="cf-upgrade-premium-features"><?php esc_html_e( 'What the separate Premium plugin adds', 'checkout-firewall' ); ?></h2><p><?php esc_html_e( 'Premium replaces Free and includes all Free protection plus the capabilities below', 'checkout-firewall' ); ?></p></header>
 				<div class="cf-upgrade__feature-groups">
 					<?php $this->feature_group( __( 'Automatic protection', 'checkout-firewall' ), $premium_groups ); ?>
 					<?php $this->feature_group( __( 'Operational visibility', 'checkout-firewall' ), $operations ); ?>
@@ -234,7 +244,7 @@ final class CommercialUpgradePage {
 			</section>
 
 			<section class="cf-upgrade__section" aria-labelledby="cf-upgrade-free-features">
-				<header class="cf-upgrade__section-heading"><h2 id="cf-upgrade-free-features"><?php esc_html_e( 'What you already have on Free', 'checkout-firewall' ); ?></h2><p><?php esc_html_e( 'Included on every plan · a real protection product, not a demo', 'checkout-firewall' ); ?></p></header>
+				<header class="cf-upgrade__section-heading"><h2 id="cf-upgrade-free-features"><?php esc_html_e( 'What you already have on Free', 'checkout-firewall' ); ?></h2><p><?php esc_html_e( 'Complete without payment, a licence, or the separate Premium plugin', 'checkout-firewall' ); ?></p></header>
 				<div class="cf-upgrade__free"><ul>
 				<?php
 				foreach ( $free_items as $item ) :
@@ -243,7 +253,7 @@ final class CommercialUpgradePage {
 			</section>
 
 			<section class="cf-upgrade__assurances" aria-label="<?php esc_attr_e( 'Plan assurances', 'checkout-firewall' ); ?>">
-				<div><h2><?php esc_html_e( 'If a licence lapses', 'checkout-firewall' ); ?></h2><p><?php esc_html_e( 'Free protection keeps running with your settings and history intact. Automatic states, alerts, and 90-day analytics stop until you renew.', 'checkout-firewall' ); ?></p></div>
+				<div><h2><?php esc_html_e( 'Free and Premium are separate plugins', 'checkout-firewall' ); ?></h2><p><?php esc_html_e( 'This Free plugin is complete and contains no locked Premium code. A paid plan provides a separately downloaded Premium replacement plugin.', 'checkout-firewall' ); ?></p></div>
 				<div><h2><?php esc_html_e( 'Moving between plans', 'checkout-firewall' ); ?></h2><p><?php esc_html_e( 'Changing plan changes only your activation allowance — no feature is added or taken away. Payment, tax, and licensing are handled by Freemius.', 'checkout-firewall' ); ?></p></div>
 				<div><h2><?php esc_html_e( 'What we still will not do', 'checkout-firewall' ); ?></h2><p><?php esc_html_e( 'No card-data access, no remote fraud scoring, no security telemetry leaving your server, and no automatic disabling of a payment gateway — on any plan.', 'checkout-firewall' ); ?></p></div>
 			</section>

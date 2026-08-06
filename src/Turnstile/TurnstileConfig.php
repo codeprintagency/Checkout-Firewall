@@ -12,10 +12,10 @@ namespace Codeprint\CheckoutFirewall\Turnstile;
 use Codeprint\CheckoutFirewall\Security\KeyStore;
 
 final class TurnstileConfig {
-	public const SITE_OPTION         = 'cwf_turnstile_site_key';
-	public const SECRET_OPTION       = 'cwf_turnstile_secret_key';
-	public const ENABLED_OPTION      = 'cwf_turnstile_enabled';
-	public const VERIFICATION_OPTION = 'cwf_turnstile_verification';
+	public const SITE_OPTION         = 'checkout_firewall_turnstile_site_key';
+	public const SECRET_OPTION       = 'checkout_firewall_turnstile_secret_key';
+	public const ENABLED_OPTION      = 'checkout_firewall_turnstile_enabled';
+	public const VERIFICATION_OPTION = 'checkout_firewall_turnstile_verification';
 	public const CONFIG_CONTEXT      = 'checkout-firewall/turnstile/config/v1';
 
 	private KeyStore $keys;
@@ -30,8 +30,8 @@ final class TurnstileConfig {
 	 * @return array{site_key:string,secret_key:string}
 	 */
 	public function credentials(): array {
-		$site   = defined( 'CWF_TURNSTILE_SITE_KEY' ) ? CWF_TURNSTILE_SITE_KEY : get_option( self::SITE_OPTION, '' );
-		$secret = defined( 'CWF_TURNSTILE_SECRET_KEY' ) ? CWF_TURNSTILE_SECRET_KEY : get_option( self::SECRET_OPTION, '' );
+		$site   = defined( 'CHECKOUT_FIREWALL_TURNSTILE_SITE_KEY' ) ? CHECKOUT_FIREWALL_TURNSTILE_SITE_KEY : get_option( self::SITE_OPTION, '' );
+		$secret = defined( 'CHECKOUT_FIREWALL_TURNSTILE_SECRET_KEY' ) ? CHECKOUT_FIREWALL_TURNSTILE_SECRET_KEY : get_option( self::SECRET_OPTION, '' );
 		return array(
 			'site_key'   => self::normalize( $site, 128 ),
 			'secret_key' => self::normalize( $secret, 256 ),
@@ -98,18 +98,18 @@ final class TurnstileConfig {
 	 * @throws \InvalidArgumentException When either supplied key is invalid.
 	 */
 	public function save( string $site_key, ?string $secret_key ): void {
-		$site_key = defined( 'CWF_TURNSTILE_SITE_KEY' ) ? self::normalize( CWF_TURNSTILE_SITE_KEY, 128 ) : self::normalize( $site_key, 128 );
+		$site_key = defined( 'CHECKOUT_FIREWALL_TURNSTILE_SITE_KEY' ) ? self::normalize( CHECKOUT_FIREWALL_TURNSTILE_SITE_KEY, 128 ) : self::normalize( $site_key, 128 );
 		if ( '' === $site_key ) {
 			throw new \InvalidArgumentException( 'Turnstile site key is invalid.' );
 		}
 		$normalized_secret = null;
-		if ( ! defined( 'CWF_TURNSTILE_SECRET_KEY' ) && null !== $secret_key && '' !== trim( $secret_key ) ) {
+		if ( ! defined( 'CHECKOUT_FIREWALL_TURNSTILE_SECRET_KEY' ) && null !== $secret_key && '' !== trim( $secret_key ) ) {
 			$normalized_secret = self::normalize( $secret_key, 256 );
 			if ( '' === $normalized_secret ) {
 				throw new \InvalidArgumentException( 'Turnstile secret key is invalid.' );
 			}
 		}
-		if ( ! defined( 'CWF_TURNSTILE_SITE_KEY' ) ) {
+		if ( ! defined( 'CHECKOUT_FIREWALL_TURNSTILE_SITE_KEY' ) ) {
 			self::write_option( self::SITE_OPTION, $site_key );
 		}
 		if ( null !== $normalized_secret ) {

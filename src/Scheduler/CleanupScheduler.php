@@ -17,7 +17,7 @@ use Codeprint\CheckoutFirewall\Support\SafeLogger;
 
 final class CleanupScheduler {
 	public const GROUP          = 'checkout-firewall';
-	public const VERSION_OPTION = 'cwf_schedules_version';
+	public const VERSION_OPTION = 'checkout_firewall_schedules_version';
 	public const VERSION        = 1;
 
 	private const HEALTH_INTERVAL = 86400;

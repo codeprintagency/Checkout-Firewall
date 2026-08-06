@@ -1,6 +1,6 @@
 <?php
 /**
- * Request-local, behavior-neutral velocity observation seam for Premium modules.
+ * Request-local, behavior-neutral velocity observations for extensions.
  *
  * @package Codeprint\CheckoutFirewall
  */
@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Protection;
 
 final class VelocityObservationState {
-	private bool $enabled = false;
 	/**
 	 * Existing Free velocity results keyed by identity type.
 	 *
@@ -18,14 +17,7 @@ final class VelocityObservationState {
 	 */
 	private array $observations = array();
 
-	public function enable(): void {
-		$this->enabled = true;
-	}
-
 	public function record( int $identity_type, int $effective, int $free_threshold, int $window, bool $trusted ): void {
-		if ( ! $this->enabled ) {
-			return;
-		}
 		$this->observations[ $identity_type ] = array(
 			'effective'      => max( 0, $effective ),
 			'free_threshold' => max( 1, $free_threshold ),

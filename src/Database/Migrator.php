@@ -12,7 +12,7 @@ namespace Codeprint\CheckoutFirewall\Database;
 use Codeprint\CheckoutFirewall\Support\Health;
 
 final class Migrator {
-	public const DATABASE_VERSION_OPTION = 'cwf_db_version';
+	public const DATABASE_VERSION_OPTION = 'checkout_firewall_db_version';
 
 	private Schema $schema;
 	private MigrationLock $lock;

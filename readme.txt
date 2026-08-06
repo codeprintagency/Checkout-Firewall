@@ -1,6 +1,6 @@
 === Checkout Firewall for WooCommerce ===
 Contributors: codeprint
-Tags: woocommerce, checkout, security, abuse prevention, turnstile
+Tags: woocommerce, checkout security, card testing, bot protection, recaptcha
 Requires at least: 6.8
 Tested up to: 7.0
 Requires PHP: 8.0
@@ -12,17 +12,17 @@ Checkout Firewall provides local, explainable checkout-abuse protection before p
 
 == Description ==
 
-Checkout Firewall protects Classic Checkout and WooCommerce Checkout Blocks with local checkout-flow proof, automatic randomized honeypot and timing signals, bounded velocity controls, provider-neutral recoverable challenges, explicit local blocks, and manual time-boxed Emergency Mode. New installations begin in non-enforcing Observe Mode so a merchant can review what Standard Mode would have challenged or stopped before enabling enforcement. Observe Mode never turns itself off.
+Checkout Firewall protects Classic, Blocks, and supported Store API checkout with signed flow proof, local evidence, velocity controls, recoverable challenges, temporary blocks, and Emergency Mode. WooCommerce is required. New installations begin in Observe Mode; enforcement starts only after an administrator enables Standard Mode.
 
-Free also includes trusted exemptions for an exact IP, a narrow IPv4 or IPv6 network, or an authenticated WordPress user. They apply only to automatic velocity and payment-failure lockouts; manual blocks and invalid or replayed proof remain authoritative. Ten intervention signals in ten minutes create a local incident notice and, when enabled, a rate-limited WordPress email. This is an activity signal, not a fraud determination.
+Free includes narrow exact-IP, CIDR, and authenticated-user exemptions plus a local incident notice and optional rate-limited WordPress email. Exemptions never bypass manual blocks or invalid/replayed proof; incident signals are not fraud determinations.
 
-Free protection works locally without a Codeprint or Freemius account, and anonymous use creates no licensing traffic. An administrator can optionally connect licensing and updates after reviewing a Freemius consent screen. Checkout Firewall does not send security events, checkout data, shopper identifiers, orders, gateway data, Turnstile data, or payment data to Codeprint or Freemius.
+Free works locally without a Codeprint or Freemius account, and anonymous use creates no licensing traffic. WordPress.org distributes and updates this complete Free plugin. An optional, explicit Freemius connection supports account and purchase surfaces for the separately distributed Premium replacement plugin. Checkout security, shopper, order, gateway, and payment data is not sent to Codeprint or Freemius.
 
-Checkout Firewall never reads or stores card data and never automatically disables a payment gateway. It cannot stop all fraud or guarantee chargebacks.
+Checkout Firewall never reads or stores card data and never automatically disables a payment gateway. It cannot stop all fraud or guarantee against chargebacks.
 
-Cloudflare is optional. Checkout Firewall automatically recognizes direct traffic and verified Cloudflare connections; custom proxy configuration is needed only for another reverse proxy or CDN. Cloudflare can provide an additional edge layer for DDoS and bot mitigation before requests reach WordPress, while Checkout Firewall remains active without it.
+Cloudflare is optional. Direct and verified Cloudflare traffic is recognized automatically; another reverse proxy requires explicit trusted ranges.
 
-Checkout Firewall is an independent product by Codeprint and is not affiliated with or endorsed by WooCommerce or Automattic. WooCommerce is a trademark of Automattic Inc. Cloudflare and Turnstile are trademarks of Cloudflare, Inc.
+Checkout Firewall is an independent Codeprint product, not endorsed by WooCommerce, Automattic, Cloudflare, Google, or Freemius.
 
 == Installation ==
 
@@ -34,25 +34,39 @@ Checkout Firewall is an independent product by Codeprint and is not affiliated w
 
 == Privacy ==
 
-Checkout Firewall processes checkout-abuse signals locally. It stores HMAC-derived identifiers and bounded masked hints, not raw card data, gateway payloads, or request bodies. A temporary keyed payment-feedback snapshot may be attached to a pending order. It is deleted after a recorded payment success or failure and otherwise expires within the configured Activity retention period of no more than seven days. Security-event and terminal block history is retained for no more than seven days; masked block hints are retained for no more than 90 days. WordPress email erasure includes directly email-attributable payment-feedback snapshots, and an explicitly authorized full uninstall removes all plugin-owned snapshots.
+Checkout Firewall processes abuse signals locally using HMAC-derived identifiers and masked hints, not card data, gateway payloads, or request bodies. Activity and terminal blocks are retained for at most seven days; masked block hints for at most 90 days. A temporary keyed order snapshot is removed after a recorded payment outcome and otherwise follows Activity retention. WordPress email erasure removes directly attributable records. Full uninstall deletion requires explicit administrator opt-in.
 
-Observe Mode stores bounded aggregate records of what Standard Mode would have challenged or blocked while allowing checkout to continue. Trusted exact IPs are keyed immediately, authenticated-user exemptions store the local user ID, and a narrow CIDR is stored raw only because network-range matching cannot be one-way. Local incident state stores separate actual/observed counts and no shopper subject.
+Observe Mode stores bounded aggregate would-intervene records while allowing checkout. Exact IPs are keyed; authenticated-user exemptions store local user ID; narrow CIDRs remain readable only for range matching.
 
-Checkout pages include a randomized honeypot and signed, short-lived timing evidence. They are evaluated locally only as supporting automation signals. The default private computational check adds modest account-free friction in the shopper browser and is verified by the store without contacting an outside challenge provider. It does not prove a human or replace the stronger optional Turnstile integration against optimized or distributed attackers.
+The randomized honeypot, signed timing evidence, and default account-free browser proof are evaluated locally. They are supporting automation friction, not proof of humanity.
 
-When configured and selected, Cloudflare Turnstile or Google reCAPTCHA loads only after a challenge and may process browser and network information under that provider's terms. Checkout Firewall omits the optional shopper IP from server-side Turnstile verification and sends no payment details to either provider.
+Selected Turnstile or reCAPTCHA loads only after a challenge and may process browser/network signals. Server verification omits the optional shopper IP and sends no payment details.
 
-Optional Freemius connection may share the administrator name and email, site URL and language, product version and state, WordPress and PHP versions, and installation or license identifiers required for licensing and updates. Checkout Firewall does not request marketing email, diagnostic tracking, installed plugin or theme inventory, or affiliation data.
+Optional Freemius connection may share administrator name/email, site URL, versions, license/installation identifiers, and activation state for account, purchase, Premium licensing, and Premium updates. Site-profile, diagnostic, extension-inventory, and newsletter permissions are disabled; anonymous activation and Skip send nothing. Free updates come from WordPress.org.
 
-The support snapshot is generated locally and is not uploaded. It excludes store identity, administrators, customers, shopper identifiers, orders, gateways, keys, tokens, requests, logs, and raw errors.
+The support snapshot is generated locally and is not uploaded. It excludes site/customer identity, orders, gateways, credentials, requests, logs, and raw errors.
 
-External service terms: [Cloudflare Privacy Policy](https://www.cloudflare.com/privacypolicy/), [Google Privacy Policy](https://policies.google.com/privacy), and [Freemius Privacy Policy](https://freemius.com/privacy/). Source and reproducible build instructions are maintained in the [Checkout Firewall repository](https://github.com/codeprintagency/Checkout-Firewall).
+== External services ==
+
+These services are conditional; local protection needs no Codeprint account:
+
+**Freemius.** Contacted only after explicit connection, or by the separately installed Premium plugin for connected licensing/update functions; never per checkout. Anonymous activation and Skip send nothing. Free updates come from WordPress.org. [Service](https://freemius.com/), [Terms](https://freemius.com/terms/), [Privacy](https://freemius.com/privacy/).
+
+**Cloudflare Turnstile.** Contacted only when selected/configured and local signals require a challenge. Browser/network signals, response token, and merchant secret may be processed; optional shopper IP and payment details are not sent by Checkout Firewall. [Service](https://developers.cloudflare.com/turnstile/), [Terms](https://www.cloudflare.com/website-terms/), [Privacy](https://www.cloudflare.com/turnstile-privacy-policy/).
+
+**Google reCAPTCHA.** Contacted only when selected/configured and local signals require a challenge. Browser/network signals, response token, and merchant secret may be processed; optional shopper IP and payment details are not sent by Checkout Firewall. [Service](https://developers.google.com/recaptcha), [API Terms](https://developers.google.com/terms/), [Terms](https://policies.google.com/terms), [Privacy](https://policies.google.com/privacy).
+
+The local challenge, decisions, records, and support snapshot contact no challenge service or Codeprint scoring API. [Source and build instructions](https://github.com/codeprintagency/Checkout-Firewall).
 
 == Frequently Asked Questions ==
 
 = Does Free protection require an account? =
 
-No. Free protection works locally. Licensing and update connection is optional.
+No. Free protection works locally and Free updates come from WordPress.org. Freemius connection is optional.
+
+= Is Premium code included or locked inside Free? =
+
+No. This WordPress.org plugin is complete and contains no Premium implementation or license-gated local feature. Premium is a separately downloaded GPL-compatible replacement plugin available outside WordPress.org.
 
 = Does Checkout Firewall disable payment gateways? =
 
@@ -92,7 +106,7 @@ For a selected, time-limited period it requires a fresh selected-provider challe
 
 = How do I roll back? =
 
-Deactivate Checkout Firewall, verify the checksum of the previously tested package, replace the plugin files, and reactivate it. Version 1.0.0 keeps schema v1 and preserves data by default.
+Deactivate Checkout Firewall, verify the checksum of the previously tested package, replace the plugin files, and reactivate it. Version 1.0.0 uses schema v3 and preserves data by default.
 
 = Where can I get diagnostic information? =
 
@@ -118,4 +132,4 @@ No. Checkout Firewall must never read, store, log, hash, or transmit card data.
 
 = 1.0.0 =
 
-* Initial Free release candidate with Classic and Blocks checkout protection, non-enforcing Observe Mode for new installations, narrow trusted exemptions, sustained-activity notices, local automation signals and velocity controls, provider-neutral challenge recovery, Emergency Mode, privacy tools, and bounded support diagnostics.
+* Initial release with Classic and Blocks checkout protection, non-enforcing Observe Mode for new installations, narrow trusted exemptions, sustained-activity notices, local automation signals and velocity controls, provider-neutral challenge recovery, Emergency Mode, privacy tools, and bounded support diagnostics.

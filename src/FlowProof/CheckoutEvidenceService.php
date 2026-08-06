@@ -12,7 +12,7 @@ namespace Codeprint\CheckoutFirewall\FlowProof;
 use Codeprint\CheckoutFirewall\Security\KeyStore;
 
 final class CheckoutEvidenceService {
-	public const PREFIX    = 'cwfe1';
+	public const PREFIX    = 'cfwe1';
 	public const MAX_TOKEN = 1024;
 	public const TTL       = 300;
 	public const MIN_AGE   = 1;
@@ -53,7 +53,7 @@ final class CheckoutEvidenceService {
 		$claims = array(
 			'binding' => $this->binding( $binding ),
 			'exp'     => $now + self::TTL,
-			'field'   => 'cwf_hp_' . bin2hex( $random ),
+			'field'   => 'checkout_firewall_hp_' . bin2hex( $random ),
 			'iat'     => $now,
 			'v'       => 1,
 		);
@@ -81,7 +81,7 @@ final class CheckoutEvidenceService {
 			return '';
 		}
 		if ( ! is_string( $token ) || ! is_string( $field ) || ! is_string( $value ) || strlen( $token ) > self::MAX_TOKEN
-			|| strlen( $field ) > 40 || strlen( $value ) > 256 || 1 !== preg_match( '/^cwf_hp_[a-f0-9]{16}$/D', $field )
+			|| strlen( $field ) > 40 || strlen( $value ) > 256 || 1 !== preg_match( '/^checkout_firewall_hp_[a-f0-9]{16}$/D', $field )
 		) {
 			return 'evidence_malformed';
 		}

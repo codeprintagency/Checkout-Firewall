@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\Admin;
 
+use Codeprint\CheckoutFirewall\Security\RequestNormalizer;
+
 use Codeprint\CheckoutFirewall\Challenge\ChallengeConfig;
 use Codeprint\CheckoutFirewall\Support\Health;
 use Codeprint\CheckoutFirewall\Operations\EmergencyMode;
@@ -17,9 +19,9 @@ use Codeprint\CheckoutFirewall\Turnstile\SiteverifyResult;
 use Codeprint\CheckoutFirewall\Turnstile\TurnstileConfig;
 
 final class TurnstileSettingsController {
-	public const SAVE_ACTION   = 'cwf_save_turnstile';
-	public const VERIFY_ACTION = 'cwf_verify_turnstile';
-	public const NONCE_ACTION  = 'cwf_turnstile_settings';
+	public const SAVE_ACTION   = 'checkout_firewall_save_turnstile';
+	public const VERIFY_ACTION = 'checkout_firewall_verify_turnstile';
+	public const NONCE_ACTION  = 'checkout_firewall_turnstile_settings';
 
 	private TurnstileConfig $config;
 	private SiteverifyClient $client;
@@ -42,16 +44,19 @@ final class TurnstileSettingsController {
 			$this->redirect( 'emergency_active' );
 		}
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Verified by authorize() before exact scalar reads.
-		if ( isset( $_POST['remove'] ) && '1' === wp_unslash( $_POST['remove'] ) ) {
+		$remove = RequestNormalizer::post( 'remove', 1 );
+		if ( ! $remove['invalid'] && '1' === $remove['value'] ) {
 			$this->config->remove();
 			$this->redirect( 'removed' );
 		}
-		$site   = isset( $_POST['site_key'] ) && is_string( $_POST['site_key'] ) ? wp_unslash( $_POST['site_key'] ) : '';
-		$secret = isset( $_POST['secret_key'] ) && is_string( $_POST['secret_key'] ) ? wp_unslash( $_POST['secret_key'] ) : null;
-		if ( defined( 'CWF_TURNSTILE_SITE_KEY' ) ) {
+		$site_input   = RequestNormalizer::post( 'site_key', 256 );
+		$secret_input = RequestNormalizer::post( 'secret_key', 256 );
+		$site         = $site_input['invalid'] || null === $site_input['value'] ? '' : $site_input['value'];
+		$secret       = $secret_input['invalid'] ? null : $secret_input['value'];
+		if ( defined( 'CHECKOUT_FIREWALL_TURNSTILE_SITE_KEY' ) ) {
 			$site = $this->config->credentials()['site_key'];
 		}
-		if ( defined( 'CWF_TURNSTILE_SECRET_KEY' ) ) {
+		if ( defined( 'CHECKOUT_FIREWALL_TURNSTILE_SECRET_KEY' ) ) {
 			$secret = null;
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
@@ -66,7 +71,8 @@ final class TurnstileSettingsController {
 	public function verify(): void {
 		$this->authorize();
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Verified by authorize() before exact scalar read.
-		$token = isset( $_POST['health_token'] ) && is_string( $_POST['health_token'] ) ? wp_unslash( $_POST['health_token'] ) : '';
+		$token_input = RequestNormalizer::post( 'health_token', 2048 );
+		$token       = $token_input['invalid'] || null === $token_input['value'] ? '' : $token_input['value'];
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		$credentials = $this->config->credentials();
 		$host        = TurnstileConfig::current_hostname();
@@ -93,7 +99,7 @@ final class TurnstileSettingsController {
 	}
 
 	private function authorize(): void {
-		if ( 'POST' !== strtoupper( (string) ( $_SERVER['REQUEST_METHOD'] ?? '' ) ) || ! current_user_can( 'manage_woocommerce' ) ) {
+		if ( 'POST' !== RequestNormalizer::request_method() || ! current_user_can( 'manage_woocommerce' ) ) {
 			wp_die( esc_html__( 'You are not allowed to manage Checkout Firewall.', 'checkout-firewall' ), '', array( 'response' => 403 ) );
 		}
 		check_admin_referer( self::NONCE_ACTION );
@@ -103,9 +109,9 @@ final class TurnstileSettingsController {
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'page'       => CheckoutFirewallPage::SLUG,
-					'view'       => 'settings',
-					'cwf_status' => sanitize_key( $status ),
+					'page'                     => CheckoutFirewallPage::SLUG,
+					'view'                     => 'settings',
+					'checkout_firewall_status' => sanitize_key( $status ),
 				),
 				admin_url( 'admin.php' )
 			)

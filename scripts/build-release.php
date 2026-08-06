@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-const CWF_PUBLIC_MIRROR_MTIME = 315532800;
+const CHECKOUT_FIREWALL_PUBLIC_MIRROR_MTIME = 315532800;
 
 $root   = dirname(__DIR__);
 $output = $argv[1] ?? $root . '/dist/checkout-firewall-1.0.0.zip';
@@ -77,7 +77,7 @@ foreach ($paths as $relative) {
 		$zip->close();
 		exit(1);
 	}
-	$zip->setMtimeName($name, CWF_PUBLIC_MIRROR_MTIME);
+	$zip->setMtimeName($name, CHECKOUT_FIREWALL_PUBLIC_MIRROR_MTIME);
 	$zip->setExternalAttributesName($name, ZipArchive::OPSYS_UNIX, 0100644 << 16);
 }
 

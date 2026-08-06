@@ -74,7 +74,7 @@ Version 1.0.0 does not evaluate WooCommerce's legacy Classic `order-pay` retry e
 
 The Freemius product ID and public key in the generated configuration are public identifiers, not credentials. Secret keys, customer licenses, dashboard credentials, payment data, and Premium source are not stored here.
 
-## Reproduce the submitted Free package
+## Reproduce the corrected Free review candidate
 
 Requirements are PHP 8.0+ with the Zip extension. From the repository root:
 
@@ -83,10 +83,10 @@ php scripts/build-release.php
 shasum -a 256 dist/checkout-firewall-1.0.0.zip
 ```
 
-The expected SHA-256 for the exact Free 1.0.0 candidate submitted for WordPress.org review is:
+The expected SHA-256 for the exact corrected Free 1.0.0 candidate prepared for the current WordPress.org review is:
 
 ```text
-127b47796f79395d588239cc89a49076de346f03ffe9001da4890075ff9fa164
+d69ae09df89930a6775b98454438fbc022719733959880becbcf8779df12abd1
 ```
 
 The packager includes only the runtime paths listed in the script, sorts every archive path, fixes timestamps to the ZIP epoch, and fixes Unix file attributes. Repository documentation and tooling are not placed inside the distributable plugin directory.

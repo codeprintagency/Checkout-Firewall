@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace Codeprint\CheckoutFirewall\Commercial;
 
-use Codeprint\CheckoutFirewall\Premium\BuildSentinel;
-
 final class FreemiusConfig {
 	private const PLACEHOLDER_MARKER = 'PLACEHOLDER';
 	private const PLANS              = array( 'pro', 'business', 'agency' );
@@ -41,11 +39,7 @@ final class FreemiusConfig {
 	}
 
 	public function code_type(): string {
-		$configured = CodeType::normalize( $this->scalar( 'code_type' ) );
-		if ( CodeType::PREMIUM === $configured && ! class_exists( BuildSentinel::class ) ) {
-			return CodeType::FREE;
-		}
-		return $configured;
+		return CodeType::normalize( $this->scalar( 'code_type' ) );
 	}
 
 	public function is_configured(): bool {
@@ -97,7 +91,9 @@ final class FreemiusConfig {
 			'type'                => 'plugin',
 			'public_key'          => $this->public_key(),
 			'is_premium'          => CodeType::PREMIUM === $this->code_type(),
-			'has_premium_version' => true,
+			// The WordPress.org package links to a separately downloaded plugin.
+			// It must never expose the SDK's in-dashboard Premium installer.
+			'has_premium_version' => CodeType::PREMIUM === $this->code_type(),
 			'has_paid_plans'      => true,
 			'is_org_compliant'    => true,
 			'anonymous_mode'      => true,

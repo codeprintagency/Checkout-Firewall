@@ -27,9 +27,13 @@ final class DecisionEventRecorder {
 
 	public function record( DecisionResult $result, CheckoutContext $context, bool $observed = false ): void {
 		try {
-			$recorded = $this->events->record( $result, $context, $this->identities->read( $context ), null, $observed );
+			$identities = $this->identities->read( $context );
+			$recorded   = $this->events->record( $result, $context, $identities, null, $observed );
 			if ( $recorded && null !== $this->incidents ) {
 				$this->incidents->observe( $result, $observed );
+			}
+			if ( $recorded ) {
+				do_action( 'checkout_firewall_decision_recorded', $result, $context, $identities, $observed );
 			}
 		} catch ( \Throwable $exception ) {
 			SafeLogger::exception( 'decision_event_failed', $exception );

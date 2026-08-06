@@ -20,6 +20,7 @@ use Codeprint\CheckoutFirewall\FlowProof\CheckoutEvidenceInputRegistry;
 use Codeprint\CheckoutFirewall\FlowProof\FlowProofInputRegistry;
 use Codeprint\CheckoutFirewall\Protection\IdentityRegistry;
 use Codeprint\CheckoutFirewall\Protection\PaymentFeedback;
+use Codeprint\CheckoutFirewall\Security\RequestNormalizer;
 use Codeprint\CheckoutFirewall\Support\SafeLogger;
 use Codeprint\CheckoutFirewall\Turnstile\TurnstileClassicClient;
 use Codeprint\CheckoutFirewall\Turnstile\TurnstileInputRegistry;
@@ -74,30 +75,29 @@ final class ClassicCheckoutAdapter {
 				isset( $data['payment_method'] ) && is_string( $data['payment_method'] ) ? $data['payment_method'] : ''
 			);
 			// phpcs:disable WordPress.Security.NonceVerification.Missing -- WooCommerce verified its checkout nonce before this hook; read only the exact proof field.
-			$present = array_key_exists( ClassicCheckoutClient::FIELD, $_POST );
-			$value   = $present ? wp_unslash( $_POST[ ClassicCheckoutClient::FIELD ] ) : null;
-			$this->proof_inputs->record( $context, $value, $present );
+			$proof = RequestNormalizer::post( ClassicCheckoutClient::FIELD, \Codeprint\CheckoutFirewall\FlowProof\FlowProofService::MAX_TOKEN_SIZE );
+			$this->proof_inputs->record( $context, $proof['value'], $proof['present'], $proof['invalid'] );
 			if ( null !== $this->challenge_inputs ) {
-				$token_present = array_key_exists( ChallengeClassicClient::TOKEN_FIELD, $_POST );
-				$state_present = array_key_exists( ChallengeClassicClient::STATE_FIELD, $_POST );
-				$token         = $token_present ? wp_unslash( $_POST[ ChallengeClassicClient::TOKEN_FIELD ] ) : null;
-				$state         = $state_present ? wp_unslash( $_POST[ ChallengeClassicClient::STATE_FIELD ] ) : null;
-				$this->challenge_inputs->record( $context, $token, $state, $token_present || $state_present );
+				$token = RequestNormalizer::post( ChallengeClassicClient::TOKEN_FIELD, \Codeprint\CheckoutFirewall\Challenge\LocalProofService::MAX_PAYLOAD );
+				$state = RequestNormalizer::post( ChallengeClassicClient::STATE_FIELD, \Codeprint\CheckoutFirewall\Challenge\ChallengeCandidateProvider::MAX_STATE );
+				$this->challenge_inputs->record( $context, $token['value'], $state['value'], $token['present'] || $state['present'], $token['invalid'] || $state['invalid'] );
 			}
 			if ( null !== $this->evidence_inputs ) {
-				$evidence_present = array_key_exists( ClassicCheckoutClient::EVIDENCE_FIELD, $_POST );
-				$name_present     = array_key_exists( ClassicCheckoutClient::HONEYPOT_NAME_FIELD, $_POST );
-				$evidence         = $evidence_present ? wp_unslash( $_POST[ ClassicCheckoutClient::EVIDENCE_FIELD ] ) : null;
-				$name             = $name_present ? wp_unslash( $_POST[ ClassicCheckoutClient::HONEYPOT_NAME_FIELD ] ) : null;
-				$honeypot         = is_string( $name ) && array_key_exists( $name, $_POST ) ? wp_unslash( $_POST[ $name ] ) : null;
-				$this->evidence_inputs->record( $context, $evidence, $name, $honeypot, $evidence_present || $name_present || null !== $honeypot );
+				$evidence = RequestNormalizer::post( ClassicCheckoutClient::EVIDENCE_FIELD, \Codeprint\CheckoutFirewall\FlowProof\CheckoutEvidenceService::MAX_TOKEN );
+				$name     = RequestNormalizer::post( ClassicCheckoutClient::HONEYPOT_NAME_FIELD, 40, '/^checkout_firewall_hp_[a-f0-9]{16}$/D' );
+				$honeypot = null === $name['value']
+					? array(
+						'value'   => null,
+						'invalid' => false,
+						'present' => false,
+					)
+					: RequestNormalizer::post( $name['value'], 256 );
+				$this->evidence_inputs->record( $context, $evidence['value'], $name['value'], $honeypot['value'], $evidence['present'] || $name['present'] || $honeypot['present'], $evidence['invalid'] || $name['invalid'] || $honeypot['invalid'] );
 			}
 			if ( null !== $this->turnstile_inputs ) {
-				$token_present = array_key_exists( TurnstileClassicClient::TOKEN_FIELD, $_POST );
-				$state_present = array_key_exists( TurnstileClassicClient::STATE_FIELD, $_POST );
-				$token         = $token_present ? wp_unslash( $_POST[ TurnstileClassicClient::TOKEN_FIELD ] ) : null;
-				$state         = $state_present ? wp_unslash( $_POST[ TurnstileClassicClient::STATE_FIELD ] ) : null;
-				$this->turnstile_inputs->record( $context, $token, $state, $token_present || $state_present );
+				$token = RequestNormalizer::post( TurnstileClassicClient::TOKEN_FIELD, \Codeprint\CheckoutFirewall\Turnstile\SiteverifyClient::MAX_TOKEN );
+				$state = RequestNormalizer::post( TurnstileClassicClient::STATE_FIELD, \Codeprint\CheckoutFirewall\Turnstile\TurnstileProvider::MAX_STATE );
+				$this->turnstile_inputs->record( $context, $token['value'], $state['value'], $token['present'] || $state['present'], $token['invalid'] || $state['invalid'] );
 			}
 			// phpcs:enable WordPress.Security.NonceVerification.Missing
 			if ( null !== $this->identities ) {

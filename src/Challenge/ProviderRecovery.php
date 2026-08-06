@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Challenge;
 
 final class ProviderRecovery {
-	public const OPTION           = 'cwf_challenge_provider_recovery';
+	public const OPTION           = 'checkout_firewall_challenge_provider_recovery';
 	public const COOLDOWN_SECONDS = 300;
 
 	/**
