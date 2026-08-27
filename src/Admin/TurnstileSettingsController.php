@@ -49,10 +49,13 @@ final class TurnstileSettingsController {
 			$this->config->remove();
 			$this->redirect( 'removed' );
 		}
-		$site_input   = RequestNormalizer::post( 'site_key', 256 );
-		$secret_input = RequestNormalizer::post( 'secret_key', 256 );
-		$site         = $site_input['invalid'] || null === $site_input['value'] ? '' : $site_input['value'];
-		$secret       = $secret_input['invalid'] ? null : $secret_input['value'];
+		$site_input   = RequestNormalizer::credential_post( 'site_key', 128 );
+		$secret_input = RequestNormalizer::credential_post( 'secret_key', 256 );
+		if ( $site_input['invalid'] || $secret_input['invalid'] ) {
+			$this->redirect( 'invalid' );
+		}
+		$site   = $site_input['invalid'] || null === $site_input['value'] ? '' : $site_input['value'];
+		$secret = $secret_input['value'];
 		if ( defined( 'CHECKOUT_FIREWALL_TURNSTILE_SITE_KEY' ) ) {
 			$site = $this->config->credentials()['site_key'];
 		}
@@ -62,6 +65,9 @@ final class TurnstileSettingsController {
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		try {
 			$this->config->save( $site, $secret );
+			if ( null !== $this->challenges ) {
+				$this->challenges->select( ChallengeConfig::TURNSTILE );
+			}
 			$this->redirect( 'saved' );
 		} catch ( \Throwable $exception ) {
 			$this->redirect( 'invalid' );

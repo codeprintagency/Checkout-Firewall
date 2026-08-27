@@ -60,7 +60,7 @@ final class ChallengeCoordinator {
 		$this->binding = \Closure::fromCallable( $binding ?? array( CartBinding::class, 'from_woocommerce' ) );
 	}
 
-	public function issue( CheckoutContext $context ): bool {
+	public function issue( CheckoutContext $context, bool $preflight = false ): bool {
 		$provider = $this->config->effective();
 		if ( ChallengeConfig::NONE === $provider ) {
 			return false;
@@ -90,6 +90,7 @@ final class ChallengeCoordinator {
 			'expires_at'        => $now + self::TTL,
 			'attempts'          => 0,
 			'status'            => 'pending',
+			'preflight'         => $preflight,
 			'local_challenge'   => null,
 		);
 		if ( ChallengeConfig::LOCAL === $provider ) {
@@ -151,6 +152,9 @@ final class ChallengeCoordinator {
 		) {
 			return null;
 		}
+		if ( true === $record['preflight'] && 0 === $record['order_id'] && null !== $context->order_id() ) {
+			$record['order_id'] = $context->order_id();
+		}
 		++$record['attempts'];
 		$this->write( $record );
 		return array(
@@ -201,9 +205,11 @@ final class ChallengeCoordinator {
 	 * @param array<string,mixed> $record Pending record.
 	 */
 	private function matches( array $record, CheckoutContext $context, string $binding, int $now ): bool {
+		$order_matches = ( $context->order_id() ?? 0 ) === $record['order_id']
+			|| ( true === ( $record['preflight'] ?? false ) && 0 === $record['order_id'] && null !== $context->order_id() );
 		return 'pending' === $record['status'] && $record['expires_at'] >= $now
 			&& hash_equals( $record['surface'], $context->surface() )
-			&& ( $context->order_id() ?? 0 ) === $record['order_id']
+			&& $order_matches
 			&& hash_equals( $record['binding'], $binding );
 	}
 
@@ -239,6 +245,7 @@ final class ChallengeCoordinator {
 			|| ! is_int( $value['issued_at'] ?? null ) || ! is_int( $value['expires_at'] ?? null )
 			|| ! is_int( $value['attempts'] ?? null ) || $value['attempts'] < 0 || $value['attempts'] > self::MAX_ATTEMPTS
 			|| 'pending' !== ( $value['status'] ?? null )
+			|| ! is_bool( $value['preflight'] ?? null )
 			|| ( ChallengeConfig::LOCAL === $value['provider'] && ! is_array( $value['local_challenge'] ?? null ) )
 		) {
 			return null;

@@ -22,6 +22,8 @@ use Codeprint\CheckoutFirewall\Challenge\ChallengeConfig;
 use Codeprint\CheckoutFirewall\Challenge\ChallengeCoordinator;
 use Codeprint\CheckoutFirewall\Challenge\ChallengeEndpoint;
 use Codeprint\CheckoutFirewall\Challenge\ChallengeInputRegistry;
+use Codeprint\CheckoutFirewall\Challenge\ChallengePolicy;
+use Codeprint\CheckoutFirewall\Challenge\PreflightPolicy;
 use Codeprint\CheckoutFirewall\Challenge\LocalProofService;
 use Codeprint\CheckoutFirewall\Compatibility\Requirements;
 use Codeprint\CheckoutFirewall\Commercial\CommercialAccountController;
@@ -42,6 +44,8 @@ use Codeprint\CheckoutFirewall\FlowProof\MintEndpoint;
 use Codeprint\CheckoutFirewall\Protection\BlockRepository;
 use Codeprint\CheckoutFirewall\Protection\CounterRepository;
 use Codeprint\CheckoutFirewall\Protection\CheckoutSignalState;
+use Codeprint\CheckoutFirewall\Protection\AutomationEvidenceProvider;
+use Codeprint\CheckoutFirewall\Protection\EndpointRateLimiter;
 use Codeprint\CheckoutFirewall\Protection\DecisionEventRecorder;
 use Codeprint\CheckoutFirewall\Protection\EventRepository;
 use Codeprint\CheckoutFirewall\Protection\GatewayHealth;
@@ -85,7 +89,7 @@ final class Plugin {
 		self::$booted = true;
 
 		try {
-			wp_prime_option_caches( array( Migrator::DATABASE_VERSION_OPTION, 'checkout_firewall_plugin_version', CleanupScheduler::VERSION_OPTION, EmergencyMode::OPTION, OperatingMode::OPTION ) );
+			wp_prime_option_caches( array( Migrator::DATABASE_VERSION_OPTION, 'checkout_firewall_plugin_version', CleanupScheduler::VERSION_OPTION, EmergencyMode::OPTION, OperatingMode::OPTION, ChallengePolicy::OPTION ) );
 
 			$failure = Requirements::runtime_failure();
 			if ( null !== $failure ) {
@@ -128,6 +132,9 @@ final class Plugin {
 			$turnstile_verified    = new VerifiedChallengeState();
 			$velocity_observations = new VelocityObservationState();
 			$emergency             = new EmergencyMode( $turnstile_config, $turnstile_conflicts, null, null, $challenge_config, $operating );
+			$challenge_policy      = new ChallengePolicy();
+			$preflight             = new PreflightPolicy( $challenge_policy, $challenge_config, $operating, $emergency );
+			$endpoint_limiter      = new EndpointRateLimiter( $identities, $counters );
 			$mailer                = new AttackStartMailer();
 			$incident_state        = new FreeIncidentState();
 			$incident_mailer       = new FreeIncidentMailer( $incident_state, $mailer );
@@ -140,24 +147,25 @@ final class Plugin {
 			( new EmergencyCandidateProvider( $emergency, $turnstile_config, $turnstile_conflicts, $turnstile_verified, $challenge_config ) )->register();
 			( new FlowProofCandidateProvider( $proof_inputs, null, null, $verified, $turnstile_verified ) )->register();
 			( new CheckoutEvidenceProvider( $evidence_inputs, $evidence_service, $checkout_signals ) )->register();
+			( new AutomationEvidenceProvider( $checkout_signals, $evidence_inputs, $turnstile_verified ) )->register();
 			( new VelocityCandidateProvider( $verified, $identities, $counters, $blocks, $health, $turnstile_verified, $velocity_observations, $checkout_signals ) )->register();
 			( new TrustedExemptionFilter( $exemption_matcher, $exemption_state ) )->register();
 			$feedback->register();
-			( new MintEndpoint( null, $evidence_service ) )->register();
-			( new ChallengeEndpoint( $challenges ) )->register();
+			( new MintEndpoint( null, $evidence_service, $endpoint_limiter ) )->register();
+			( new ChallengeEndpoint( $challenges, $preflight, $endpoint_limiter ) )->register();
 			( new ClassicCheckoutClient() )->register();
-			( new ChallengeClassicClient() )->register();
-			( new CheckoutBlocksRegistrar() )->register();
+			( new ChallengeClassicClient( $preflight ) )->register();
+			( new CheckoutBlocksRegistrar( $preflight ) )->register();
 			$emergency->register();
 			$mailer->register();
 			$incident_mailer->register();
 			$incident_observer->register();
 			( new FreeIncidentNotice( $incident_state ) )->register();
-			( new CheckoutFirewallPage( $turnstile_config, $turnstile_conflicts, $emergency, $challenge_config, $recaptcha_config, $operating, $exemption_store ) )->register();
+			( new CheckoutFirewallPage( $turnstile_config, $turnstile_conflicts, $emergency, $challenge_config, $recaptcha_config, $operating, $exemption_store, $challenge_policy ) )->register();
 			( new AdminActionController( $emergency, $mailer, $operating, $exemption_store ) )->register();
 			( new SupportExportController() )->register();
 			( new TurnstileSettingsController( $turnstile_config, null, $challenge_config ) )->register();
-			( new ChallengeSettingsController( $challenge_config, $recaptcha_config, $emergency ) )->register();
+			( new ChallengeSettingsController( $challenge_config, $recaptcha_config, $emergency, null, $challenge_policy ) )->register();
 			( new PersonalDataEraser() )->register();
 			( new PrivacyPolicyContent() )->register();
 			( new CommercialAccountController() )->register();

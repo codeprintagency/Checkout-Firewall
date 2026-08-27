@@ -22,6 +22,19 @@ final class RequestNormalizer {
 	}
 
 	/**
+	 * Read a credential from POST while tolerating copy/paste whitespace only at
+	 * the outer boundary. Internal controls and any other sanitizing mutation
+	 * remain invalid.
+	 *
+	 * @return array{value:?string,invalid:bool,present:bool}
+	 */
+	public static function credential_post( string $key, int $maximum ): array {
+		$present = array_key_exists( $key, $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Callers enforce an admin nonce before use.
+		$result  = self::credential( $present ? $_POST[ $key ] : null, $maximum, true ); // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- credential() immediately type-checks, unslashes, trims, sanitizes, bounds, and rejects unsafe mutation.
+		return $result + array( 'present' => $present );
+	}
+
+	/**
 	 * Read and normalize a multiline POST string at the request boundary.
 	 *
 	 * @return array{value:?string,invalid:bool,present:bool}
@@ -99,6 +112,38 @@ final class RequestNormalizer {
 		if ( null !== $pattern && 1 !== preg_match( $pattern, $sanitized ) ) {
 			$invalid = true;
 		}
+		return array(
+			'value'   => $invalid ? null : $sanitized,
+			'invalid' => $invalid,
+		);
+	}
+
+	/**
+	 * Normalize an administrator-supplied provider credential.
+	 *
+	 * This is intentionally separate from text(): signed tokens continue to
+	 * reject every byte-changing normalization, while copied credentials may
+	 * discard only surrounding whitespace.
+	 *
+	 * @return array{value:?string,invalid:bool}
+	 */
+	public static function credential( mixed $value, int $maximum, bool $slashed = true ): array {
+		if ( null === $value ) {
+			return array(
+				'value'   => null,
+				'invalid' => false,
+			);
+		}
+		if ( ! is_string( $value ) ) {
+			return array(
+				'value'   => null,
+				'invalid' => true,
+			);
+		}
+		$raw       = $slashed ? wp_unslash( $value ) : $value;
+		$trimmed   = trim( $raw );
+		$sanitized = sanitize_text_field( $trimmed );
+		$invalid   = $sanitized !== $trimmed || strlen( $sanitized ) > $maximum;
 		return array(
 			'value'   => $invalid ? null : $sanitized,
 			'invalid' => $invalid,

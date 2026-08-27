@@ -2,7 +2,7 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Checkout Firewall for WooCommerce 1.0.0\n"
+"Project-Id-Version: Checkout Firewall for WooCommerce 1.0.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/checkout-firewall\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,1571 +36,1661 @@ msgstr ""
 
 #: src/Admin/AdminActionController.php:298
 #: src/Admin/AdminActionController.php:305
-#: src/Admin/ChallengeSettingsController.php:111
+#: src/Admin/ChallengeSettingsController.php:133
 #: src/Admin/FreeIncidentNotice.php:46
-#: src/Admin/TurnstileSettingsController.php:103
+#: src/Admin/TurnstileSettingsController.php:109
 msgid "You are not allowed to manage Checkout Firewall."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:58
-#: src/Admin/CheckoutFirewallPage.php:548
+#: src/Admin/CheckoutFirewallPage.php:61
+#: src/Admin/CheckoutFirewallPage.php:572
 #: src/Admin/TurnstileSettingsPage.php:31
 #: src/Privacy/PersonalDataEraser.php:44
 msgid "Checkout Firewall"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:85
+#: src/Admin/CheckoutFirewallPage.php:88
 msgid "EMERGENCY MODE"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:85
+#: src/Admin/CheckoutFirewallPage.php:88
 msgid "OBSERVE MODE"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:85
+#: src/Admin/CheckoutFirewallPage.php:88
 msgid "STANDARD MODE"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:88
+#: src/Admin/CheckoutFirewallPage.php:91
 msgid "Free · local protection"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:90
+#: src/Admin/CheckoutFirewallPage.php:93
 msgid "Premium"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:138
+#: src/Admin/CheckoutFirewallPage.php:141
 msgid "Two checkout challenges may be running."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:139
+#: src/Admin/CheckoutFirewallPage.php:142
 msgid "Another CAPTCHA plugin appears to be active. Customers may see conflicting challenges until one integration is disabled."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:141
+#: src/Admin/CheckoutFirewallPage.php:144
 msgid "Review the conflict"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:150
+#: src/Admin/CheckoutFirewallPage.php:153
 msgid "EMERGENCY MODE ACTIVE"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:150
+#: src/Admin/CheckoutFirewallPage.php:153
 msgid "OBSERVE MODE · NOT ENFORCING"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:150
+#: src/Admin/CheckoutFirewallPage.php:153
 msgid "PROTECTION ACTIVE"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:150
+#: src/Admin/CheckoutFirewallPage.php:153
 msgid "PROTECTION ACTIVE · RECOVERY LIMITED"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:151
+#: src/Admin/CheckoutFirewallPage.php:154
 msgid "Every guest checkout requires fresh verification."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:151
+#: src/Admin/CheckoutFirewallPage.php:154
 msgid "Observe Mode is measuring checkout activity."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:151
+#: src/Admin/CheckoutFirewallPage.php:154
 msgid "Checkout protection is active across your store."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:152
+#: src/Admin/CheckoutFirewallPage.php:155
 msgid "Guests must present valid checkout-flow proof and pass a fresh checkout challenge. Logged-in customers remain on Standard Mode, and no payment gateway has been changed."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:152
+#: src/Admin/CheckoutFirewallPage.php:155
 msgid "Checkout Firewall is not challenging or stopping checkout attempts. Review what it would have done, then turn on Standard Mode when you are ready."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:152
+#: src/Admin/CheckoutFirewallPage.php:155
 msgid "Classic Checkout, Checkout Blocks, and Store API checkout routes are evaluated locally before payment processing."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:153
+#: src/Admin/CheckoutFirewallPage.php:156
 msgid "Protected checkout surfaces"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:153
+#: src/Admin/CheckoutFirewallPage.php:156
 msgid "CLASSIC CHECKOUT"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:153
+#: src/Admin/CheckoutFirewallPage.php:156
 msgid "CHECKOUT BLOCKS"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:153
+#: src/Admin/CheckoutFirewallPage.php:156
 msgid "STORE API"
 msgstr ""
 
 #. translators: 1: hours remaining, 2: minutes remaining.
 #. translators: 1: whole hours remaining, 2: whole minutes remaining.
-#: src/Admin/CheckoutFirewallPage.php:157
-#: src/Admin/CheckoutFirewallPage.php:603
+#: src/Admin/CheckoutFirewallPage.php:160
+#: src/Admin/CheckoutFirewallPage.php:627
 #, php-format
 msgid "It expires in %1$d h %2$d m."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:163
+#: src/Admin/CheckoutFirewallPage.php:166
 msgid "Turn on Standard Mode"
 msgstr ""
 
 #. translators: %s: advisory Observe Mode review date in UTC.
-#: src/Admin/CheckoutFirewallPage.php:165
+#: src/Admin/CheckoutFirewallPage.php:168
 #, php-format
 msgid "Review after %s UTC."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:167
+#: src/Admin/CheckoutFirewallPage.php:170
 msgid "Enforcement starts only when you choose it. The seven-day review date never turns protection on automatically."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:169
+#: src/Admin/CheckoutFirewallPage.php:172
 msgid "Run a protection check"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:171
+#: src/Admin/CheckoutFirewallPage.php:174
 msgid "End Emergency Mode"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:173
+#: src/Admin/CheckoutFirewallPage.php:176
 msgid "Emergency duration"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:173
-#: src/Admin/CheckoutFirewallPage.php:297
+#: src/Admin/CheckoutFirewallPage.php:176
+#: src/Admin/CheckoutFirewallPage.php:300
 msgid "1 hour"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:173
+#: src/Admin/CheckoutFirewallPage.php:176
 msgid "4 hours"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:173
+#: src/Admin/CheckoutFirewallPage.php:176
 msgid "12 hours"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:173
-#: src/Admin/CheckoutFirewallPage.php:297
+#: src/Admin/CheckoutFirewallPage.php:176
+#: src/Admin/CheckoutFirewallPage.php:300
 msgid "24 hours"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:173
+#: src/Admin/CheckoutFirewallPage.php:176
 msgid "Turn on Emergency Mode"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:175
+#: src/Admin/CheckoutFirewallPage.php:178
 msgid "Emergency Mode challenges every guest checkout for a fixed period. It never disables a payment gateway."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:179
+#: src/Admin/CheckoutFirewallPage.php:182
 msgid "Switch to Observe Mode"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:185
+#: src/Admin/CheckoutFirewallPage.php:188
 msgid "What Checkout Firewall is observing"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:185
+#: src/Admin/CheckoutFirewallPage.php:188
 msgid "What you are protected against"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:185
+#: src/Admin/CheckoutFirewallPage.php:188
 msgid "Six checks are measured but not enforced"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:185
+#: src/Admin/CheckoutFirewallPage.php:188
 msgid "Six checks, evaluated before payment"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:187
+#: src/Admin/CheckoutFirewallPage.php:190
 msgid "Recent decisions"
 msgstr ""
 
 #. translators: %d: activity retention in days.
-#: src/Admin/CheckoutFirewallPage.php:187
+#: src/Admin/CheckoutFirewallPage.php:190
 #, php-format
 msgid "Last %d days · actual and observed interventions"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:190
+#: src/Admin/CheckoutFirewallPage.php:193
 msgid "No intervention signals yet"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:190
+#: src/Admin/CheckoutFirewallPage.php:193
 msgid "Observe Mode is evaluating checkout locally. This list fills when it calculates that Standard Mode would challenge or stop an attempt."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:190
+#: src/Admin/CheckoutFirewallPage.php:193
 msgid "Protection is evaluating every checkout. This list stays empty until an attempt is challenged or blocked; ordinary successful checkouts are never recorded here."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:192
+#: src/Admin/CheckoutFirewallPage.php:195
 msgid "See all activity →"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:196
+#: src/Admin/CheckoutFirewallPage.php:199
 msgid "Protection health"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:196
+#: src/Admin/CheckoutFirewallPage.php:199
 msgid "Run health check"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:198
+#: src/Admin/CheckoutFirewallPage.php:201
 msgid "How Checkout Firewall protects your checkout"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:198
+#: src/Admin/CheckoutFirewallPage.php:201
 msgid "Most customers are allowed silently. Uncertain traffic can recover with the selected browser check, while clear abuse is stopped before the gateway is asked to process payment."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:198
+#: src/Admin/CheckoutFirewallPage.php:201
 msgid "Checkout protection sequence"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:198
+#: src/Admin/CheckoutFirewallPage.php:201
 msgid "Checkout request"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:198
+#: src/Admin/CheckoutFirewallPage.php:201
 msgid "Flow & honeypot signals"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:198
+#: src/Admin/CheckoutFirewallPage.php:201
 msgid "Velocity & blocks"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:198
+#: src/Admin/CheckoutFirewallPage.php:201
 msgid "Browser check if needed"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:198
-#: src/Admin/CheckoutFirewallPage.php:708
-#: src/Admin/CheckoutFirewallPage.php:715
+#: src/Admin/CheckoutFirewallPage.php:201
+#: src/Admin/CheckoutFirewallPage.php:732
+#: src/Admin/CheckoutFirewallPage.php:739
 msgid "Decision"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:198
+#: src/Admin/CheckoutFirewallPage.php:201
 msgid "Payment gateway"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:198
+#: src/Admin/CheckoutFirewallPage.php:201
 msgid "Checkout Firewall reduces checkout-abuse risk. It does not read card data and cannot prevent every fraudulent transaction or chargeback."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:212
-#: src/Admin/CheckoutFirewallPage.php:350
-#: src/Admin/CheckoutFirewallPage.php:542
+#: src/Admin/CheckoutFirewallPage.php:215
+#: src/Admin/CheckoutFirewallPage.php:353
+#: src/Admin/CheckoutFirewallPage.php:566
 msgid "Activity"
 msgstr ""
 
 #. translators: %d: activity retention in days.
-#: src/Admin/CheckoutFirewallPage.php:212
+#: src/Admin/CheckoutFirewallPage.php:215
 #, php-format
 msgid "Checkout attempts that were challenged or stopped, plus what Observe Mode calculated it would have done. Kept for %d days and then removed automatically. Ordinary successful checkouts are not recorded."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:219
+#: src/Admin/CheckoutFirewallPage.php:222
 msgid "No interventions in the retained activity window"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:219
+#: src/Admin/CheckoutFirewallPage.php:222
 msgid "Nothing has needed a challenge or block. Protection is still evaluating every checkout; this page fills only when an attempt is stopped."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:224
+#: src/Admin/CheckoutFirewallPage.php:227
 msgid "Repeated interventions are aggregated into hourly rows rather than stored request by request. Identity hints are masked; the raw IP address or email is not retained."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:243
+#: src/Admin/CheckoutFirewallPage.php:246
 msgid "Load older"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:263
-#: src/Admin/CheckoutFirewallPage.php:543
+#: src/Admin/CheckoutFirewallPage.php:266
+#: src/Admin/CheckoutFirewallPage.php:567
 msgid "Blocks"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:263
+#: src/Admin/CheckoutFirewallPage.php:266
 msgid "Identities that cannot currently complete checkout. Automatic blocks expire on their own. Release a block if a legitimate customer was caught."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:264
+#: src/Admin/CheckoutFirewallPage.php:267
 msgid "Active blocks"
 msgstr ""
 
 #. translators: %d: number of visible active block rows.
-#: src/Admin/CheckoutFirewallPage.php:264
+#: src/Admin/CheckoutFirewallPage.php:267
 #, php-format
 msgid "%d block shown"
 msgid_plural "%d blocks shown"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Admin/CheckoutFirewallPage.php:268
+#: src/Admin/CheckoutFirewallPage.php:271
 msgid "Nothing is blocked right now"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:268
+#: src/Admin/CheckoutFirewallPage.php:271
 msgid "No identity is currently prevented from checking out. Automatic and manual blocks appear here while they are in force."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:272
-#: src/Admin/CheckoutFirewallPage.php:276
+#: src/Admin/CheckoutFirewallPage.php:275
+#: src/Admin/CheckoutFirewallPage.php:279
 msgid "Identity"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:272
-#: src/Admin/CheckoutFirewallPage.php:276
+#: src/Admin/CheckoutFirewallPage.php:275
+#: src/Admin/CheckoutFirewallPage.php:279
 msgid "Source"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:272
-#: src/Admin/CheckoutFirewallPage.php:276
-#: src/Admin/CheckoutFirewallPage.php:303
-#: src/Admin/CheckoutFirewallPage.php:312
+#: src/Admin/CheckoutFirewallPage.php:275
+#: src/Admin/CheckoutFirewallPage.php:279
+#: src/Admin/CheckoutFirewallPage.php:306
+#: src/Admin/CheckoutFirewallPage.php:315
 msgid "Reason"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:272
-#: src/Admin/CheckoutFirewallPage.php:276
+#: src/Admin/CheckoutFirewallPage.php:275
+#: src/Admin/CheckoutFirewallPage.php:279
 msgid "Blocked"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:272
-#: src/Admin/CheckoutFirewallPage.php:276
-#: src/Admin/CheckoutFirewallPage.php:303
+#: src/Admin/CheckoutFirewallPage.php:275
+#: src/Admin/CheckoutFirewallPage.php:279
+#: src/Admin/CheckoutFirewallPage.php:306
 msgid "Expires"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:272
-#: src/Admin/CheckoutFirewallPage.php:276
-#: src/Admin/CheckoutFirewallPage.php:303
+#: src/Admin/CheckoutFirewallPage.php:275
+#: src/Admin/CheckoutFirewallPage.php:279
+#: src/Admin/CheckoutFirewallPage.php:306
 msgid "Action"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:276
+#: src/Admin/CheckoutFirewallPage.php:279
 msgid "MANUAL"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:276
-#: src/Admin/CheckoutFirewallPage.php:336
+#: src/Admin/CheckoutFirewallPage.php:279
+#: src/Admin/CheckoutFirewallPage.php:339
 msgid "AUTOMATIC"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:276
-#: src/Admin/CheckoutFirewallPage.php:297
+#: src/Admin/CheckoutFirewallPage.php:279
+#: src/Admin/CheckoutFirewallPage.php:300
 msgid "Until released"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:276
+#: src/Admin/CheckoutFirewallPage.php:279
 msgid "Release"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:295
+#: src/Admin/CheckoutFirewallPage.php:298
 msgid "Load later expiries"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:297
+#: src/Admin/CheckoutFirewallPage.php:300
 msgid "Block an identity manually"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:297
+#: src/Admin/CheckoutFirewallPage.php:300
 msgid "Use this when you have identified abusive traffic yourself. The full value is hashed immediately and is not stored."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:297
+#: src/Admin/CheckoutFirewallPage.php:300
 msgid "Identity type"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:297
+#: src/Admin/CheckoutFirewallPage.php:300
 msgid "IP address"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:297
+#: src/Admin/CheckoutFirewallPage.php:300
 msgid "Email address"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:297
-#: src/Admin/CheckoutFirewallPage.php:312
+#: src/Admin/CheckoutFirewallPage.php:300
+#: src/Admin/CheckoutFirewallPage.php:315
 msgid "Value"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:297
-#: src/Admin/CheckoutFirewallPage.php:312
+#: src/Admin/CheckoutFirewallPage.php:300
+#: src/Admin/CheckoutFirewallPage.php:315
 msgid "Duration"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:297
-#: src/Admin/CheckoutFirewallPage.php:312
+#: src/Admin/CheckoutFirewallPage.php:300
+#: src/Admin/CheckoutFirewallPage.php:315
 msgid "7 days"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:297
+#: src/Admin/CheckoutFirewallPage.php:300
 msgid "Add block"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:299
-#: src/Admin/CheckoutFirewallPage.php:807
+#: src/Admin/CheckoutFirewallPage.php:302
+#: src/Admin/CheckoutFirewallPage.php:832
 msgid "Trusted exemptions"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:299
+#: src/Admin/CheckoutFirewallPage.php:302
 msgid "Exempt a known office network or signed-in customer from automatic velocity and payment-failure lockouts. Manual blocks and invalid or replayed checkout proof still win."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:303
+#: src/Admin/CheckoutFirewallPage.php:306
 msgid "Subject"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:307
-#: src/Admin/CheckoutFirewallPage.php:312
+#: src/Admin/CheckoutFirewallPage.php:310
+#: src/Admin/CheckoutFirewallPage.php:315
 msgid "Until removed"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:307
+#: src/Admin/CheckoutFirewallPage.php:310
 msgid "Remove"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:311
+#: src/Admin/CheckoutFirewallPage.php:314
 msgid "No trusted exemptions are active."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:312
+#: src/Admin/CheckoutFirewallPage.php:315
 msgid "Subject type"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:312
+#: src/Admin/CheckoutFirewallPage.php:315
 msgid "IP address or narrow CIDR"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:312
+#: src/Admin/CheckoutFirewallPage.php:315
 msgid "Authenticated WordPress user ID"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:312
-#: src/Admin/CheckoutFirewallPage.php:634
+#: src/Admin/CheckoutFirewallPage.php:315
+#: src/Admin/CheckoutFirewallPage.php:658
 msgid "Office network"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:312
-#: src/Admin/CheckoutFirewallPage.php:635
+#: src/Admin/CheckoutFirewallPage.php:315
+#: src/Admin/CheckoutFirewallPage.php:659
 msgid "Wholesale customer"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:312
-#: src/Admin/CheckoutFirewallPage.php:636
+#: src/Admin/CheckoutFirewallPage.php:315
+#: src/Admin/CheckoutFirewallPage.php:660
 msgid "VIP customer"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:312
-#: src/Admin/CheckoutFirewallPage.php:637
+#: src/Admin/CheckoutFirewallPage.php:315
+#: src/Admin/CheckoutFirewallPage.php:661
 msgid "Authorized testing"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:312
+#: src/Admin/CheckoutFirewallPage.php:315
 msgid "1 day"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:312
+#: src/Admin/CheckoutFirewallPage.php:315
 msgid "30 days"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:312
+#: src/Admin/CheckoutFirewallPage.php:315
 msgid "Add trusted exemption"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:312
+#: src/Admin/CheckoutFirewallPage.php:315
 msgid "Email cannot be trusted because a guest can type any billing address. Exact IPs are keyed immediately. CIDRs are stored as entered for range matching and are limited to /24 or narrower for IPv4 and /64 or narrower for IPv6."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:314
+#: src/Admin/CheckoutFirewallPage.php:317
 msgid "Recently released and expired"
 msgstr ""
 
 #. translators: %d: terminal block retention in days.
-#: src/Admin/CheckoutFirewallPage.php:314
+#: src/Admin/CheckoutFirewallPage.php:317
 #, php-format
 msgid "Kept for %d days after a block ends"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:318
+#: src/Admin/CheckoutFirewallPage.php:321
 msgid "No recently released or expired blocks."
 msgstr ""
 
 #. translators: %s: localized date and time.
-#: src/Admin/CheckoutFirewallPage.php:326
+#: src/Admin/CheckoutFirewallPage.php:329
 #, php-format
 msgid "Released %s"
 msgstr ""
 
 #. translators: %s: localized date and time.
-#: src/Admin/CheckoutFirewallPage.php:326
+#: src/Admin/CheckoutFirewallPage.php:329
 #, php-format
 msgid "Expired %s"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:337
+#: src/Admin/CheckoutFirewallPage.php:340
 msgid "AUTOMATIC · CLOUDFLARE DETECTED"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:338
+#: src/Admin/CheckoutFirewallPage.php:341
 msgid "AUTOMATIC · CHECK CLOUDFLARE"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:339
+#: src/Admin/CheckoutFirewallPage.php:342
 msgid "CUSTOM PROXY"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:342
+#: src/Admin/CheckoutFirewallPage.php:345
 msgid "REVIEW NEEDED"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:344
-#: src/Admin/CheckoutFirewallPage.php:544
+#: src/Admin/CheckoutFirewallPage.php:347
+#: src/Admin/CheckoutFirewallPage.php:568
 msgid "Settings"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:344
+#: src/Admin/CheckoutFirewallPage.php:347
 msgid "Protection works immediately with a private local browser check. Turnstile and Google reCAPTCHA are optional alternatives."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:349
+#: src/Admin/CheckoutFirewallPage.php:352
 msgid "How long to keep records"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:349
+#: src/Admin/CheckoutFirewallPage.php:352
 msgid "Shorter is more private; longer helps investigate an incident. Records are removed automatically at the end of the selected window."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:350
+#: src/Admin/CheckoutFirewallPage.php:353
 msgid "Challenges and blocks shown on the Activity page, plus temporary payment-feedback snapshots on pending orders"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:351
+#: src/Admin/CheckoutFirewallPage.php:354
 msgid "Released and expired blocks"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:351
+#: src/Admin/CheckoutFirewallPage.php:354
 msgid "History of blocks that are no longer in force"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:352
+#: src/Admin/CheckoutFirewallPage.php:355
 msgid "Masked identity hints"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:352
+#: src/Admin/CheckoutFirewallPage.php:355
 msgid "Partial values that help recognize repeat abusive traffic"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:354
+#: src/Admin/CheckoutFirewallPage.php:357
 msgid "Security notifications"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:354
+#: src/Admin/CheckoutFirewallPage.php:357
 msgid "Send one privacy-safe message when Emergency Mode starts or sustained checkout-abuse signals open a local incident. Delivery is handled by WordPress mail and is not guaranteed."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:354
+#: src/Admin/CheckoutFirewallPage.php:357
 msgid "Email me about Emergency Mode and elevated checkout activity"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:354
+#: src/Admin/CheckoutFirewallPage.php:357
 msgid "Recipient"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:356
+#: src/Admin/CheckoutFirewallPage.php:359
 msgid "ADVANCED NETWORK SETTING"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:356
-#: src/Admin/CheckoutFirewallPage.php:803
+#: src/Admin/CheckoutFirewallPage.php:359
+#: src/Admin/CheckoutFirewallPage.php:828
 msgid "Visitor IP detection"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:356
+#: src/Admin/CheckoutFirewallPage.php:359
 msgid "Direct and Cloudflare traffic are detected automatically."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:358
+#: src/Admin/CheckoutFirewallPage.php:361
 msgid "What does this do?"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:358
+#: src/Admin/CheckoutFirewallPage.php:361
 msgid "Checkout Firewall uses a privacy-protected version of a visitor’s IP address as one of several signals for spotting unusually fast repeated checkout attempts. It automatically uses the direct connection address or Cloudflare’s visitor address when Cloudflare is verified."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:358
+#: src/Admin/CheckoutFirewallPage.php:361
 msgid "When should I change it?"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:358
+#: src/Admin/CheckoutFirewallPage.php:361
 msgid "Only when your host confirms that another reverse proxy or CDN sits in front of WordPress. Ask the host for the exact visitor-address header and trusted IP ranges."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:358
+#: src/Admin/CheckoutFirewallPage.php:361
 msgid "Why does it matter?"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:358
+#: src/Admin/CheckoutFirewallPage.php:361
 msgid "A wrong custom setting can make many customers look like one visitor or can trust an address supplied by an attacker. Do not guess proxy addresses or headers."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:359
+#: src/Admin/CheckoutFirewallPage.php:362
 msgid "How traffic reaches WordPress"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:359
+#: src/Admin/CheckoutFirewallPage.php:362
 msgid "Automatic — Direct or verified Cloudflare"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:359
+#: src/Admin/CheckoutFirewallPage.php:362
 msgid "Another trusted proxy — host supplied"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:359
+#: src/Admin/CheckoutFirewallPage.php:362
 msgid "Visitor-address header — custom proxy only"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:360
+#: src/Admin/CheckoutFirewallPage.php:363
 msgid "Trusted proxy IP ranges — custom proxy only, one CIDR per line"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:360
+#: src/Admin/CheckoutFirewallPage.php:363
 msgid "Cloudflare is detected automatically from its verified network ranges; no Cloudflare setup is needed here. For another proxy, copy the exact header and CIDR ranges supplied by your hosting provider."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:363
+#: src/Admin/CheckoutFirewallPage.php:366
 msgid "Save operations settings"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:371
-#: src/Admin/CheckoutFirewallPage.php:545
+#: src/Admin/CheckoutFirewallPage.php:374
+#: src/Admin/CheckoutFirewallPage.php:569
 msgid "Privacy & help"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:371
+#: src/Admin/CheckoutFirewallPage.php:374
 msgid "Exactly what Checkout Firewall retains locally, what can leave your server, and how to get safe diagnostic help."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:373
+#: src/Admin/CheckoutFirewallPage.php:376
 msgid "What stays on your server"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:374
+#: src/Admin/CheckoutFirewallPage.php:377
 msgid "Actual intervention records and Observe Mode records of what Standard Mode would have challenged or blocked, including a reason code and bounded count."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:374
+#: src/Admin/CheckoutFirewallPage.php:377
 msgid "Keyed one-way identifiers for IP, email, session, and IP plus email, with an approved masked hint."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:374
+#: src/Admin/CheckoutFirewallPage.php:377
 msgid "A temporary keyed payment-feedback snapshot on a pending order. It is deleted after a recorded success or failure and otherwise expires within the Activity retention window."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:374
+#: src/Admin/CheckoutFirewallPage.php:377
 msgid "Active and recently ended blocks, protection settings, identity-free incident counts, and local health state."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:374
+#: src/Admin/CheckoutFirewallPage.php:377
 msgid "Trusted exemptions for a local user ID, a keyed exact IP, or a narrow raw network range needed for CIDR matching."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:375
+#: src/Admin/CheckoutFirewallPage.php:378
 msgid "What Checkout Firewall never stores"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:375
+#: src/Admin/CheckoutFirewallPage.php:378
 msgid "Card numbers, security codes, gateway payment payloads, or request bodies."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:375
+#: src/Admin/CheckoutFirewallPage.php:378
 msgid "A Checkout Firewall activity record for ordinary successful checkouts."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:375
+#: src/Admin/CheckoutFirewallPage.php:378
 msgid "Raw exact IP addresses or email addresses after the immediate local decision is derived. A narrow CIDR is stored only when an administrator explicitly creates that trusted network exemption."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:376
+#: src/Admin/CheckoutFirewallPage.php:379
 msgid "Use WordPress → Tools → Erase Personal Data for confirmed email erasure. An email alone cannot attribute IP, session, or combined aggregates."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:380
+#: src/Admin/CheckoutFirewallPage.php:383
 msgid "What can leave your server"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:380
+#: src/Admin/CheckoutFirewallPage.php:383
 msgid "External services remain optional and are never used for checkout telemetry."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:381
-#: src/Admin/CheckoutFirewallPage.php:463
+#: src/Admin/CheckoutFirewallPage.php:384
+#: src/Admin/CheckoutFirewallPage.php:478
 msgid "Private local browser check"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:381
-#: src/Admin/CheckoutFirewallPage.php:382
-#: src/Admin/CheckoutFirewallPage.php:383
+#: src/Admin/CheckoutFirewallPage.php:384
+#: src/Admin/CheckoutFirewallPage.php:385
+#: src/Admin/CheckoutFirewallPage.php:386
 msgid "IN USE"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:381
+#: src/Admin/CheckoutFirewallPage.php:384
 msgid "AVAILABLE"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:381
+#: src/Admin/CheckoutFirewallPage.php:384
 msgid "The default proof-of-work check runs in the shopper browser and is verified by this store. It does not contact an outside challenge provider."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:382
-#: src/Admin/CheckoutFirewallPage.php:433
-#: src/Admin/CheckoutFirewallPage.php:503
-#: src/Admin/TurnstileSettingsPage.php:63
+#: src/Admin/CheckoutFirewallPage.php:385
+#: src/Admin/CheckoutFirewallPage.php:436
+#: src/Admin/CheckoutFirewallPage.php:524
+#: src/Admin/TurnstileSettingsPage.php:64
 msgid "Cloudflare Turnstile"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:382
-#: src/Admin/CheckoutFirewallPage.php:383
+#: src/Admin/CheckoutFirewallPage.php:385
+#: src/Admin/CheckoutFirewallPage.php:386
 msgid "NOT IN USE"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:382
+#: src/Admin/CheckoutFirewallPage.php:385
 msgid "When selected and a challenge is shown, the shopper browser contacts Cloudflare and this server verifies the result. Checkout Firewall omits the optional shopper IP from server-side verification."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:383
-#: src/Admin/CheckoutFirewallPage.php:434
-#: src/Admin/CheckoutFirewallPage.php:450
-#: src/Admin/CheckoutFirewallPage.php:477
+#: src/Admin/CheckoutFirewallPage.php:386
+#: src/Admin/CheckoutFirewallPage.php:437
+#: src/Admin/CheckoutFirewallPage.php:453
+#: src/Admin/CheckoutFirewallPage.php:494
 msgid "Google reCAPTCHA"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:383
+#: src/Admin/CheckoutFirewallPage.php:386
 msgid "When selected and a challenge is shown, the shopper browser contacts Google and this server verifies the result. Checkout Firewall sends no payment details to Google."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:384
+#: src/Admin/CheckoutFirewallPage.php:387
 msgid "Codeprint account via Freemius"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:384
+#: src/Admin/CheckoutFirewallPage.php:387
 msgid "OPTIONAL"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:385
+#: src/Admin/CheckoutFirewallPage.php:388
 msgid "Free protection works locally without an account, and Free updates come from WordPress.org. Connecting an optional Freemius account first shows its consent screen and supports account, purchase, and separately installed Premium licensing and updates."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:386
+#: src/Admin/CheckoutFirewallPage.php:389
 msgid "Checkout Firewall does not request marketing email, diagnostic tracking, or installed plugin and theme inventory."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:387
+#: src/Admin/CheckoutFirewallPage.php:390
 msgid "Checkout decisions, blocks, identifiers, orders, gateway data, Turnstile data, Emergency Mode state, and security events are never sent to Codeprint or Freemius. The same boundary covers local and reCAPTCHA challenge responses."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:392
+#: src/Admin/CheckoutFirewallPage.php:395
 msgid "Connect optional Freemius account"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:395
+#: src/Admin/CheckoutFirewallPage.php:398
 msgid "Connection is unavailable until an approved product configuration is installed. Free protection is unaffected."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:401
+#: src/Admin/CheckoutFirewallPage.php:404
 msgid "Support snapshot"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:402
+#: src/Admin/CheckoutFirewallPage.php:405
 msgid "Download a local diagnostic summary with software versions, closed health states, schedule presence, configuration states, and bucketed Checkout Firewall table sizes."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:403
+#: src/Admin/CheckoutFirewallPage.php:406
 msgid "The snapshot excludes store and site identity, paths, administrators, customers, IP addresses, emails, orders, gateways, security identifiers, keys, tokens, request data, logs, and raw errors. It is generated locally and is not uploaded."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:407
+#: src/Admin/CheckoutFirewallPage.php:410
 msgid "Download support snapshot"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:410
+#: src/Admin/CheckoutFirewallPage.php:413
 msgid "Personal data tools"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:410
+#: src/Admin/CheckoutFirewallPage.php:413
 msgid "WordPress can erase directly email-keyed Checkout Firewall rows after an administrator confirms the request."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:414
+#: src/Admin/CheckoutFirewallPage.php:417
 msgid "Open Erase Personal Data"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:417
+#: src/Admin/CheckoutFirewallPage.php:420
 msgid "If you uninstall"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:417
+#: src/Admin/CheckoutFirewallPage.php:420
 msgid "Data is preserved by default so reinstalling can restore your protection settings and history."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:419
+#: src/Admin/CheckoutFirewallPage.php:422
 msgid "Preserve data"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:420
+#: src/Admin/CheckoutFirewallPage.php:423
 msgid "Delete all Checkout Firewall data on uninstall"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:421
+#: src/Admin/CheckoutFirewallPage.php:424
 msgid "Type DELETE when enabling deletion"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:422
+#: src/Admin/CheckoutFirewallPage.php:425
 msgid "CHECKOUT_FIREWALL_DELETE_DATA_ON_UNINSTALL is enabled in wp-config.php. This control is read-only."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:422
+#: src/Admin/CheckoutFirewallPage.php:425
 msgid "Saving this choice deletes nothing now. Full deletion is irreversible if the plugin is later uninstalled."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:423
+#: src/Admin/CheckoutFirewallPage.php:426
 msgid "Save uninstall behavior"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:432
-#: src/Admin/CheckoutFirewallPage.php:448
+#: src/Admin/CheckoutFirewallPage.php:435
+#: src/Admin/CheckoutFirewallPage.php:451
 msgid "Private local check"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:435
+#: src/Admin/CheckoutFirewallPage.php:438
 msgid "No browser challenge"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:439
+#: src/Admin/CheckoutFirewallPage.php:442
 msgid "CHECKOUT RECOVERY"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:439
+#: src/Admin/CheckoutFirewallPage.php:442
 msgid "Browser challenge provider"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:439
-msgid "Checkout Firewall shows this only after local signals decide a shopper needs one extra check. Ordinary checkouts never see it."
+#: src/Admin/CheckoutFirewallPage.php:442
+msgid "Choose the browser check Checkout Firewall uses when checkout needs verification."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:439
+#: src/Admin/CheckoutFirewallPage.php:442
 msgid "Unavailable"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:440
-msgid "Automatic bot signals are already active"
+#: src/Admin/CheckoutFirewallPage.php:443
+msgid "Automatic bot signals are active"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:440
-msgid "Every checkout receives a randomized honeypot and signed timing evidence. These are supporting signals for the velocity policy, not a reason to block a shopper by themselves."
+#: src/Admin/CheckoutFirewallPage.php:443
+msgid "Checkout Firewall combines velocity, a randomized honeypot, signed timing evidence, and bounded browser-request signals. Strong evidence or multiple supporting signals can request verification; they never create a permanent block."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:444
+#: src/Admin/CheckoutFirewallPage.php:447
 msgid "Using the private local fallback"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:444
+#: src/Admin/CheckoutFirewallPage.php:447
 msgid "The selected external provider is not verified, so recoverable checkouts use the local browser check until setup is complete."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:448
+#: src/Admin/CheckoutFirewallPage.php:451
 msgid "Ready immediately. A short proof-of-work check runs in the shopper browser and is verified only by your store."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:449
+#: src/Admin/CheckoutFirewallPage.php:452
 msgid "Cloudflare Turnstile · Recommended"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:449
-msgid "Best fit for most stores. Requires free Cloudflare Turnstile keys and contacts Cloudflare only when challenged."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:450
-msgid "Optional reCAPTCHA v2 checkbox support. Requires Google site and secret keys."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:451
-msgid "No browser challenge · Advanced"
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:451
-msgid "When a recoverable limit is reached, checkout is temporarily throttled instead of showing a challenge."
-msgstr ""
-
 #: src/Admin/CheckoutFirewallPage.php:452
-msgid "Save challenge provider"
+msgid "Best fit for most stores. Requires free Cloudflare Turnstile keys and contacts Cloudflare only when checkout requires verification."
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:453
+msgid "Optional reCAPTCHA v2 checkbox support. Requires Google site and secret keys."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:454
+msgid "No browser challenge · Advanced"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:454
+msgid "When a recoverable limit is reached, checkout is temporarily throttled instead of showing a challenge."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:455
+msgid "Save challenge provider"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:456
 msgid "The settings for your new choice are shown below. Save the provider choice when you are ready to use it."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:463
+#: src/Admin/CheckoutFirewallPage.php:460
+msgid "WHEN SHOPPERS SEE IT"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:460
+msgid "Challenge timing"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:460
+msgid "Adaptive protection keeps ordinary checkout friction-free. Always for guests shows the selected provider before every guest places an order."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:464
+msgid "Adaptive · Recommended"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:464
+msgid "Show verification only when local checkout behavior, Emergency Mode, or eligible Premium attack state calls for it."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:465
+msgid "Always for guest checkout"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:465
+msgid "Display the selected check before every guest order. Logged-in customers remain adaptive."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:467
+msgid "Observe Mode never loads or verifies a remote checkout provider. If you select Always for guests, it begins only after Standard Mode is enabled."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:468
+msgid "Save challenge timing"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:478
 msgid "READY NOW · NO API KEYS"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:463
+#: src/Admin/CheckoutFirewallPage.php:478
 msgid "Nothing else is required. The challenge runs in the shopper browser and is verified by this store without contacting an outside challenge provider."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:463
+#: src/Admin/CheckoutFirewallPage.php:478
 msgid "READY"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:463
+#: src/Admin/CheckoutFirewallPage.php:478
 msgid "This is lightweight computational friction, not proof that the shopper is human. Turnstile remains the recommended stronger option for stores that want managed bot detection."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:468
+#: src/Admin/CheckoutFirewallPage.php:483
 msgid "ADVANCED · NO RECOVERY CHALLENGE"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:468
+#: src/Admin/CheckoutFirewallPage.php:483
 msgid "Temporary throttling only"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:468
+#: src/Admin/CheckoutFirewallPage.php:483
 msgid "Recoverable limits do not show a browser challenge. Checkout is temporarily throttled instead, while explicit blocks and invalid checkout-flow proof remain enforced."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:468
+#: src/Admin/CheckoutFirewallPage.php:483
 msgid "REVIEW"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:468
+#: src/Admin/CheckoutFirewallPage.php:483
 msgid "Use this only when your store cannot present any browser challenge. It gives legitimate shoppers fewer ways to recover from an uncertain-looking attempt."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:477
+#: src/Admin/CheckoutFirewallPage.php:494
 msgid "OPTIONAL PROVIDER · API KEYS"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:477
+#: src/Admin/CheckoutFirewallPage.php:494
 msgid "reCAPTCHA v2 checkbox; Google account and site and secret keys required."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:477
-#: src/Admin/CheckoutFirewallPage.php:501
+#: src/Admin/CheckoutFirewallPage.php:494
+#: src/Admin/CheckoutFirewallPage.php:522
 msgid "VERIFIED"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:477
-#: src/Admin/CheckoutFirewallPage.php:501
-msgid "NOT CONFIGURED"
+#: src/Admin/CheckoutFirewallPage.php:494
+#: src/Admin/CheckoutFirewallPage.php:522
+msgid "KEYS SAVED · TEST REQUIRED"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:479
-msgid "Choose this only if your store already uses Google reCAPTCHA or you prefer it to the private local check and Turnstile. The shopper browser contacts Google only when Checkout Firewall requests a challenge."
+#: src/Admin/CheckoutFirewallPage.php:494
+#: src/Admin/CheckoutFirewallPage.php:522
+#: src/Admin/TurnstileSettingsPage.php:64
+msgid "SETUP REQUIRED"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:480
-#: src/Admin/CheckoutFirewallPage.php:509
-#: src/Admin/TurnstileSettingsPage.php:66
+#: src/Admin/CheckoutFirewallPage.php:496
+msgid "Choose this only if your store already uses Google reCAPTCHA or you prefer it to the private local check and Turnstile. The shopper browser contacts Google only when checkout requires verification under your saved challenge timing or an active protection state."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:497
+#: src/Admin/CheckoutFirewallPage.php:530
+#: src/Admin/TurnstileSettingsPage.php:67
 msgid "Site key"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:480
-#: src/Admin/CheckoutFirewallPage.php:509
-#: src/Admin/TurnstileSettingsPage.php:67
+#: src/Admin/CheckoutFirewallPage.php:497
+#: src/Admin/CheckoutFirewallPage.php:530
+#: src/Admin/TurnstileSettingsPage.php:68
 msgid "Secret key"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:480
-#: src/Admin/CheckoutFirewallPage.php:509
-#: src/Admin/TurnstileSettingsPage.php:67
+#: src/Admin/CheckoutFirewallPage.php:497
+#: src/Admin/CheckoutFirewallPage.php:530
+#: src/Admin/TurnstileSettingsPage.php:68
 msgid "Required"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:480
-#: src/Admin/CheckoutFirewallPage.php:509
-#: src/Admin/TurnstileSettingsPage.php:67
+#: src/Admin/CheckoutFirewallPage.php:497
+#: src/Admin/CheckoutFirewallPage.php:530
+#: src/Admin/TurnstileSettingsPage.php:68
 msgid "Saved — leave blank to keep it"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:480
+#: src/Admin/CheckoutFirewallPage.php:497
 msgid "Saving a change disables reCAPTCHA until this store verifies the new keys."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:480
+#: src/Admin/CheckoutFirewallPage.php:497
 msgid "Save reCAPTCHA keys"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:484
-#: src/Admin/CheckoutFirewallPage.php:517
-#: src/Admin/TurnstileSettingsPage.php:77
+#: src/Admin/CheckoutFirewallPage.php:501
+#: src/Admin/CheckoutFirewallPage.php:538
+#: src/Admin/TurnstileSettingsPage.php:78
 msgid "Remove keys"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:488
-msgid "Verify and use reCAPTCHA"
+#: src/Admin/CheckoutFirewallPage.php:505
+msgid "This connection test loads reCAPTCHA on this settings page and asks Google to validate the result. It does not run a checkout or payment."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:500
-#: src/Admin/TurnstileSettingsPage.php:63
-msgid "TEST KEYS · NOT FOR PRODUCTION"
+#: src/Admin/CheckoutFirewallPage.php:505
+msgid "Google reCAPTCHA could not load. Check browser privacy controls and this site’s Content Security Policy, then retry."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:500
-msgid "ALLOW · VERIFIED"
+#: src/Admin/CheckoutFirewallPage.php:505
+msgid "Google reCAPTCHA could not complete the connection test. Reload this page and try again."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:500
-msgid "CHALLENGE · SETUP REQUIRED"
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:500
-msgid "OPTIONAL PROVIDER"
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:501
-msgid "ACTION NEEDED"
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:503
-msgid "Turnstile gives an uncertain-looking legitimate customer a way to verify instead of being turned away. It appears only for recoverable challenges or Emergency Mode."
+#: src/Admin/CheckoutFirewallPage.php:505
+#: src/Admin/CheckoutFirewallPage.php:507
+msgid "Test connection and enable reCAPTCHA"
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:507
-#: src/Admin/TurnstileSettingsPage.php:61
-msgid "Turnstile conflict"
+msgid "reCAPTCHA connection test unavailable"
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:507
-msgid "Another checkout CAPTCHA is active. Disable one plugin before verification."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:509
-#: src/Admin/TurnstileSettingsPage.php:67
-msgid "Configured in wp-config.php"
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:511
-#: src/Admin/TurnstileSettingsPage.php:69
-msgid "Read-only keys are supplied by wp-config.php and are never copied into WordPress options."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:513
-#: src/Admin/TurnstileSettingsPage.php:71
-msgid "Keys are stored without autoload. Saving a change disables recovery until it is verified again."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:513
-#: src/Admin/TurnstileSettingsPage.php:72
-msgid "Express-payment recovery is not yet tested for this store. If a payment sheet is interrupted, use the standard checkout button."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:513
-#: src/Admin/TurnstileSettingsPage.php:73
-msgid "Save keys"
+msgid "Save both the site key and secret key first. Checkout Firewall will not enable reCAPTCHA from an incomplete pair."
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:521
-#: src/Admin/TurnstileSettingsPage.php:81
-msgid "Verify and activate"
+#: src/Admin/TurnstileSettingsPage.php:64
+msgid "TEST KEYS · NOT FOR PRODUCTION"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:529
+#: src/Admin/CheckoutFirewallPage.php:521
+msgid "ALLOW · VERIFIED"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:521
+msgid "CHALLENGE · SETUP REQUIRED"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:521
+msgid "OPTIONAL PROVIDER"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:524
+msgid "Turnstile gives an uncertain-looking legitimate customer a way to verify instead of being turned away. It appears only for recoverable challenges or Emergency Mode."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:528
+#: src/Admin/TurnstileSettingsPage.php:62
+msgid "Turnstile conflict"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:528
+msgid "Another checkout CAPTCHA is active. Disable one plugin before verification."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:530
+#: src/Admin/TurnstileSettingsPage.php:68
+msgid "Configured in wp-config.php"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:532
+#: src/Admin/TurnstileSettingsPage.php:70
+msgid "Read-only keys are supplied by wp-config.php and are never copied into WordPress options."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:534
+#: src/Admin/TurnstileSettingsPage.php:72
+msgid "Keys are stored without autoload. Saving a change disables recovery until it is verified again."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:534
+#: src/Admin/TurnstileSettingsPage.php:73
+msgid "Express-payment recovery is not yet tested for this store. If a payment sheet is interrupted, use the standard checkout button."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:534
+#: src/Admin/TurnstileSettingsPage.php:74
+msgid "Save keys"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:542
+#: src/Admin/TurnstileSettingsPage.php:82
+msgid "This connection test loads Turnstile on this settings page and asks Cloudflare to validate the result. It does not run a checkout or payment."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:542
+#: src/Admin/TurnstileSettingsPage.php:81
+msgid "Cloudflare Turnstile could not load. Check browser privacy controls and this site’s Content Security Policy, then retry."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:542
+#: src/Admin/TurnstileSettingsPage.php:81
+msgid "Cloudflare Turnstile could not complete the connection test. Reload this page and try again."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:542
+#: src/Admin/CheckoutFirewallPage.php:544
+#: src/Admin/TurnstileSettingsPage.php:82
+#: src/Admin/TurnstileSettingsPage.php:85
+msgid "Test connection and enable Turnstile"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:544
+#: src/Admin/TurnstileSettingsPage.php:85
+msgid "Turnstile connection test unavailable"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:544
+#: src/Admin/TurnstileSettingsPage.php:85
+msgid "Save both the site key and secret key first. Checkout Firewall will not enable Turnstile from an incomplete pair."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:553
 msgid "ADVANCED SECURITY SETTING"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:529
+#: src/Admin/CheckoutFirewallPage.php:553
 msgid "Identity key"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:529
+#: src/Admin/CheckoutFirewallPage.php:553
 msgid "One-way fingerprinting secret. Routine rotation is not needed."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:529
+#: src/Admin/CheckoutFirewallPage.php:553
 msgid "HEALTHY"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:529
-#: src/Admin/CheckoutFirewallPage.php:824
+#: src/Admin/CheckoutFirewallPage.php:553
+#: src/Admin/CheckoutFirewallPage.php:849
 msgid "ATTENTION"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:531
+#: src/Admin/CheckoutFirewallPage.php:555
 msgid "What is it?"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:531
+#: src/Admin/CheckoutFirewallPage.php:555
 msgid "Checkout Firewall immediately converts customer IP, email, and session values into one-way fingerprints using this secret local key. It stores the fingerprints instead of the original values."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:531
+#: src/Admin/CheckoutFirewallPage.php:555
 msgid "Why would I rotate it?"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:531
+#: src/Admin/CheckoutFirewallPage.php:555
 msgid "Only if you believe the WordPress database or this key was exposed, or trusted support specifically directs you to rotate it. Rotating it routinely provides little benefit."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:531
+#: src/Admin/CheckoutFirewallPage.php:555
 msgid "What changes afterward?"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:531
+#: src/Admin/CheckoutFirewallPage.php:555
 msgid "A new key protects future fingerprints and checkout proofs. Existing key versions remain so retained history and counters still work, and active blocks keep matching."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:532
+#: src/Admin/CheckoutFirewallPage.php:556
 msgid "Before you rotate"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:532
+#: src/Admin/CheckoutFirewallPage.php:556
 msgid "This is forward rotation, not deletion. Any configured Turnstile or reCAPTCHA provider is disabled until you verify it again in Settings. This does not change WordPress passwords, payment-gateway keys, or customer accounts."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:533
+#: src/Admin/CheckoutFirewallPage.php:557
 msgid "Type ROTATE to confirm"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:533
+#: src/Admin/CheckoutFirewallPage.php:557
 msgid "Rotate identity key"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:541
+#: src/Admin/CheckoutFirewallPage.php:565
 msgid "Overview"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:580
+#: src/Admin/CheckoutFirewallPage.php:604
 msgid "A Codeprint product."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:580
+#: src/Admin/CheckoutFirewallPage.php:604
 msgid "Checkout Firewall is an independent Codeprint product, not affiliated with or endorsed by Automattic Inc., Cloudflare, Google, or ALTCHA. WooCommerce, Cloudflare, Turnstile, Google, reCAPTCHA, and ALTCHA are trademarks of their respective owners."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:616
+#: src/Admin/CheckoutFirewallPage.php:640
 msgid "A local checkout protection rule intervened."
 msgstr ""
 
 #. translators: %d: WordPress user ID.
-#: src/Admin/CheckoutFirewallPage.php:627
+#: src/Admin/CheckoutFirewallPage.php:651
 #, php-format
 msgid "WordPress user #%d"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:629
+#: src/Admin/CheckoutFirewallPage.php:653
 msgid "Trusted network"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:639
+#: src/Admin/CheckoutFirewallPage.php:663
 msgid "Trusted exemption"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:697
+#: src/Admin/CheckoutFirewallPage.php:721
 msgid "Retained checkout decisions"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:697
+#: src/Admin/CheckoutFirewallPage.php:721
 msgid "challenges issued"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:697
+#: src/Admin/CheckoutFirewallPage.php:721
 msgid "checkout attempts stopped"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:697
+#: src/Admin/CheckoutFirewallPage.php:721
 msgid "would challenge"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:697
+#: src/Admin/CheckoutFirewallPage.php:721
 msgid "would stop"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:697
+#: src/Admin/CheckoutFirewallPage.php:721
 msgid "distinct keyed identities"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:697
+#: src/Admin/CheckoutFirewallPage.php:721
 msgid "Not counted"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:697
+#: src/Admin/CheckoutFirewallPage.php:721
 msgid "Totals cover the newest 1,000 retained aggregate rows. Ordinary successful checkouts are never logged here."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:697
+#: src/Admin/CheckoutFirewallPage.php:721
 msgid "Ordinary successful checkouts are never logged. Observed decisions did not interrupt checkout."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:708
-#: src/Admin/CheckoutFirewallPage.php:715
+#: src/Admin/CheckoutFirewallPage.php:732
+#: src/Admin/CheckoutFirewallPage.php:739
 msgid "When"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:708
-#: src/Admin/CheckoutFirewallPage.php:719
+#: src/Admin/CheckoutFirewallPage.php:732
+#: src/Admin/CheckoutFirewallPage.php:743
 msgid "Why"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:708
-#: src/Admin/CheckoutFirewallPage.php:719
+#: src/Admin/CheckoutFirewallPage.php:732
+#: src/Admin/CheckoutFirewallPage.php:743
 msgid "Identity hint"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:708
-#: src/Admin/CheckoutFirewallPage.php:719
+#: src/Admin/CheckoutFirewallPage.php:732
+#: src/Admin/CheckoutFirewallPage.php:743
 msgid "Times seen"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:713
+#: src/Admin/CheckoutFirewallPage.php:737
 msgid "WOULD BLOCK"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:713
+#: src/Admin/CheckoutFirewallPage.php:737
 msgid "WOULD CHALLENGE"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:713
+#: src/Admin/CheckoutFirewallPage.php:737
 msgid "THROTTLED"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:719
+#: src/Admin/CheckoutFirewallPage.php:743
 msgid "Checkout continued."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:728
+#: src/Admin/CheckoutFirewallPage.php:752
 msgid "Automated checkout requests"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:728
+#: src/Admin/CheckoutFirewallPage.php:752
 msgid "One-time, five-minute checkout-flow proof identifies requests that did not follow the expected storefront flow."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:728
-#: src/Admin/CheckoutFirewallPage.php:729
-#: src/Admin/CheckoutFirewallPage.php:730
-#: src/Admin/CheckoutFirewallPage.php:731
-#: src/Admin/CheckoutFirewallPage.php:732
-#: src/Admin/CheckoutFirewallPage.php:733
+#: src/Admin/CheckoutFirewallPage.php:752
+#: src/Admin/CheckoutFirewallPage.php:753
+#: src/Admin/CheckoutFirewallPage.php:754
+#: src/Admin/CheckoutFirewallPage.php:755
+#: src/Admin/CheckoutFirewallPage.php:756
+#: src/Admin/CheckoutFirewallPage.php:757
 msgid "COVERED"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:729
+#: src/Admin/CheckoutFirewallPage.php:753
 msgid "Direct Store API abuse"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:729
+#: src/Admin/CheckoutFirewallPage.php:753
 msgid "Checkout Blocks and Store API checkout routes use the same local decision engine as Classic Checkout."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:730
+#: src/Admin/CheckoutFirewallPage.php:754
 msgid "Rapid repeated attempts"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:730
+#: src/Admin/CheckoutFirewallPage.php:754
 msgid "Velocity limits evaluate keyed IP, billing email, session, and combined IP-and-email identities."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:731
+#: src/Admin/CheckoutFirewallPage.php:755
 msgid "Payment-failure patterns"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:731
+#: src/Admin/CheckoutFirewallPage.php:755
 msgid "Payment-failure lockouts are reduced while a gateway outcome window needs attention; other protection remains active."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:731
+#: src/Admin/CheckoutFirewallPage.php:755
 msgid "Repeated declines and other gateway failures can produce a temporary local lockout."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:731
+#: src/Admin/CheckoutFirewallPage.php:755
 msgid "PAUSED · GATEWAY HEALTH"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:732
+#: src/Admin/CheckoutFirewallPage.php:756
 msgid "Identities already blocked"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:732
+#: src/Admin/CheckoutFirewallPage.php:756
 msgid "An active local block is enforced before payment and cannot be bypassed by a browser challenge."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:733
+#: src/Admin/CheckoutFirewallPage.php:757
 msgid "Recoverable challenges"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:733
+#: src/Admin/CheckoutFirewallPage.php:757
 msgid "A recoverable suspicious checkout can use the selected browser check instead of reaching a dead end."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:733
+#: src/Admin/CheckoutFirewallPage.php:757
 msgid "Browser challenges are disabled; recoverable limits use an accurate temporary throttle."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:733
+#: src/Admin/CheckoutFirewallPage.php:757
 msgid "THROTTLE ONLY"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:740
+#: src/Admin/CheckoutFirewallPage.php:764
 msgid "OBSERVING"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:745
+#: src/Admin/CheckoutFirewallPage.php:769
 msgid "Emergency Mode started."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:746
+#: src/Admin/CheckoutFirewallPage.php:770
 msgid "Emergency Mode stopped. Standard Mode is active."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:747
+#: src/Admin/CheckoutFirewallPage.php:771
 msgid "Emergency Mode needs an available checkout challenge provider."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:748
+#: src/Admin/CheckoutFirewallPage.php:772
 msgid "Stop Emergency Mode before changing challenge settings."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:749
+#: src/Admin/CheckoutFirewallPage.php:773
 msgid "Health check completed."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:750
+#: src/Admin/CheckoutFirewallPage.php:774
 msgid "Health check could not complete."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:751
+#: src/Admin/CheckoutFirewallPage.php:775
 msgid "Local block created."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:752
+#: src/Admin/CheckoutFirewallPage.php:776
 msgid "The block was not created. Check the identifier and duration."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:753
+#: src/Admin/CheckoutFirewallPage.php:777
 msgid "The block was released."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:754
+#: src/Admin/CheckoutFirewallPage.php:778
 msgid "The block was already inactive."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:755
+#: src/Admin/CheckoutFirewallPage.php:779
 msgid "The block could not be released."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:756
+#: src/Admin/CheckoutFirewallPage.php:780
 msgid "Operations settings saved."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:757
+#: src/Admin/CheckoutFirewallPage.php:781
 msgid "Settings were not saved. Check every value."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:758
+#: src/Admin/CheckoutFirewallPage.php:782
 msgid "Identifier key rotated. Verify any configured external challenge provider again."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:759
+#: src/Admin/CheckoutFirewallPage.php:783
 msgid "Key rotation was refused. Stop Emergency Mode and type ROTATE."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:760
+#: src/Admin/CheckoutFirewallPage.php:784
 msgid "Key rotation could not complete safely."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:761
+#: src/Admin/CheckoutFirewallPage.php:785
 msgid "Uninstall behavior saved."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:762
+#: src/Admin/CheckoutFirewallPage.php:786
 msgid "Uninstall deletion is controlled by CHECKOUT_FIREWALL_DELETE_DATA_ON_UNINSTALL."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:763
+#: src/Admin/CheckoutFirewallPage.php:787
 msgid "The required confirmation was missing."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:764
+#: src/Admin/CheckoutFirewallPage.php:788
 msgid "Observe Mode is active. Checkout attempts are being measured but not challenged or stopped."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:765
+#: src/Admin/CheckoutFirewallPage.php:789
 msgid "End Emergency Mode before switching to Observe Mode."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:766
+#: src/Admin/CheckoutFirewallPage.php:790
 msgid "Standard Mode is active. New automatic decisions can now be enforced."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:767
+#: src/Admin/CheckoutFirewallPage.php:791
 msgid "Protection mode could not be changed safely."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:768
+#: src/Admin/CheckoutFirewallPage.php:792
 msgid "Trusted exemption created."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:769
+#: src/Admin/CheckoutFirewallPage.php:793
 msgid "Trusted exemption was not created. Check the subject, range, reason, and duration."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:770
+#: src/Admin/CheckoutFirewallPage.php:794
 msgid "Trusted exemption removed."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:771
+#: src/Admin/CheckoutFirewallPage.php:795
 msgid "Trusted exemption was already inactive."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:772
+#: src/Admin/CheckoutFirewallPage.php:796
 msgid "Trusted exemption could not be removed."
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:773
-msgid "Turnstile keys saved. Verify and activate next."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:774
-msgid "Turnstile keys removed."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:775
-msgid "Turnstile keys were not saved. Check both values."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:776
-#: src/Admin/TurnstileSettingsPage.php:94
-msgid "Turnstile recovery is verified and active."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:777
-msgid "Cloudflare test keys cannot activate production checkout."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:778
-msgid "Cloudflare rejected the Turnstile secret key."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:779
-msgid "Turnstile verification failed. Try again."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:780
-msgid "Checkout challenge provider saved."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:781
-msgid "The checkout challenge provider was not changed."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:782
-msgid "reCAPTCHA keys saved. Verify them next."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:783
-msgid "reCAPTCHA keys removed."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:784
-msgid "reCAPTCHA keys were not saved. Check both values."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:785
-msgid "Google reCAPTCHA is verified and selected."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:786
-msgid "Google rejected the reCAPTCHA secret key."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:787
-msgid "reCAPTCHA verification failed. Try again."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:788
-msgid "Licensing connection is unavailable. Free protection is unaffected."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:791
-#: src/Admin/TurnstileSettingsPage.php:100
-msgid "Settings updated."
-msgstr ""
-
-#: src/Admin/CheckoutFirewallPage.php:796
-msgid "Runtime requirements"
-msgstr ""
-
 #: src/Admin/CheckoutFirewallPage.php:797
-msgid "Database schema"
+msgid "Turnstile keys saved and selected. Complete the connection test below to enable Turnstile."
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:798
-msgid "Identity keys"
+msgid "Turnstile keys removed."
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:799
-msgid "Cleanup schedules"
+msgid "Turnstile keys were not saved. Both the site key and secret key are required for initial setup."
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:800
-msgid "Checkout challenge"
+#: src/Admin/TurnstileSettingsPage.php:97
+msgid "Turnstile recovery is verified and active."
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:801
-msgid "Turnstile configuration"
+msgid "Cloudflare test keys cannot activate production checkout."
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:802
-msgid "Protection mode"
+msgid "Cloudflare rejected the Turnstile secret key."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:803
+msgid "Turnstile verification failed. Try again."
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:804
-msgid "Optional edge protection"
+msgid "Checkout challenge provider saved."
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:805
-msgid "Security email"
+msgid "Checkout challenge timing saved."
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:806
-msgid "Operating mode"
+msgid "The checkout challenge provider was not changed."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:807
+msgid "reCAPTCHA keys saved and selected. Complete the connection test below to enable reCAPTCHA."
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:808
-msgid "Activity incident"
+msgid "reCAPTCHA keys removed."
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:809
-msgid "Payment gateways"
+msgid "reCAPTCHA keys were not saved. Both the site key and secret key are required for initial setup."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:810
+msgid "Google reCAPTCHA is verified and selected."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:811
+msgid "Google rejected the reCAPTCHA secret key."
 msgstr ""
 
 #: src/Admin/CheckoutFirewallPage.php:812
+msgid "reCAPTCHA verification failed. Try again."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:813
+msgid "Licensing connection is unavailable. Free protection is unaffected."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:816
+#: src/Admin/TurnstileSettingsPage.php:103
+msgid "Settings updated."
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:821
+msgid "Runtime requirements"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:822
+msgid "Database schema"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:823
+msgid "Identity keys"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:824
+msgid "Cleanup schedules"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:825
+msgid "Checkout challenge"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:826
+msgid "Turnstile configuration"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:827
+msgid "Protection mode"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:829
+msgid "Optional edge protection"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:830
+msgid "Security email"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:831
+msgid "Operating mode"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:833
+msgid "Activity incident"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:834
+msgid "Payment gateways"
+msgstr ""
+
+#: src/Admin/CheckoutFirewallPage.php:837
 msgid "Run the bounded local protection check to verify the database, schedules, identity key, proxy policy, gateways, and checkout recovery provider."
 msgstr ""
 
 #. translators: %s: localized date and time of the last health check.
-#: src/Admin/CheckoutFirewallPage.php:818
+#: src/Admin/CheckoutFirewallPage.php:843
 #, php-format
 msgid "Checked %s"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:824
+#: src/Admin/CheckoutFirewallPage.php:849
 msgid "PASS"
 msgstr ""
 
-#: src/Admin/CheckoutFirewallPage.php:824
+#: src/Admin/CheckoutFirewallPage.php:849
 msgid "INACTIVE"
 msgstr ""
 
 #. translators: %d: number of retention days.
-#: src/Admin/CheckoutFirewallPage.php:838
+#: src/Admin/CheckoutFirewallPage.php:863
 #, php-format
 msgid "%d day"
 msgid_plural "%d days"
@@ -1853,144 +1943,140 @@ msgstr ""
 msgid "The support snapshot could not be generated safely."
 msgstr ""
 
-#: src/Admin/TurnstileSettingsPage.php:53
+#: src/Admin/TurnstileSettingsPage.php:54
 msgid "CHECKOUT FIREWALL"
 msgstr ""
 
-#: src/Admin/TurnstileSettingsPage.php:53
+#: src/Admin/TurnstileSettingsPage.php:54
 msgid "Turnstile recovery"
 msgstr ""
 
-#: src/Admin/TurnstileSettingsPage.php:53
+#: src/Admin/TurnstileSettingsPage.php:54
 msgid "Ask for an extra check only when local checkout protection needs it."
 msgstr ""
 
-#: src/Admin/TurnstileSettingsPage.php:61
+#: src/Admin/TurnstileSettingsPage.php:62
 msgid "Another CAPTCHA plugin is active on checkout. Two challenges on one form frustrate customers. Disable one — check the Plugins screen."
 msgstr ""
 
-#: src/Admin/TurnstileSettingsPage.php:63
+#: src/Admin/TurnstileSettingsPage.php:64
 msgid "VERIFIED · ACTIVE"
 msgstr ""
 
-#: src/Admin/TurnstileSettingsPage.php:63
-msgid "SETUP REQUIRED"
-msgstr ""
-
-#: src/Admin/TurnstileSettingsPage.php:85
+#: src/Admin/TurnstileSettingsPage.php:88
 msgid "Checkout Firewall is an independent product by Codeprint. WooCommerce and Cloudflare are trademarks of their respective owners."
 msgstr ""
 
-#: src/Admin/TurnstileSettingsPage.php:92
-msgid "Keys saved. Complete verification to activate Turnstile recovery."
-msgstr ""
-
-#: src/Admin/TurnstileSettingsPage.php:93
-msgid "Turnstile keys were removed."
-msgstr ""
-
 #: src/Admin/TurnstileSettingsPage.php:95
-msgid "The keys were not saved. Check their format and try again."
+msgid "Keys saved and selected. Complete the connection test below to enable Turnstile."
 msgstr ""
 
 #: src/Admin/TurnstileSettingsPage.php:96
-msgid "Cloudflare rejected the secret. Turnstile recovery remains disabled."
-msgstr ""
-
-#: src/Admin/TurnstileSettingsPage.php:97
-msgid "Verification did not complete. Turnstile recovery remains disabled."
+msgid "Turnstile keys were removed."
 msgstr ""
 
 #: src/Admin/TurnstileSettingsPage.php:98
+msgid "The keys were not saved. Both the site key and secret key are required for initial setup."
+msgstr ""
+
+#: src/Admin/TurnstileSettingsPage.php:99
+msgid "Cloudflare rejected the secret. Turnstile recovery remains disabled."
+msgstr ""
+
+#: src/Admin/TurnstileSettingsPage.php:100
+msgid "Verification did not complete. Turnstile recovery remains disabled."
+msgstr ""
+
+#: src/Admin/TurnstileSettingsPage.php:101
 msgid "Cloudflare test keys are allowed only in local, development, or test environments."
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:75
+#: src/Challenge/ChallengeClassicClient.php:86
 #: src/Turnstile/TurnstileClassicClient.php:81
 msgid "The check expired. Complete the refreshed check to continue."
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:76
+#: src/Challenge/ChallengeClassicClient.php:87
 msgid "The check could not be completed. Try the check again."
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:77
+#: src/Challenge/ChallengeClassicClient.php:88
 msgid "Try security check again"
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:78
+#: src/Challenge/ChallengeClassicClient.php:89
 msgid "The security check could not load. Please try again."
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:79
+#: src/Challenge/ChallengeClassicClient.php:90
 msgid "Checking your browser…"
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:80
+#: src/Challenge/ChallengeClassicClient.php:91
 msgid "Visit ALTCHA.org"
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:81
+#: src/Challenge/ChallengeClassicClient.php:92
 msgid "Get an audio challenge"
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:82
+#: src/Challenge/ChallengeClassicClient.php:93
 msgid "Enter code"
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:83
+#: src/Challenge/ChallengeClassicClient.php:94
 msgid "Enter the security code"
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:84
+#: src/Challenge/ChallengeClassicClient.php:95
 msgid "Protected by ALTCHA"
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:85
+#: src/Challenge/ChallengeClassicClient.php:96
 msgid "Verify this browser"
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:86
+#: src/Challenge/ChallengeClassicClient.php:97
 msgid "Loading…"
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:87
+#: src/Challenge/ChallengeClassicClient.php:98
 msgid "Reload"
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:88
+#: src/Challenge/ChallengeClassicClient.php:99
 msgid "Verification required"
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:89
+#: src/Challenge/ChallengeClassicClient.php:100
 msgid "Verified"
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:90
+#: src/Challenge/ChallengeClassicClient.php:101
 msgid "Verify"
 msgstr ""
 
-#: src/Challenge/ChallengeClassicClient.php:91
+#: src/Challenge/ChallengeClassicClient.php:102
 msgid "Please wait while your browser is verified."
 msgstr ""
 
-#: src/Challenge/ChallengeCoordinator.php:116
+#: src/Challenge/ChallengeCoordinator.php:117
 msgid "Complete a checkout security check"
 msgstr ""
 
-#: src/Challenge/ChallengeCoordinator.php:117
+#: src/Challenge/ChallengeCoordinator.php:118
 msgid "Checkout Firewall needs one extra check before this order can continue. It will retry the checkout once after verification."
 msgstr ""
 
-#: src/Challenge/ChallengeCoordinator.php:121
+#: src/Challenge/ChallengeCoordinator.php:122
 msgid "This private proof-of-work check runs in your browser and is verified by this store. No challenge data is sent to an outside provider."
 msgstr ""
 
-#: src/Challenge/ChallengeCoordinator.php:129
+#: src/Challenge/ChallengeCoordinator.php:130
 msgid "This check uses Cloudflare Turnstile. Checkout Firewall does not send payment details or the optional shopper IP to Cloudflare."
 msgstr ""
 
-#: src/Challenge/ChallengeCoordinator.php:135
+#: src/Challenge/ChallengeCoordinator.php:136
 msgid "This check uses Google reCAPTCHA. The shopper browser contacts Google; Checkout Firewall sends no payment details to Google."
 msgstr ""
 
@@ -2268,124 +2354,136 @@ msgstr ""
 msgid "Open licensing account"
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:82
+#: src/Decision/ReasonCatalog.php:85
 msgid "No protection rule requested an intervention."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:84
+#: src/Decision/ReasonCatalog.php:87
 msgid "A local block explicitly denied this checkout."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:86
+#: src/Decision/ReasonCatalog.php:89
 msgid "The checkout-flow proof was already consumed."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:88
+#: src/Decision/ReasonCatalog.php:91
 msgid "The checkout-flow proof was invalid."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:90
+#: src/Decision/ReasonCatalog.php:93
 msgid "Recent payment failures reached the local lockout policy."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:92
+#: src/Decision/ReasonCatalog.php:95
+msgid "Checkout velocity reached the temporary local throttle policy."
+msgstr ""
+
+#: src/Decision/ReasonCatalog.php:97
 msgid "Merchant-enabled Emergency Mode denied this checkout."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:94
+#: src/Decision/ReasonCatalog.php:99
 msgid "Combined local checkout velocity exceeded its threshold."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:96
+#: src/Decision/ReasonCatalog.php:101
 msgid "Session checkout velocity exceeded its threshold."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:98
+#: src/Decision/ReasonCatalog.php:103
 msgid "Email checkout velocity exceeded its threshold."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:100
+#: src/Decision/ReasonCatalog.php:105
 msgid "IP checkout velocity exceeded its threshold."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:102
+#: src/Decision/ReasonCatalog.php:107
+msgid "Recent attributable payment failures requested an extra checkout check before the next gateway attempt."
+msgstr ""
+
+#: src/Decision/ReasonCatalog.php:109
+msgid "Multiple bounded browser-automation signals requested an extra checkout check."
+msgstr ""
+
+#: src/Decision/ReasonCatalog.php:111
 msgid "The configured Turnstile challenge was invalid."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:104
+#: src/Decision/ReasonCatalog.php:113
 msgid "The configured Turnstile challenge is required."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:106
+#: src/Decision/ReasonCatalog.php:115
 msgid "The selected checkout challenge was invalid."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:108
+#: src/Decision/ReasonCatalog.php:117
 msgid "The selected checkout challenge is required."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:110
+#: src/Decision/ReasonCatalog.php:119
 msgid "A recoverable checkout limit was reached while challenge recovery was unavailable."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:112
+#: src/Decision/ReasonCatalog.php:121
 msgid "The checkout-flow proof expired."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:114
+#: src/Decision/ReasonCatalog.php:123
 msgid "The checkout-flow proof was missing."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:116
+#: src/Decision/ReasonCatalog.php:125
 msgid "Trusted-customer policy reduced the intervention before evaluation."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:118
+#: src/Decision/ReasonCatalog.php:127
 msgid "Gateway-outage policy reduced the intervention before evaluation."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:120
+#: src/Decision/ReasonCatalog.php:129
 msgid "Checkout Firewall encountered an internal error and failed open."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:134
+#: src/Decision/ReasonCatalog.php:143
 msgid "Too many checkout attempts were made. Please wait a few minutes and try again."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:137
+#: src/Decision/ReasonCatalog.php:146
 msgid "Please verify your checkout and try again."
 msgstr ""
 
-#: src/Decision/ReasonCatalog.php:140
+#: src/Decision/ReasonCatalog.php:149
 msgid "This checkout could not be processed. Contact the store if you believe this is an error."
 msgstr ""
 
-#: src/FlowProof/CheckoutBlocksRegistrar.php:53
+#: src/FlowProof/CheckoutBlocksRegistrar.php:54
 msgid "Checkout-flow proof for the current checkout context."
 msgstr ""
 
-#: src/FlowProof/CheckoutBlocksRegistrar.php:59
+#: src/FlowProof/CheckoutBlocksRegistrar.php:60
 msgid "Selected-provider response for a pending Checkout Firewall challenge."
 msgstr ""
 
-#: src/FlowProof/CheckoutBlocksRegistrar.php:65
-#: src/FlowProof/CheckoutBlocksRegistrar.php:95
+#: src/FlowProof/CheckoutBlocksRegistrar.php:66
+#: src/FlowProof/CheckoutBlocksRegistrar.php:96
 msgid "Opaque pending Checkout Firewall challenge state."
 msgstr ""
 
-#: src/FlowProof/CheckoutBlocksRegistrar.php:71
+#: src/FlowProof/CheckoutBlocksRegistrar.php:72
 msgid "Signed browser timing and honeypot evidence."
 msgstr ""
 
-#: src/FlowProof/CheckoutBlocksRegistrar.php:77
+#: src/FlowProof/CheckoutBlocksRegistrar.php:78
 msgid "Randomized checkout honeypot field name."
 msgstr ""
 
-#: src/FlowProof/CheckoutBlocksRegistrar.php:83
+#: src/FlowProof/CheckoutBlocksRegistrar.php:84
 msgid "Checkout honeypot field value."
 msgstr ""
 
-#: src/FlowProof/CheckoutBlocksRegistrar.php:89
+#: src/FlowProof/CheckoutBlocksRegistrar.php:90
 msgid "Turnstile response for a pending Checkout Firewall challenge."
 msgstr ""
 
@@ -2446,7 +2544,7 @@ msgid "Checkout Firewall could not complete this erasure page safely."
 msgstr ""
 
 #: src/Privacy/PrivacyPolicyContent.php:23
-msgid "Checkout Firewall locally processes keyed IP, email, session, and combined identifiers to protect WooCommerce checkout. It stores only HMAC-derived identifiers and approved masked hints, never raw payment data, card fields, gateway payloads, or request bodies. Checkout pages include a randomized empty honeypot field and signed short-lived render-time evidence; these are evaluated locally as supporting automation signals and are not retained as shopper profiles. The default private browser challenge performs bounded proof-of-work in the shopper browser and is verified by this store without contacting an outside challenge provider. A temporary keyed payment-feedback snapshot may be attached to a pending order so a later payment result can update local protection. It is deleted immediately after a recorded success or failure and otherwise expires within the configured activity-retention period of no more than seven days. Security event and terminal block history is retained for the configured period of no more than seven days; masked block hints are retained for no more than 90 days, while active enforcement may continue after a hint is removed. When configured and selected, Cloudflare Turnstile or Google reCAPTCHA loads only after a checkout challenge and may process browser and network information under the selected provider's terms. Checkout Firewall omits the optional shopper IP from server-side verification and sends no payment details to either provider. Checkout Firewall sends no checkout telemetry to Codeprint and requires no Codeprint account. Optional Freemius connection is initiated only by an administrator after a consent screen and may transmit the connecting administrator name and email, site URL, plugin and SDK versions, plugin/license/installation identifiers, and activation state for account, purchase, and separately installed Premium licensing/update functions. Free updates come from WordPress.org. Checkout Firewall disables Freemius site-profile, diagnostic, extension-inventory, and newsletter permissions. Anonymous activation and Skip send no Freemius request. The downloadable support snapshot is generated locally, is not uploaded, and excludes site identity, administrators, customers, identifiers, orders, gateways, keys, tokens, requests, logs, and raw errors. WordPress email-based erasure removes directly email-keyed rows and temporary payment-feedback snapshots, but cannot attribute IP, session, or combined records from an email alone. Plugin data is preserved on uninstall unless the site administrator explicitly authorizes full deletion."
+msgid "Checkout Firewall locally processes keyed IP, email, session, and combined identifiers to protect WooCommerce checkout. It stores only HMAC-derived identifiers and approved masked hints, never raw payment data, card fields, gateway payloads, request bodies, or raw browser headers. Checkout pages include a randomized empty honeypot field and signed short-lived render-time evidence; bounded header-presence and explicit same-site mismatch classifications may also contribute local automation evidence. These classifications are not retained as shopper profiles. The default private browser challenge performs bounded proof-of-work in the shopper browser and is verified by this store without contacting an outside challenge provider. A temporary keyed payment-feedback snapshot may be attached to a pending order so a later payment result can update local protection. It is deleted immediately after a recorded success or failure and otherwise expires within the configured activity-retention period of no more than seven days. Security event and terminal block history is retained for the configured period of no more than seven days; masked block hints are retained for no more than 90 days, while active enforcement may continue after a hint is removed. When configured and selected, Cloudflare Turnstile or Google reCAPTCHA loads only when checkout requires verification. Under Adaptive timing, ordinary low-risk checkout does not contact the provider; a merchant may instead require pre-submit verification for every guest, and active Emergency Mode or eligible Premium Attack state may also prepare it before order submission. Observe Mode never loads or verifies a remote checkout provider. The provider may process browser and network information under its terms. Checkout Firewall omits the optional shopper IP from server-side verification and sends no payment details to either provider. Checkout Firewall sends no checkout telemetry to Codeprint and requires no Codeprint account. Optional Freemius connection is initiated only by an administrator after a consent screen and may transmit the connecting administrator name and email, site URL, plugin and SDK versions, plugin/license/installation identifiers, and activation state for account, purchase, and separately installed Premium licensing/update functions. Free updates come from WordPress.org. Checkout Firewall disables Freemius site-profile, diagnostic, extension-inventory, and newsletter permissions. Anonymous activation and Skip send no Freemius request. The downloadable support snapshot is generated locally, is not uploaded, and excludes site identity, administrators, customers, identifiers, orders, gateways, keys, tokens, requests, logs, and raw errors. WordPress email-based erasure removes directly email-keyed rows and temporary payment-feedback snapshots, but cannot attribute IP, session, or combined records from an email alone. Plugin data is preserved on uninstall unless the site administrator explicitly authorizes full deletion."
 msgstr ""
 
 #: src/Privacy/PrivacyPolicyContent.php:24

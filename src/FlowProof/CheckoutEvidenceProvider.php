@@ -11,6 +11,7 @@ namespace Codeprint\CheckoutFirewall\FlowProof;
 
 use Codeprint\CheckoutFirewall\Checkout\CheckoutContext;
 use Codeprint\CheckoutFirewall\Protection\CheckoutSignalState;
+use Codeprint\CheckoutFirewall\Support\SafeLogger;
 
 final class CheckoutEvidenceProvider {
 	private CheckoutEvidenceInputRegistry $inputs;
@@ -36,16 +37,18 @@ final class CheckoutEvidenceProvider {
 			return $candidates;
 		}
 		if ( $input['invalid'] ) {
-			$this->state->mark( $context, 'evidence_malformed' );
+			$this->state->mark( $context, 'evidence_malformed', 2 );
 			return $candidates;
 		}
 		try {
 			$reason = $this->service->classify( $input['token'], $input['field'], $input['value'], CartBinding::from_woocommerce() );
 			if ( '' !== $reason ) {
-				$this->state->mark( $context, $reason );
+				$strong = in_array( $reason, array( 'evidence_malformed', 'evidence_invalid', 'honeypot_filled', 'submitted_impossibly_fast' ), true );
+				$this->state->mark( $context, $reason, $strong ? 2 : 1 );
 			}
 		} catch ( \Throwable $exception ) {
-			$this->state->mark( $context, 'evidence_unavailable' );
+			// Evidence collection is advisory and fails open.
+			SafeLogger::exception( 'checkout_evidence_failed', $exception );
 		}
 		return $candidates;
 	}

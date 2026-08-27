@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Turnstile;
 
 final class SiteverifyClient {
-	public const ENDPOINT  = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+	public const ENDPOINT  = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'; // phpcs:ignore PluginCheck.CodeAnalysis.Offloading.OffloadedContent -- Disclosed server verification API, not resource offloading.
 	public const MAX_TOKEN = 2048;
 	public const MAX_BODY  = 16384;
 	public const TIMEOUT   = 3.0;

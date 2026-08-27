@@ -36,7 +36,7 @@ final class CommercialBootstrap {
   'slug' => 'checkout-firewall',
   'premium_slug' => 'checkout-firewall-premium',
   'type' => 'plugin',
-  'public_key' => 'pk_00000000000000000000000000000001',
+  'public_key' => 'pk_3c42b00c5aac89cd5bd09e009bff9',
   'is_premium' => false,
   'has_premium_version' => false,
   'has_paid_plans' => true,

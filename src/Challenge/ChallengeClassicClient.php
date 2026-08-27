@@ -10,20 +10,29 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Challenge;
 
 final class ChallengeClassicClient {
-	public const TOKEN_FIELD = 'checkout_firewall_challenge_token';
-	public const STATE_FIELD = 'checkout_firewall_challenge_state';
-	private const CORE       = 'checkout-firewall-challenge-core';
-	private const CLIENT     = 'checkout-firewall-challenge-classic';
-	private const STYLE      = 'checkout-firewall-checkout';
+	public const TOKEN_FIELD                   = 'checkout_firewall_challenge_token';
+	public const STATE_FIELD                   = 'checkout_firewall_challenge_state';
+	private const CORE                         = 'checkout-firewall-challenge-core';
+	private const CLIENT                       = 'checkout-firewall-challenge-classic';
+	private const STYLE                        = 'checkout-firewall-checkout';
+	private static ?PreflightPolicy $preflight = null;
+
+	public function __construct( ?PreflightPolicy $preflight = null ) {
+		self::$preflight = $preflight;
+	}
 
 	public function register(): void {
-		add_action( 'woocommerce_checkout_before_customer_details', array( $this, 'render' ), 1 );
+		add_action( 'woocommerce_checkout_before_customer_details', array( $this, 'render_fields' ), 1 );
+		add_action( 'woocommerce_checkout_before_order_review', array( $this, 'render_panel' ), 5 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ), 21 );
 	}
 
-	public function render(): void {
+	public function render_fields(): void {
 		echo '<input type="hidden" name="' . esc_attr( self::TOKEN_FIELD ) . '" id="' . esc_attr( self::TOKEN_FIELD ) . '" value="" />';
 		echo '<input type="hidden" name="' . esc_attr( self::STATE_FIELD ) . '" id="' . esc_attr( self::STATE_FIELD ) . '" value="" />';
+	}
+
+	public function render_panel(): void {
 		echo '<div id="cf-challenge-classic" class="cf-challenge-panel" hidden aria-live="polite"></div>';
 	}
 
@@ -61,6 +70,8 @@ final class ChallengeClassicClient {
 			'localWorker' => plugins_url( 'assets/vendor/altcha/pbkdf2.js', CHECKOUT_FIREWALL_PLUGIN_FILE ),
 			'localStyle'  => plugins_url( 'assets/vendor/altcha/altcha.css', CHECKOUT_FIREWALL_PLUGIN_FILE ),
 			'language'    => strtolower( substr( determine_locale(), 0, 2 ) ),
+			'preflight'   => null !== self::$preflight && self::$preflight->required(),
+			'surface'     => 'classic',
 			'strings'     => self::script_strings(),
 		);
 	}

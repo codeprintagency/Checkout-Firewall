@@ -4,7 +4,7 @@
 
 The complete development repository and Premium implementation are maintained privately. This public repository contains the readable Free runtime source, bundled third-party source and licenses, and the deterministic packaging tool needed to reproduce the submitted Free ZIP.
 
-> **Release status:** WordPress.org review is in progress. Install the plugin only from the official WordPress.org listing after it becomes available. GitHub source archives are not WordPress installation packages.
+> **Release status:** Free version 1.0.1 is public on WordPress.org. This mirror now reproduces the qualified 1.0.2 adaptive-protection update. Install through the official WordPress.org listing; GitHub source archives are not WordPress installation packages.
 
 ## What the Free edition does
 
@@ -16,6 +16,8 @@ Checkout Firewall evaluates normal WooCommerce Classic Checkout, Checkout Blocks
 - keyed IP, billing-email, session, and combined-identity velocity limits;
 - local payment-success and payment-failure feedback without inspecting payment data;
 - recoverable browser challenges;
+- Adaptive and Always guest challenge timing, with pre-submit verification in Always and Emergency modes;
+- graduated checkout velocity, bounded automation evidence, and payment-failure recovery;
 - trusted IP, narrow-CIDR, and authenticated-user exemptions;
 - temporary blocks, block release, Activity history, Protection Health, and notifications;
 - Standard Mode and a manual, time-limited Emergency Mode.
@@ -24,14 +26,14 @@ The decision engine can allow, request a challenge, temporarily throttle, or tem
 
 ## Challenge providers
 
-Ordinary low-risk checkout does not load a challenge. When local signals require an additional check, a merchant can choose:
+Under the default Adaptive timing, ordinary low-risk checkout does not load a challenge. A merchant can require the selected provider before every eligible guest checkout with Always timing. When verification is required, a merchant can choose:
 
 - **Local check:** the default, account-free ALTCHA-compatible proof-of-work check, solved in the shopper's browser and verified by the store;
 - **Cloudflare Turnstile:** an optional managed provider configured with merchant-owned keys;
 - **Google reCAPTCHA v2:** an optional managed alternative configured with merchant-owned keys;
 - **No provider:** throttle-only recovery without pretending a challenge was completed.
 
-The local provider makes no remote challenge request. Turnstile or reCAPTCHA loads only after the merchant selects and configures it and a checkout actually requires a challenge.
+The local provider makes no remote challenge request. Turnstile or reCAPTCHA loads only after the merchant selects and configures it and checkout requires verification under Adaptive, Always, Emergency Mode, or eligible Premium Attack state.
 
 ## Privacy and safety boundaries
 
@@ -54,12 +56,12 @@ All paid plans have the same Premium features and differ only by production acti
 
 ## Requirements and qualified compatibility
 
-- WordPress 6.8 or newer; qualified through WordPress 7.0
+- WordPress 6.8 or newer; qualified through WordPress 7.1
 - PHP 8.0 or newer
 - WooCommerce 10.7 or newer; qualified through WooCommerce 10.9
 - WooCommerce Checkout Blocks and High-Performance Order Storage declared compatible
 
-Version 1.0.0 does not evaluate WooCommerce's legacy Classic `order-pay` retry endpoint. Normal Classic Checkout, Checkout Blocks, and supported Store API checkout routes are covered.
+Version 1.0.2 does not evaluate WooCommerce's legacy Classic `order-pay` retry endpoint. Normal Classic Checkout, Checkout Blocks, and supported Store API checkout routes are covered.
 
 ## Repository layout
 
@@ -74,19 +76,19 @@ Version 1.0.0 does not evaluate WooCommerce's legacy Classic `order-pay` retry e
 
 The Freemius product ID and public key in the generated configuration are public identifiers, not credentials. Secret keys, customer licenses, dashboard credentials, payment data, and Premium source are not stored here.
 
-## Reproduce the corrected Free review candidate
+## Reproduce Free version 1.0.2
 
 Requirements are PHP 8.0+ with the Zip extension. From the repository root:
 
 ```bash
 php scripts/build-release.php
-shasum -a 256 dist/checkout-firewall-1.0.0.zip
+shasum -a 256 dist/checkout-firewall-1.0.2.zip
 ```
 
-The expected SHA-256 for the exact corrected Free 1.0.0 candidate prepared for the current WordPress.org review is:
+The expected SHA-256 for the exact qualified Free 1.0.2 update is:
 
 ```text
-d69ae09df89930a6775b98454438fbc022719733959880becbcf8779df12abd1
+742e43c938e2de67830cd84e39539d461f05c79399abab0b43b55dec9f69fee0
 ```
 
 The packager includes only the runtime paths listed in the script, sorts every archive path, fixes timestamps to the ZIP epoch, and fixes Unix file attributes. Repository documentation and tooling are not placed inside the distributable plugin directory.

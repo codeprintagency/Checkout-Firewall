@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\FlowProof;
 
 use Codeprint\CheckoutFirewall\Support\SafeLogger;
+use Codeprint\CheckoutFirewall\Data\CounterType;
+use Codeprint\CheckoutFirewall\Protection\EndpointRateLimiter;
 
 final class MintEndpoint {
 	public const NAMESPACE = 'wc/store/v1';
@@ -17,10 +19,12 @@ final class MintEndpoint {
 
 	private FlowProofService $service;
 	private CheckoutEvidenceService $evidence;
+	private ?EndpointRateLimiter $limiter;
 
-	public function __construct( ?FlowProofService $service = null, ?CheckoutEvidenceService $evidence = null ) {
+	public function __construct( ?FlowProofService $service = null, ?CheckoutEvidenceService $evidence = null, ?EndpointRateLimiter $limiter = null ) {
 		$this->service  = $service ?? new FlowProofService();
 		$this->evidence = $evidence ?? new CheckoutEvidenceService();
+		$this->limiter  = $limiter;
 	}
 
 	public function register(): void {
@@ -47,6 +51,14 @@ final class MintEndpoint {
 
 		try {
 			self::load_checkout_cart();
+			if ( null !== $this->limiter ) {
+				$limit = $this->limiter->allow( CounterType::FLOW_PROOF_MINT, 30, 120 );
+				if ( ! $limit['allowed'] ) {
+					$response = self::response( array( 'code' => 'checkout_firewall_proof_rate_limited' ), 429 );
+					$response->header( 'Retry-After', (string) $limit['retry_after'] );
+					return $response;
+				}
+			}
 			$binding = CartBinding::from_woocommerce();
 			$mint    = array_merge( $this->service->mint( $binding ), $this->evidence->mint( $binding ) );
 			return self::response( $mint, 200 );

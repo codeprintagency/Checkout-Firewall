@@ -16,6 +16,7 @@ final class CheckoutEvidenceService {
 	public const MAX_TOKEN = 1024;
 	public const TTL       = 300;
 	public const MIN_AGE   = 1;
+	public const FAST_AGE  = 3;
 	private const CONTEXT  = 'checkout-firewall/checkout-evidence/sign/v1';
 
 	private KeyStore $keys;
@@ -112,7 +113,11 @@ final class CheckoutEvidenceService {
 		if ( '' !== $value ) {
 			return 'honeypot_filled';
 		}
-		return $now - $claims['iat'] < self::MIN_AGE ? 'submitted_too_fast' : '';
+		$age = $now - $claims['iat'];
+		if ( $age < self::MIN_AGE ) {
+			return 'submitted_impossibly_fast';
+		}
+		return $age < self::FAST_AGE ? 'submitted_fast' : '';
 	}
 
 	private function binding( CartBinding $binding ): string {

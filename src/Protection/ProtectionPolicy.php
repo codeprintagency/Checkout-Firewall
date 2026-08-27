@@ -24,17 +24,39 @@ final class ProtectionPolicy {
 	public const OUTAGE_FAILURE = 16;
 
 	/**
-	 * Return the frozen velocity policy for an identity.
+	 * Return the adaptive challenge policy for an identity.
 	 *
 	 * @return array{window:int,threshold:int}
 	 * @throws \InvalidArgumentException When the identity type is unsupported.
 	 */
 	public static function velocity( int $type, bool $trusted ): array {
 		$policies = array(
-			IdentifierType::IP       => array( 300, 30 ),
-			IdentifierType::EMAIL    => array( 900, 10 ),
-			IdentifierType::SESSION  => array( 600, 10 ),
-			IdentifierType::IP_EMAIL => array( 900, 6 ),
+			IdentifierType::IP       => array( 300, 10 ),
+			IdentifierType::EMAIL    => array( 900, 5 ),
+			IdentifierType::SESSION  => array( 600, 3 ),
+			IdentifierType::IP_EMAIL => array( 900, 3 ),
+		);
+		if ( ! isset( $policies[ $type ] ) ) {
+			throw new \InvalidArgumentException( 'Unsupported velocity identity.' );
+		}
+		return array(
+			'window'    => $policies[ $type ][0],
+			'threshold' => $policies[ $type ][1] * ( $trusted ? 2 : 1 ),
+		);
+	}
+
+	/**
+	 * Return the temporary-throttle policy for an identity.
+	 *
+	 * @return array{window:int,threshold:int}
+	 * @throws \InvalidArgumentException When the identity type is unsupported.
+	 */
+	public static function throttle( int $type, bool $trusted ): array {
+		$policies = array(
+			IdentifierType::IP       => array( 900, 30 ),
+			IdentifierType::EMAIL    => array( 1800, 8 ),
+			IdentifierType::SESSION  => array( 900, 6 ),
+			IdentifierType::IP_EMAIL => array( 1800, 6 ),
 		);
 		if ( ! isset( $policies[ $type ] ) ) {
 			throw new \InvalidArgumentException( 'Unsupported velocity identity.' );

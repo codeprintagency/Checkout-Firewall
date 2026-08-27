@@ -48,6 +48,7 @@ final class TurnstileSettingsPage {
 		$status       = $status_input['invalid'] || null === $status_input['value'] ? '' : $status_input['value'];
 		$conflict     = $this->conflicts->active_slug();
 		$test_pair    = TurnstileConfig::is_test_pair( $credentials );
+		$configured   = '' !== $credentials['site_key'] && '' !== $credentials['secret_key'];
 		?>
 		<div class="wrap cf-admin">
 			<header class="cf-admin__header"><p class="cf-eyebrow"><?php esc_html_e( 'CHECKOUT FIREWALL', 'checkout-firewall' ); ?></p><h1><?php esc_html_e( 'Turnstile recovery', 'checkout-firewall' ); ?></h1><p><?php esc_html_e( 'Ask for an extra check only when local checkout protection needs it.', 'checkout-firewall' ); ?></p></header>
@@ -76,10 +77,12 @@ final class TurnstileSettingsPage {
 						?>
 						<button class="button cf-button" type="submit" name="remove" value="1"><?php esc_html_e( 'Remove keys', 'checkout-firewall' ); ?></button><?php endif; ?></div>
 				</form>
-				<?php if ( '' !== $credentials['site_key'] && '' !== $credentials['secret_key'] && null === $conflict ) : ?>
-				<form class="cf-health" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-site-key="<?php echo esc_attr( $credentials['site_key'] ); ?>" data-action="checkout_firewall_health" data-cdata="<?php echo esc_attr( $this->config->health_cdata() ); ?>">
-					<input type="hidden" name="action" value="<?php echo esc_attr( TurnstileSettingsController::VERIFY_ACTION ); ?>" /><?php wp_nonce_field( TurnstileSettingsController::NONCE_ACTION ); ?><input type="hidden" name="health_token" value="" /><div class="cf-health__widget" aria-live="polite"></div><button class="button button-primary cf-button" type="button" data-cf-verify disabled><?php esc_html_e( 'Verify and activate', 'checkout-firewall' ); ?></button>
+				<?php if ( $configured && null === $conflict ) : ?>
+				<form class="cf-health cf-turnstile-health" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-site-key="<?php echo esc_attr( $credentials['site_key'] ); ?>" data-action="checkout_firewall_health" data-cdata="<?php echo esc_attr( $this->config->health_cdata() ); ?>" data-load-error="<?php esc_attr_e( 'Cloudflare Turnstile could not load. Check browser privacy controls and this site’s Content Security Policy, then retry.', 'checkout-firewall' ); ?>" data-widget-error="<?php esc_attr_e( 'Cloudflare Turnstile could not complete the connection test. Reload this page and try again.', 'checkout-firewall' ); ?>">
+					<p class="cf-help"><?php esc_html_e( 'This connection test loads Turnstile on this settings page and asks Cloudflare to validate the result. It does not run a checkout or payment.', 'checkout-firewall' ); ?></p><input type="hidden" name="action" value="<?php echo esc_attr( TurnstileSettingsController::VERIFY_ACTION ); ?>" /><?php wp_nonce_field( TurnstileSettingsController::NONCE_ACTION ); ?><input type="hidden" name="health_token" value="" /><div class="cf-health__widget" aria-live="polite"></div><button class="button button-primary cf-button" type="button" data-cf-verify disabled><?php esc_html_e( 'Test connection and enable Turnstile', 'checkout-firewall' ); ?></button>
 				</form>
+				<?php elseif ( ! $configured ) : ?>
+					<div class="cf-notice cf-notice--challenge"><strong><?php esc_html_e( 'Turnstile connection test unavailable', 'checkout-firewall' ); ?></strong><p><?php esc_html_e( 'Save both the site key and secret key first. Checkout Firewall will not enable Turnstile from an incomplete pair.', 'checkout-firewall' ); ?></p><button class="button cf-button" type="button" disabled><?php esc_html_e( 'Test connection and enable Turnstile', 'checkout-firewall' ); ?></button></div>
 				<?php endif; ?>
 			</section>
 			<p class="cf-legal"><?php esc_html_e( 'Checkout Firewall is an independent product by Codeprint. WooCommerce and Cloudflare are trademarks of their respective owners.', 'checkout-firewall' ); ?></p>
@@ -89,10 +92,10 @@ final class TurnstileSettingsPage {
 
 	private static function status_copy( string $status ): string {
 		$copy = array(
-			'saved'               => __( 'Keys saved. Complete verification to activate Turnstile recovery.', 'checkout-firewall' ),
+			'saved'               => __( 'Keys saved and selected. Complete the connection test below to enable Turnstile.', 'checkout-firewall' ),
 			'removed'             => __( 'Turnstile keys were removed.', 'checkout-firewall' ),
 			'verified'            => __( 'Turnstile recovery is verified and active.', 'checkout-firewall' ),
-			'invalid'             => __( 'The keys were not saved. Check their format and try again.', 'checkout-firewall' ),
+			'invalid'             => __( 'The keys were not saved. Both the site key and secret key are required for initial setup.', 'checkout-firewall' ),
 			'invalid_secret'      => __( 'Cloudflare rejected the secret. Turnstile recovery remains disabled.', 'checkout-firewall' ),
 			'verification_failed' => __( 'Verification did not complete. Turnstile recovery remains disabled.', 'checkout-firewall' ),
 			'test_keys'           => __( 'Cloudflare test keys are allowed only in local, development, or test environments.', 'checkout-firewall' ),

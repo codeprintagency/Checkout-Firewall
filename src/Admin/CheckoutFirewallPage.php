@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Admin;
 
 use Codeprint\CheckoutFirewall\Challenge\ChallengeConfig;
+use Codeprint\CheckoutFirewall\Challenge\ChallengePolicy;
 use Codeprint\CheckoutFirewall\Decision\ReasonCatalog;
 use Codeprint\CheckoutFirewall\Decision\ReasonCode;
 use Codeprint\CheckoutFirewall\Commercial\CommercialAccountController;
@@ -38,15 +39,17 @@ final class CheckoutFirewallPage {
 	private RecaptchaConfig $recaptcha;
 	private OperatingMode $operating;
 	private TrustedExemptionStore $exemptions;
+	private ChallengePolicy $challenge_policy;
 
-	public function __construct( TurnstileConfig $turnstile, TurnstileConflictDetector $conflicts, EmergencyMode $mode, ?ChallengeConfig $challenges = null, ?RecaptchaConfig $recaptcha = null, ?OperatingMode $operating = null, ?TrustedExemptionStore $exemptions = null ) {
-		$this->turnstile  = $turnstile;
-		$this->conflicts  = $conflicts;
-		$this->mode       = $mode;
-		$this->recaptcha  = $recaptcha ?? new RecaptchaConfig();
-		$this->challenges = $challenges ?? new ChallengeConfig( $turnstile, $this->recaptcha, $conflicts );
-		$this->operating  = $operating ?? new OperatingMode();
-		$this->exemptions = $exemptions ?? new TrustedExemptionStore();
+	public function __construct( TurnstileConfig $turnstile, TurnstileConflictDetector $conflicts, EmergencyMode $mode, ?ChallengeConfig $challenges = null, ?RecaptchaConfig $recaptcha = null, ?OperatingMode $operating = null, ?TrustedExemptionStore $exemptions = null, ?ChallengePolicy $challenge_policy = null ) {
+		$this->turnstile        = $turnstile;
+		$this->conflicts        = $conflicts;
+		$this->mode             = $mode;
+		$this->recaptcha        = $recaptcha ?? new RecaptchaConfig();
+		$this->challenges       = $challenges ?? new ChallengeConfig( $turnstile, $this->recaptcha, $conflicts );
+		$this->operating        = $operating ?? new OperatingMode();
+		$this->exemptions       = $exemptions ?? new TrustedExemptionStore();
+		$this->challenge_policy = $challenge_policy ?? new ChallengePolicy();
 	}
 
 	public function register(): void {
@@ -436,8 +439,8 @@ else :
 		);
 		?>
 		<section class="cf-panel cf-panel--spaced" aria-labelledby="cf-challenge-provider-title">
-			<div class="cf-panel__heading"><div><p class="cf-eyebrow"><?php esc_html_e( 'CHECKOUT RECOVERY', 'checkout-firewall' ); ?></p><h3 id="cf-challenge-provider-title"><?php esc_html_e( 'Browser challenge provider', 'checkout-firewall' ); ?></h3><p><?php esc_html_e( 'Checkout Firewall shows this only after local signals decide a shopper needs one extra check. Ordinary checkouts never see it.', 'checkout-firewall' ); ?></p></div><span class="cf-pill <?php echo ChallengeConfig::NONE === $effective ? 'cf-pill--challenge' : 'cf-pill--allow'; ?>"><?php echo esc_html( $labels[ $effective ] ?? __( 'Unavailable', 'checkout-firewall' ) ); ?></span></div>
-			<div class="cf-notice"><strong><?php esc_html_e( 'Automatic bot signals are already active', 'checkout-firewall' ); ?></strong><p><?php esc_html_e( 'Every checkout receives a randomized honeypot and signed timing evidence. These are supporting signals for the velocity policy, not a reason to block a shopper by themselves.', 'checkout-firewall' ); ?></p></div>
+			<div class="cf-panel__heading"><div><p class="cf-eyebrow"><?php esc_html_e( 'CHECKOUT RECOVERY', 'checkout-firewall' ); ?></p><h3 id="cf-challenge-provider-title"><?php esc_html_e( 'Browser challenge provider', 'checkout-firewall' ); ?></h3><p><?php esc_html_e( 'Choose the browser check Checkout Firewall uses when checkout needs verification.', 'checkout-firewall' ); ?></p></div><span class="cf-pill <?php echo ChallengeConfig::NONE === $effective ? 'cf-pill--challenge' : 'cf-pill--allow'; ?>"><?php echo esc_html( $labels[ $effective ] ?? __( 'Unavailable', 'checkout-firewall' ) ); ?></span></div>
+			<div class="cf-notice"><strong><?php esc_html_e( 'Automatic bot signals are active', 'checkout-firewall' ); ?></strong><p><?php esc_html_e( 'Checkout Firewall combines velocity, a randomized honeypot, signed timing evidence, and bounded browser-request signals. Strong evidence or multiple supporting signals can request verification; they never create a permanent block.', 'checkout-firewall' ); ?></p></div>
 			<?php
 			if ( $this->challenges->is_fallback() ) :
 				?>
@@ -446,11 +449,23 @@ else :
 				<input type="hidden" name="action" value="<?php echo esc_attr( ChallengeSettingsController::SELECT_ACTION ); ?>" /><?php wp_nonce_field( ChallengeSettingsController::NONCE_ACTION ); ?>
 				<div class="cf-provider-grid">
 					<label><input type="radio" name="challenge_provider" value="local" aria-controls="cf-provider-local-panel" <?php checked( ChallengeConfig::LOCAL, $selected ); ?> /><strong><?php esc_html_e( 'Private local check', 'checkout-firewall' ); ?></strong><span><?php esc_html_e( 'Ready immediately. A short proof-of-work check runs in the shopper browser and is verified only by your store.', 'checkout-firewall' ); ?></span></label>
-					<label><input type="radio" name="challenge_provider" value="turnstile" aria-controls="cf-provider-turnstile-panel" <?php checked( ChallengeConfig::TURNSTILE, $selected ); ?> /><strong><?php esc_html_e( 'Cloudflare Turnstile · Recommended', 'checkout-firewall' ); ?></strong><span><?php esc_html_e( 'Best fit for most stores. Requires free Cloudflare Turnstile keys and contacts Cloudflare only when challenged.', 'checkout-firewall' ); ?></span></label>
+					<label><input type="radio" name="challenge_provider" value="turnstile" aria-controls="cf-provider-turnstile-panel" <?php checked( ChallengeConfig::TURNSTILE, $selected ); ?> /><strong><?php esc_html_e( 'Cloudflare Turnstile · Recommended', 'checkout-firewall' ); ?></strong><span><?php esc_html_e( 'Best fit for most stores. Requires free Cloudflare Turnstile keys and contacts Cloudflare only when checkout requires verification.', 'checkout-firewall' ); ?></span></label>
 					<label><input type="radio" name="challenge_provider" value="recaptcha" aria-controls="cf-provider-recaptcha-panel" <?php checked( ChallengeConfig::RECAPTCHA, $selected ); ?> /><strong><?php esc_html_e( 'Google reCAPTCHA', 'checkout-firewall' ); ?></strong><span><?php esc_html_e( 'Optional reCAPTCHA v2 checkbox support. Requires Google site and secret keys.', 'checkout-firewall' ); ?></span></label>
 					<label><input type="radio" name="challenge_provider" value="none" aria-controls="cf-provider-none-panel" <?php checked( ChallengeConfig::NONE, $selected ); ?> /><strong><?php esc_html_e( 'No browser challenge · Advanced', 'checkout-firewall' ); ?></strong><span><?php esc_html_e( 'When a recoverable limit is reached, checkout is temporarily throttled instead of showing a challenge.', 'checkout-firewall' ); ?></span></label>
 				</div><button class="button button-primary cf-button" type="submit" <?php disabled( $this->mode->is_active() ); ?>><?php esc_html_e( 'Save challenge provider', 'checkout-firewall' ); ?></button>
 				<p class="cf-provider-pending" data-cf-provider-pending hidden><?php esc_html_e( 'The settings for your new choice are shown below. Save the provider choice when you are ready to use it.', 'checkout-firewall' ); ?></p>
+			</form>
+		</section>
+		<section class="cf-panel cf-panel--spaced" aria-labelledby="cf-challenge-policy-title">
+			<div class="cf-panel__heading"><div><p class="cf-eyebrow"><?php esc_html_e( 'WHEN SHOPPERS SEE IT', 'checkout-firewall' ); ?></p><h3 id="cf-challenge-policy-title"><?php esc_html_e( 'Challenge timing', 'checkout-firewall' ); ?></h3><p><?php esc_html_e( 'Adaptive protection keeps ordinary checkout friction-free. Always for guests shows the selected provider before every guest places an order.', 'checkout-firewall' ); ?></p></div></div>
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<input type="hidden" name="action" value="<?php echo esc_attr( ChallengeSettingsController::POLICY_ACTION ); ?>" /><?php wp_nonce_field( ChallengeSettingsController::NONCE_ACTION ); ?>
+				<div class="cf-provider-grid">
+					<label><input type="radio" name="challenge_policy" value="adaptive" <?php checked( ChallengePolicy::ADAPTIVE, $this->challenge_policy->current() ); ?> /><strong><?php esc_html_e( 'Adaptive · Recommended', 'checkout-firewall' ); ?></strong><span><?php esc_html_e( 'Show verification only when local checkout behavior, Emergency Mode, or eligible Premium attack state calls for it.', 'checkout-firewall' ); ?></span></label>
+					<label><input type="radio" name="challenge_policy" value="always_guests" <?php checked( ChallengePolicy::ALWAYS_GUESTS, $this->challenge_policy->current() ); ?> /><strong><?php esc_html_e( 'Always for guest checkout', 'checkout-firewall' ); ?></strong><span><?php esc_html_e( 'Display the selected check before every guest order. Logged-in customers remain adaptive.', 'checkout-firewall' ); ?></span></label>
+				</div>
+				<p class="cf-help"><?php esc_html_e( 'Observe Mode never loads or verifies a remote checkout provider. If you select Always for guests, it begins only after Standard Mode is enabled.', 'checkout-firewall' ); ?></p>
+				<button class="button button-primary cf-button" type="submit"><?php esc_html_e( 'Save challenge timing', 'checkout-firewall' ); ?></button>
 			</form>
 		</section>
 		<?php
@@ -472,20 +487,25 @@ else :
 
 	private function recaptcha_settings(): void {
 		$credentials = $this->recaptcha->credentials();
+		$configured  = '' !== $credentials['site_key'] && '' !== $credentials['secret_key'];
+		$active      = $this->recaptcha->is_active();
 		?>
 		<section class="cf-panel" aria-labelledby="cf-recaptcha-title">
-			<div class="cf-panel__heading"><div><p class="cf-eyebrow"><?php esc_html_e( 'OPTIONAL PROVIDER · API KEYS', 'checkout-firewall' ); ?></p><h3 id="cf-recaptcha-title"><?php esc_html_e( 'Google reCAPTCHA', 'checkout-firewall' ); ?></h3><p><?php esc_html_e( 'reCAPTCHA v2 checkbox; Google account and site and secret keys required.', 'checkout-firewall' ); ?></p></div><span class="cf-pill <?php echo $this->recaptcha->is_active() ? 'cf-pill--allow' : 'cf-pill--neutral'; ?>"><?php echo $this->recaptcha->is_active() ? esc_html__( 'VERIFIED', 'checkout-firewall' ) : esc_html__( 'NOT CONFIGURED', 'checkout-firewall' ); ?></span></div>
+			<div class="cf-panel__heading"><div><p class="cf-eyebrow"><?php esc_html_e( 'OPTIONAL PROVIDER · API KEYS', 'checkout-firewall' ); ?></p><h3 id="cf-recaptcha-title"><?php esc_html_e( 'Google reCAPTCHA', 'checkout-firewall' ); ?></h3><p><?php esc_html_e( 'reCAPTCHA v2 checkbox; Google account and site and secret keys required.', 'checkout-firewall' ); ?></p></div><span class="cf-pill <?php echo $active ? 'cf-pill--allow' : ( $configured ? 'cf-pill--challenge' : 'cf-pill--neutral' ); ?>"><?php echo $active ? esc_html__( 'VERIFIED', 'checkout-firewall' ) : ( $configured ? esc_html__( 'KEYS SAVED · TEST REQUIRED', 'checkout-firewall' ) : esc_html__( 'SETUP REQUIRED', 'checkout-firewall' ) ); ?></span></div>
 			<div aria-labelledby="cf-recaptcha-title">
-				<p><?php esc_html_e( 'Choose this only if your store already uses Google reCAPTCHA or you prefer it to the private local check and Turnstile. The shopper browser contacts Google only when Checkout Firewall requests a challenge.', 'checkout-firewall' ); ?></p>
+				<p><?php esc_html_e( 'Choose this only if your store already uses Google reCAPTCHA or you prefer it to the private local check and Turnstile. The shopper browser contacts Google only when checkout requires verification under your saved challenge timing or an active protection state.', 'checkout-firewall' ); ?></p>
 				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>"><input type="hidden" name="action" value="<?php echo esc_attr( ChallengeSettingsController::SAVE_ACTION ); ?>" /><?php wp_nonce_field( ChallengeSettingsController::NONCE_ACTION ); ?><label for="cf-recaptcha-site-key"><?php esc_html_e( 'Site key', 'checkout-firewall' ); ?></label><input id="cf-recaptcha-site-key" name="site_key" type="text" maxlength="128" value="<?php echo esc_attr( $credentials['site_key'] ); ?>" required <?php wp_readonly( defined( 'CHECKOUT_FIREWALL_RECAPTCHA_SITE_KEY' ) ); ?> /><label for="cf-recaptcha-secret-key"><?php esc_html_e( 'Secret key', 'checkout-firewall' ); ?></label><input id="cf-recaptcha-secret-key" name="secret_key" type="password" maxlength="256" value="" autocomplete="new-password" placeholder="<?php echo '' === $credentials['secret_key'] ? esc_attr__( 'Required', 'checkout-firewall' ) : esc_attr__( 'Saved — leave blank to keep it', 'checkout-firewall' ); ?>" <?php wp_readonly( defined( 'CHECKOUT_FIREWALL_RECAPTCHA_SECRET_KEY' ) ); ?> /><p class="cf-help"><?php esc_html_e( 'Saving a change disables reCAPTCHA until this store verifies the new keys.', 'checkout-firewall' ); ?></p><div class="cf-actions"><button class="button button-primary cf-button" type="submit"><?php esc_html_e( 'Save reCAPTCHA keys', 'checkout-firewall' ); ?></button>
 				<?php
 				if ( '' !== $credentials['site_key'] ) :
 					?>
 					<button class="button cf-button" name="remove" value="1" type="submit"><?php esc_html_e( 'Remove keys', 'checkout-firewall' ); ?></button><?php endif; ?></div></form>
 				<?php
-				if ( '' !== $credentials['site_key'] && '' !== $credentials['secret_key'] ) :
+				if ( $configured ) :
 					?>
-					<form class="cf-health cf-recaptcha-health" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-site-key="<?php echo esc_attr( $credentials['site_key'] ); ?>"><input type="hidden" name="action" value="<?php echo esc_attr( ChallengeSettingsController::VERIFY_ACTION ); ?>" /><?php wp_nonce_field( ChallengeSettingsController::NONCE_ACTION ); ?><input type="hidden" name="health_token" value="" /><div class="cf-health__widget" aria-live="polite"></div><button class="button button-primary cf-button" type="button" data-cf-recaptcha-verify disabled><?php esc_html_e( 'Verify and use reCAPTCHA', 'checkout-firewall' ); ?></button></form><?php endif; ?>
+					<p class="cf-help"><?php esc_html_e( 'This connection test loads reCAPTCHA on this settings page and asks Google to validate the result. It does not run a checkout or payment.', 'checkout-firewall' ); ?></p><form class="cf-health cf-recaptcha-health" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-site-key="<?php echo esc_attr( $credentials['site_key'] ); ?>" data-load-error="<?php esc_attr_e( 'Google reCAPTCHA could not load. Check browser privacy controls and this site’s Content Security Policy, then retry.', 'checkout-firewall' ); ?>" data-widget-error="<?php esc_attr_e( 'Google reCAPTCHA could not complete the connection test. Reload this page and try again.', 'checkout-firewall' ); ?>"><input type="hidden" name="action" value="<?php echo esc_attr( ChallengeSettingsController::VERIFY_ACTION ); ?>" /><?php wp_nonce_field( ChallengeSettingsController::NONCE_ACTION ); ?><input type="hidden" name="health_token" value="" /><div class="cf-health__widget" aria-live="polite"></div><button class="button button-primary cf-button" type="button" data-cf-recaptcha-verify disabled><?php esc_html_e( 'Test connection and enable reCAPTCHA', 'checkout-firewall' ); ?></button></form>
+				<?php else : ?>
+					<div class="cf-notice cf-notice--challenge"><strong><?php esc_html_e( 'reCAPTCHA connection test unavailable', 'checkout-firewall' ); ?></strong><p><?php esc_html_e( 'Save both the site key and secret key first. Checkout Firewall will not enable reCAPTCHA from an incomplete pair.', 'checkout-firewall' ); ?></p><button class="button cf-button" type="button" disabled><?php esc_html_e( 'Test connection and enable reCAPTCHA', 'checkout-firewall' ); ?></button></div>
+				<?php endif; ?>
 			</div>
 		</section>
 		<?php
@@ -495,12 +515,13 @@ else :
 		$credentials = $this->turnstile->credentials();
 		$conflict    = $this->conflicts->active_slug();
 		$test_pair   = TurnstileConfig::is_test_pair( $credentials );
+		$configured  = '' !== $credentials['site_key'] && '' !== $credentials['secret_key'];
 		$active      = $this->turnstile->is_active() && null === $conflict;
 		$selected    = ChallengeConfig::TURNSTILE === $this->challenges->selected();
 		$eyebrow     = $test_pair ? __( 'TEST KEYS · NOT FOR PRODUCTION', 'checkout-firewall' ) : ( $active ? __( 'ALLOW · VERIFIED', 'checkout-firewall' ) : ( $selected ? __( 'CHALLENGE · SETUP REQUIRED', 'checkout-firewall' ) : __( 'OPTIONAL PROVIDER', 'checkout-firewall' ) ) );
-		$status      = $active ? __( 'VERIFIED', 'checkout-firewall' ) : ( $selected ? __( 'ACTION NEEDED', 'checkout-firewall' ) : __( 'NOT CONFIGURED', 'checkout-firewall' ) );
+		$status      = $active ? __( 'VERIFIED', 'checkout-firewall' ) : ( $configured ? __( 'KEYS SAVED · TEST REQUIRED', 'checkout-firewall' ) : __( 'SETUP REQUIRED', 'checkout-firewall' ) );
 		?>
-		<section class="cf-panel" aria-labelledby="cf-turnstile-title"><div class="cf-panel__heading"><div><p class="cf-eyebrow"><?php echo esc_html( $eyebrow ); ?></p><h3 id="cf-turnstile-title"><?php esc_html_e( 'Cloudflare Turnstile', 'checkout-firewall' ); ?></h3><p><?php esc_html_e( 'Turnstile gives an uncertain-looking legitimate customer a way to verify instead of being turned away. It appears only for recoverable challenges or Emergency Mode.', 'checkout-firewall' ); ?></p></div><span class="cf-pill <?php echo $active ? 'cf-pill--allow' : ( $selected ? 'cf-pill--challenge' : 'cf-pill--neutral' ); ?>"><?php echo esc_html( $status ); ?></span></div>
+		<section class="cf-panel" aria-labelledby="cf-turnstile-title"><div class="cf-panel__heading"><div><p class="cf-eyebrow"><?php echo esc_html( $eyebrow ); ?></p><h3 id="cf-turnstile-title"><?php esc_html_e( 'Cloudflare Turnstile', 'checkout-firewall' ); ?></h3><p><?php esc_html_e( 'Turnstile gives an uncertain-looking legitimate customer a way to verify instead of being turned away. It appears only for recoverable challenges or Emergency Mode.', 'checkout-firewall' ); ?></p></div><span class="cf-pill <?php echo $active ? 'cf-pill--allow' : ( $selected || $configured ? 'cf-pill--challenge' : 'cf-pill--neutral' ); ?>"><?php echo esc_html( $status ); ?></span></div>
 		<?php
 		if ( null !== $conflict ) :
 			?>
@@ -516,9 +537,12 @@ else :
 				?>
 			<button class="button cf-button" name="remove" value="1" type="submit"><?php esc_html_e( 'Remove keys', 'checkout-firewall' ); ?></button><?php endif; ?></div></form>
 			<?php
-			if ( '' !== $credentials['site_key'] && '' !== $credentials['secret_key'] && null === $conflict ) :
+			if ( $configured && null === $conflict ) :
 				?>
-	<form class="cf-health" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-site-key="<?php echo esc_attr( $credentials['site_key'] ); ?>" data-action="checkout_firewall_health" data-cdata="<?php echo esc_attr( $this->turnstile->health_cdata() ); ?>"><input type="hidden" name="action" value="<?php echo esc_attr( TurnstileSettingsController::VERIFY_ACTION ); ?>" /><?php wp_nonce_field( TurnstileSettingsController::NONCE_ACTION ); ?><input type="hidden" name="health_token" value="" /><div class="cf-health__widget" aria-live="polite"></div><button class="button button-primary cf-button" type="button" data-cf-verify disabled><?php esc_html_e( 'Verify and activate', 'checkout-firewall' ); ?></button></form><?php endif; ?></section>
+		<p class="cf-help"><?php esc_html_e( 'This connection test loads Turnstile on this settings page and asks Cloudflare to validate the result. It does not run a checkout or payment.', 'checkout-firewall' ); ?></p><form class="cf-health cf-turnstile-health" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-site-key="<?php echo esc_attr( $credentials['site_key'] ); ?>" data-action="checkout_firewall_health" data-cdata="<?php echo esc_attr( $this->turnstile->health_cdata() ); ?>" data-load-error="<?php esc_attr_e( 'Cloudflare Turnstile could not load. Check browser privacy controls and this site’s Content Security Policy, then retry.', 'checkout-firewall' ); ?>" data-widget-error="<?php esc_attr_e( 'Cloudflare Turnstile could not complete the connection test. Reload this page and try again.', 'checkout-firewall' ); ?>"><input type="hidden" name="action" value="<?php echo esc_attr( TurnstileSettingsController::VERIFY_ACTION ); ?>" /><?php wp_nonce_field( TurnstileSettingsController::NONCE_ACTION ); ?><input type="hidden" name="health_token" value="" /><div class="cf-health__widget" aria-live="polite"></div><button class="button button-primary cf-button" type="button" data-cf-verify disabled><?php esc_html_e( 'Test connection and enable Turnstile', 'checkout-firewall' ); ?></button></form>
+		<?php elseif ( ! $configured ) : ?>
+			<div class="cf-notice cf-notice--challenge"><strong><?php esc_html_e( 'Turnstile connection test unavailable', 'checkout-firewall' ); ?></strong><p><?php esc_html_e( 'Save both the site key and secret key first. Checkout Firewall will not enable Turnstile from an incomplete pair.', 'checkout-firewall' ); ?></p><button class="button cf-button" type="button" disabled><?php esc_html_e( 'Test connection and enable Turnstile', 'checkout-firewall' ); ?></button></div>
+		<?php endif; ?></section>
 		<?php
 	}
 
@@ -770,18 +794,19 @@ else :
 			'exemption_removed'             => __( 'Trusted exemption removed.', 'checkout-firewall' ),
 			'exemption_inactive'            => __( 'Trusted exemption was already inactive.', 'checkout-firewall' ),
 			'exemption_remove_failed'       => __( 'Trusted exemption could not be removed.', 'checkout-firewall' ),
-			'saved'                         => __( 'Turnstile keys saved. Verify and activate next.', 'checkout-firewall' ),
+			'saved'                         => __( 'Turnstile keys saved and selected. Complete the connection test below to enable Turnstile.', 'checkout-firewall' ),
 			'removed'                       => __( 'Turnstile keys removed.', 'checkout-firewall' ),
-			'invalid'                       => __( 'Turnstile keys were not saved. Check both values.', 'checkout-firewall' ),
+			'invalid'                       => __( 'Turnstile keys were not saved. Both the site key and secret key are required for initial setup.', 'checkout-firewall' ),
 			'verified'                      => __( 'Turnstile recovery is verified and active.', 'checkout-firewall' ),
 			'test_keys'                     => __( 'Cloudflare test keys cannot activate production checkout.', 'checkout-firewall' ),
 			'invalid_secret'                => __( 'Cloudflare rejected the Turnstile secret key.', 'checkout-firewall' ),
 			'verification_failed'           => __( 'Turnstile verification failed. Try again.', 'checkout-firewall' ),
 			'challenge_selected'            => __( 'Checkout challenge provider saved.', 'checkout-firewall' ),
+			'challenge_policy_saved'        => __( 'Checkout challenge timing saved.', 'checkout-firewall' ),
 			'challenge_invalid'             => __( 'The checkout challenge provider was not changed.', 'checkout-firewall' ),
-			'recaptcha_saved'               => __( 'reCAPTCHA keys saved. Verify them next.', 'checkout-firewall' ),
+			'recaptcha_saved'               => __( 'reCAPTCHA keys saved and selected. Complete the connection test below to enable reCAPTCHA.', 'checkout-firewall' ),
 			'recaptcha_removed'             => __( 'reCAPTCHA keys removed.', 'checkout-firewall' ),
-			'recaptcha_invalid'             => __( 'reCAPTCHA keys were not saved. Check both values.', 'checkout-firewall' ),
+			'recaptcha_invalid'             => __( 'reCAPTCHA keys were not saved. Both the site key and secret key are required for initial setup.', 'checkout-firewall' ),
 			'recaptcha_verified'            => __( 'Google reCAPTCHA is verified and selected.', 'checkout-firewall' ),
 			'recaptcha_invalid_secret'      => __( 'Google rejected the reCAPTCHA secret key.', 'checkout-firewall' ),
 			'recaptcha_verification_failed' => __( 'reCAPTCHA verification failed. Try again.', 'checkout-firewall' ),

@@ -20,11 +20,13 @@ final class TrustedExemptionFilter {
 		ReasonCode::VELOCITY_SESSION_EXCEEDED,
 		ReasonCode::VELOCITY_COMBINED_EXCEEDED,
 		ReasonCode::PAYMENT_FAILURE_LOCKOUT,
+		ReasonCode::PAYMENT_FAILURE_CHALLENGE,
 	);
 	private const IP_REASONS   = array(
 		ReasonCode::VELOCITY_IP_EXCEEDED,
 		ReasonCode::VELOCITY_COMBINED_EXCEEDED,
 		ReasonCode::PAYMENT_FAILURE_LOCKOUT,
+		ReasonCode::PAYMENT_FAILURE_CHALLENGE,
 	);
 
 	public function __construct( private TrustedExemptionMatcher $matcher, private TrustedExemptionState $state ) {}
@@ -53,7 +55,10 @@ final class TrustedExemptionFilter {
 		$kept    = array();
 		$removed = false;
 		foreach ( $candidates as $candidate ) {
-			if ( $candidate instanceof DecisionCandidate && in_array( $candidate->reason(), $allowed, true ) ) {
+			$throttle_exempt = $candidate instanceof DecisionCandidate
+				&& ReasonCode::VELOCITY_THROTTLED === $candidate->reason()
+				&& ( 'user' === $match['subject_type'] || in_array( $candidate->signals()['identity_type'] ?? 0, array( \Codeprint\CheckoutFirewall\Data\IdentifierType::IP, \Codeprint\CheckoutFirewall\Data\IdentifierType::IP_EMAIL ), true ) );
+			if ( $candidate instanceof DecisionCandidate && ( in_array( $candidate->reason(), $allowed, true ) || $throttle_exempt ) ) {
 				$removed = true;
 				continue;
 			}

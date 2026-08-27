@@ -113,7 +113,7 @@ final class ClassicCheckoutAdapter {
 		if ( ! $result->allows_checkout() ) {
 			$code = DecisionAction::CHALLENGE === $result->action()
 				? 'checkout_firewall_challenge_required'
-				: ( ReasonCode::CHALLENGE_UNAVAILABLE === $result->reason() ? 'checkout_firewall_checkout_throttled' : 'checkout_firewall_checkout_blocked' );
+				: ( in_array( $result->reason(), array( ReasonCode::CHALLENGE_UNAVAILABLE, ReasonCode::VELOCITY_THROTTLED ), true ) ? 'checkout_firewall_checkout_throttled' : 'checkout_firewall_checkout_blocked' );
 			$errors->add( $code, $result->customer_message() );
 		}
 	}

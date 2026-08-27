@@ -42,11 +42,21 @@ final class TurnstileConflictDetector {
 		foreach ( $this->plugins() as $plugin ) {
 			$directory = strtok( $plugin, '/' );
 			$slug      = sanitize_key( false === $directory ? '' : $directory );
-			if ( in_array( $slug, $known, true ) ) {
-				return $slug;
+			$basename  = sanitize_key( pathinfo( $plugin, PATHINFO_FILENAME ) );
+			$matched   = in_array( $slug, $known, true ) ? $slug : ( in_array( $basename, $known, true ) ? $basename : null );
+			if ( null !== $matched && $this->protects_checkout( $matched ) ) {
+				return $matched;
 			}
 		}
 		return null;
+	}
+
+	private function protects_checkout( string $slug ): bool {
+		if ( 'simple-cloudflare-turnstile' !== $slug ) {
+			return true;
+		}
+		$value = get_option( 'cfturnstile_woo_checkout', false );
+		return in_array( $value, array( true, 1, '1', 'yes', 'on' ), true );
 	}
 
 	public function has_conflict(): bool {

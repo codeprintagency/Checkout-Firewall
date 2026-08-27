@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\Admin;
 
 use Codeprint\CheckoutFirewall\Challenge\ChallengeConfig;
+use Codeprint\CheckoutFirewall\Challenge\ChallengePolicy;
 use Codeprint\CheckoutFirewall\Operations\EmergencyMode;
 use Codeprint\CheckoutFirewall\Security\RequestNormalizer;
 use Codeprint\CheckoutFirewall\Recaptcha\RecaptchaConfig;
@@ -22,24 +23,41 @@ final class ChallengeSettingsController {
 	public const SELECT_ACTION = 'checkout_firewall_select_challenge';
 	public const SAVE_ACTION   = 'checkout_firewall_save_recaptcha';
 	public const VERIFY_ACTION = 'checkout_firewall_verify_recaptcha';
+	public const POLICY_ACTION = 'checkout_firewall_save_challenge_policy';
 	public const NONCE_ACTION  = 'checkout_firewall_challenge_settings';
 
 	private ChallengeConfig $challenges;
 	private RecaptchaConfig $recaptcha;
 	private EmergencyMode $emergency;
 	private SiteverifyClient $client;
+	private ChallengePolicy $policy;
 
-	public function __construct( ChallengeConfig $challenges, RecaptchaConfig $recaptcha, EmergencyMode $emergency, ?SiteverifyClient $client = null ) {
+	public function __construct( ChallengeConfig $challenges, RecaptchaConfig $recaptcha, EmergencyMode $emergency, ?SiteverifyClient $client = null, ?ChallengePolicy $policy = null ) {
 		$this->challenges = $challenges;
 		$this->recaptcha  = $recaptcha;
 		$this->emergency  = $emergency;
 		$this->client     = $client ?? new SiteverifyClient();
+		$this->policy     = $policy ?? new ChallengePolicy();
 	}
 
 	public function register(): void {
 		add_action( 'admin_post_' . self::SELECT_ACTION, array( $this, 'select' ) );
 		add_action( 'admin_post_' . self::SAVE_ACTION, array( $this, 'save' ) );
 		add_action( 'admin_post_' . self::VERIFY_ACTION, array( $this, 'verify' ) );
+		add_action( 'admin_post_' . self::POLICY_ACTION, array( $this, 'save_policy' ) );
+	}
+
+	public function save_policy(): void {
+		$this->authorize();
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified by authorize() before exact scalar read.
+		$input  = RequestNormalizer::post( 'challenge_policy', 32 );
+		$policy = $input['invalid'] || null === $input['value'] ? '' : sanitize_key( $input['value'] );
+		try {
+			$this->policy->save( $policy );
+			$this->redirect( 'challenge_policy_saved' );
+		} catch ( \Throwable $exception ) {
+			$this->redirect( 'challenge_invalid' );
+		}
 	}
 
 	public function select(): void {
@@ -69,13 +87,17 @@ final class ChallengeSettingsController {
 			$this->recaptcha->remove();
 			$this->redirect( 'recaptcha_removed' );
 		}
-		$site_input   = RequestNormalizer::post( 'site_key', 256 );
-		$secret_input = RequestNormalizer::post( 'secret_key', 256 );
-		$site         = $site_input['invalid'] || null === $site_input['value'] ? '' : $site_input['value'];
-		$secret       = $secret_input['invalid'] ? null : $secret_input['value'];
+		$site_input   = RequestNormalizer::credential_post( 'site_key', 128 );
+		$secret_input = RequestNormalizer::credential_post( 'secret_key', 256 );
+		if ( $site_input['invalid'] || $secret_input['invalid'] ) {
+			$this->redirect( 'recaptcha_invalid' );
+		}
+		$site   = $site_input['invalid'] || null === $site_input['value'] ? '' : $site_input['value'];
+		$secret = $secret_input['value'];
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 		try {
 			$this->recaptcha->save( $site, $secret );
+			$this->challenges->select( ChallengeConfig::RECAPTCHA );
 			$this->redirect( 'recaptcha_saved' );
 		} catch ( \Throwable $exception ) {
 			$this->redirect( 'recaptcha_invalid' );

@@ -2,9 +2,9 @@
 Contributors: codeprint
 Tags: woocommerce, checkout security, card testing, bot protection, recaptcha
 Requires at least: 6.8
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.0.0
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,8 +14,6 @@ Checkout Firewall provides local, explainable checkout-abuse protection before p
 
 Checkout Firewall protects Classic, Blocks, and supported Store API checkout with signed flow proof, local evidence, velocity controls, recoverable challenges, temporary blocks, and Emergency Mode. WooCommerce is required. New installations begin in Observe Mode; enforcement starts only after an administrator enables Standard Mode.
 
-Free includes narrow exact-IP, CIDR, and authenticated-user exemptions plus a local incident notice and optional rate-limited WordPress email. Exemptions never bypass manual blocks or invalid/replayed proof; incident signals are not fraud determinations.
-
 Free works locally without a Codeprint or Freemius account, and anonymous use creates no licensing traffic. WordPress.org distributes and updates this complete Free plugin. An optional, explicit Freemius connection supports account and purchase surfaces for the separately distributed Premium replacement plugin. Checkout security, shopper, order, gateway, and payment data is not sent to Codeprint or Freemius.
 
 Checkout Firewall never reads or stores card data and never automatically disables a payment gateway. It cannot stop all fraud or guarantee against chargebacks.
@@ -23,6 +21,8 @@ Checkout Firewall never reads or stores card data and never automatically disabl
 Cloudflare is optional. Direct and verified Cloudflare traffic is recognized automatically; another reverse proxy requires explicit trusted ranges.
 
 Checkout Firewall is an independent Codeprint product, not endorsed by WooCommerce, Automattic, Cloudflare, Google, or Freemius.
+
+Built by [Codeprint](https://codeprint.io/).
 
 == Installation ==
 
@@ -40,7 +40,7 @@ Observe Mode stores bounded aggregate would-intervene records while allowing che
 
 The randomized honeypot, signed timing evidence, and default account-free browser proof are evaluated locally. They are supporting automation friction, not proof of humanity.
 
-Selected Turnstile or reCAPTCHA loads only after a challenge and may process browser/network signals. Server verification omits the optional shopper IP and sends no payment details.
+Selected Turnstile or reCAPTCHA loads only when checkout requires verification. With the default Adaptive timing, ordinary low-risk checkout does not contact the selected provider. A merchant may instead enable Always for guest checkout; active Emergency Mode and eligible Premium Attack state can also prepare verification before Place order. Observe Mode never loads or verifies a remote checkout provider. Server verification omits the optional shopper IP and sends no payment details.
 
 Optional Freemius connection may share administrator name/email, site URL, versions, license/installation identifiers, and activation state for account, purchase, Premium licensing, and Premium updates. Site-profile, diagnostic, extension-inventory, and newsletter permissions are disabled; anonymous activation and Skip send nothing. Free updates come from WordPress.org.
 
@@ -52,9 +52,9 @@ These services are conditional; local protection needs no Codeprint account:
 
 **Freemius.** Contacted only after explicit connection, or by the separately installed Premium plugin for connected licensing/update functions; never per checkout. Anonymous activation and Skip send nothing. Free updates come from WordPress.org. [Service](https://freemius.com/), [Terms](https://freemius.com/terms/), [Privacy](https://freemius.com/privacy/).
 
-**Cloudflare Turnstile.** Contacted only when selected/configured and local signals require a challenge. Browser/network signals, response token, and merchant secret may be processed; optional shopper IP and payment details are not sent by Checkout Firewall. [Service](https://developers.cloudflare.com/turnstile/), [Terms](https://www.cloudflare.com/website-terms/), [Privacy](https://www.cloudflare.com/turnstile-privacy-policy/).
+**Cloudflare Turnstile.** Contacted only when selected/configured and checkout requires verification under the merchant's challenge timing, active Emergency Mode, or eligible Premium Attack state. Browser/network signals, response token, and merchant secret may be processed; optional shopper IP and payment details are not sent by Checkout Firewall. Observe Mode never contacts Turnstile for checkout verification. [Service](https://developers.cloudflare.com/turnstile/), [Terms](https://www.cloudflare.com/website-terms/), [Privacy](https://www.cloudflare.com/turnstile-privacy-policy/).
 
-**Google reCAPTCHA.** Contacted only when selected/configured and local signals require a challenge. Browser/network signals, response token, and merchant secret may be processed; optional shopper IP and payment details are not sent by Checkout Firewall. [Service](https://developers.google.com/recaptcha), [API Terms](https://developers.google.com/terms/), [Terms](https://policies.google.com/terms), [Privacy](https://policies.google.com/privacy).
+**Google reCAPTCHA.** Contacted only when selected/configured and checkout requires verification under the merchant's challenge timing, active Emergency Mode, or eligible Premium Attack state. Browser/network signals, response token, and merchant secret may be processed; optional shopper IP and payment details are not sent by Checkout Firewall. Observe Mode never contacts reCAPTCHA for checkout verification. [Service](https://developers.google.com/recaptcha), [API Terms](https://developers.google.com/terms/), [Terms](https://policies.google.com/terms), [Privacy](https://policies.google.com/privacy).
 
 The local challenge, decisions, records, and support snapshot contact no challenge service or Codeprint scoring API. [Source and build instructions](https://github.com/codeprintagency/Checkout-Firewall).
 
@@ -80,9 +80,9 @@ No. Checkout Firewall works without Cloudflare. If the store uses Cloudflare, th
 
 Yes. Checkout Firewall declares compatibility with WooCommerce Cart and Checkout Blocks and High-Performance Order Storage.
 
-= Which checkout surfaces are protected in version 1.0.0? =
+= Which checkout surfaces are protected in version 1.0.2? =
 
-Checkout Firewall protects the normal Classic Checkout flow, Checkout Blocks, and the customer Store API checkout routes, including the Store API existing-order route. WooCommerce's legacy Classic `order-pay` payment-retry endpoint is not protected in version 1.0.0. Existing WooCommerce authorization still applies there, but Checkout Firewall does not add its proof, velocity, or challenge decision to that legacy endpoint.
+Classic Checkout, Checkout Blocks, and customer Store API checkout routes are protected. Legacy Classic `order-pay` retries retain WooCommerce authorization but do not receive Checkout Firewall proof, velocity, or challenge evaluation in 1.0.2.
 
 = What happens when I uninstall it? =
 
@@ -104,14 +104,6 @@ Yes. Add a trusted exemption for a specific authenticated WordPress user, exact 
 
 For a selected, time-limited period it requires a fresh selected-provider challenge for guest checkout. It does not change payment gateways. If challenge recovery becomes unavailable, Emergency Mode ends automatically and Standard Mode remains active.
 
-= How do I roll back? =
-
-Deactivate Checkout Firewall, verify the checksum of the previously tested package, replace the plugin files, and reactivate it. Version 1.0.0 uses schema v3 and preserves data by default.
-
-= Where can I get diagnostic information? =
-
-Open WooCommerce → Checkout Firewall → Privacy & help and download the privacy-bounded support snapshot.
-
 == Screenshots ==
 
 1. Overview showing Standard or Observe Mode and local system health.
@@ -124,11 +116,15 @@ Open WooCommerce → Checkout Firewall → Privacy & help and download the priva
 
 Include the plugin version, software-version section, closed health states, and schedule states from the support snapshot. Do not send payment payloads, request bodies, production database exports, raw shopper identifiers, passwords, secret keys, tokens, or license keys.
 
-= Is card data collected? =
-
-No. Checkout Firewall must never read, store, log, hash, or transmit card data.
-
 == Changelog ==
+
+= 1.0.2 =
+
+* Add adaptive challenge timing, earlier card-testing friction, pre-submit recovery, and safer endpoint limits.
+
+= 1.0.1 =
+
+* Fix Turnstile and reCAPTCHA key saving, provider selection, connection-test visibility, and visible setup-error recovery.
 
 = 1.0.0 =
 

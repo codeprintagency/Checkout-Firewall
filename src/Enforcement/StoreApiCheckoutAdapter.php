@@ -172,7 +172,7 @@ final class StoreApiCheckoutAdapter {
 		}
 
 		$challenge = DecisionAction::CHALLENGE === $result->action();
-		$throttle  = ReasonCode::CHALLENGE_UNAVAILABLE === $result->reason();
+		$throttle  = in_array( $result->reason(), array( ReasonCode::CHALLENGE_UNAVAILABLE, ReasonCode::VELOCITY_THROTTLED ), true );
 		$code      = $challenge
 			? 'checkout_firewall_challenge_required'
 			: ( $throttle ? 'checkout_firewall_checkout_throttled' : 'checkout_firewall_checkout_blocked' );

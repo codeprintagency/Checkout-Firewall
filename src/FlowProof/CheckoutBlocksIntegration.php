@@ -12,11 +12,17 @@ namespace Codeprint\CheckoutFirewall\FlowProof;
 use Automattic\WooCommerce\Blocks\Integrations\IntegrationInterface;
 use Codeprint\CheckoutFirewall\Challenge\ChallengeClassicClient;
 use Codeprint\CheckoutFirewall\Challenge\ChallengeEndpoint;
+use Codeprint\CheckoutFirewall\Challenge\PreflightPolicy;
 
 final class CheckoutBlocksIntegration implements IntegrationInterface {
-	private const HANDLE           = 'checkout-firewall-flow-proof-blocks';
-	private const CORE_HANDLE      = 'checkout-firewall-flow-proof-core';
-	private const CHALLENGE_HANDLE = 'checkout-firewall-challenge-blocks';
+	private const HANDLE                       = 'checkout-firewall-flow-proof-blocks';
+	private const CORE_HANDLE                  = 'checkout-firewall-flow-proof-core';
+	private const CHALLENGE_HANDLE             = 'checkout-firewall-challenge-blocks';
+	private static ?PreflightPolicy $preflight = null;
+
+	public function __construct( ?PreflightPolicy $preflight = null ) {
+		self::$preflight = $preflight;
+	}
 
 	public function get_name(): string {
 		return 'checkout-firewall-flow-proof';
@@ -83,6 +89,8 @@ final class CheckoutBlocksIntegration implements IntegrationInterface {
 			'localWorker'       => plugins_url( 'assets/vendor/altcha/pbkdf2.js', CHECKOUT_FIREWALL_PLUGIN_FILE ),
 			'localStyle'        => plugins_url( 'assets/vendor/altcha/altcha.css', CHECKOUT_FIREWALL_PLUGIN_FILE ),
 			'language'          => strtolower( substr( determine_locale(), 0, 2 ) ),
+			'preflight'         => null !== self::$preflight && self::$preflight->required(),
+			'challengeSurface'  => 'blocks',
 		);
 	}
 }

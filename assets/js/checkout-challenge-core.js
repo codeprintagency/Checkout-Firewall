@@ -102,7 +102,7 @@
 		}
 		function solved( token, descriptor, current ) {
 			if ( current !== generation || submitted || typeof token !== 'string' || ! token ) { return; }
-			submitted = true; state = 'submitting'; options.onSolved( token, descriptor.state );
+			submitted = true; state = options.autoSubmit === false ? 'verified' : 'submitting'; options.onSolved( token, descriptor.state );
 		}
 		function renderLocal( descriptor, target, current ) {
 			loadStyle( options, options.localStyle );
@@ -145,7 +145,8 @@
 		function begin() {
 			if ( inflight || state === 'submitting' || ( options.isExpress && options.isExpress() ) ) { return inflight || Promise.resolve( false ); }
 			const current = ++generation; state = 'loading'; submitted = false;
-			inflight = options.fetch( options.endpoint, { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json' }, body: '{}' } )
+			const body = options.preflight ? { intent: 'preflight', surface: options.surface || 'classic' } : {};
+			inflight = options.fetch( options.endpoint, { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify( body ) } )
 				.then( function ( response ) { if ( response.status === 404 ) { return null; } if ( ! response.ok ) { throw new Error( 'challenge descriptor unavailable' ); } return response.json(); } )
 				.then( function ( descriptor ) {
 					if ( current !== generation ) { return false; }

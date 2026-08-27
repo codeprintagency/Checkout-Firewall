@@ -10,10 +10,11 @@
 	setData( '', '' );
 	const client = core.createClient( {
 		endpoint: data.challengeEndpoint, fetch: window.fetch.bind( window ), document: document, strings: data.challengeStrings,
+		preflight: !! data.preflight, surface: data.challengeSurface || 'blocks', autoSubmit: ! data.preflight,
 		localScript: data.localScript, localWorker: data.localWorker, localStyle: data.localStyle, language: data.language,
 		mount: function () { let node = document.getElementById( 'cf-challenge-blocks' ); if ( ! node ) { node = document.createElement( 'div' ); node.id = 'cf-challenge-blocks'; node.className = 'cf-challenge-panel'; node.hidden = true; const button = document.querySelector( '.wc-block-components-checkout-place-order-button' ); if ( button && button.parentNode ) { button.parentNode.insertBefore( node, button ); } } return node; },
 		isExpress: function () { const selector = window.wp.data.select( paymentStore ); return !! ( selector && typeof selector.isExpressPaymentStarted === 'function' && selector.isExpressPaymentStarted() ); },
-		onSolved: function ( token, state ) { setData( token, state ); const retry = function () { const button = document.querySelector( '.wc-block-components-checkout-place-order-button' ); if ( button ) { button.click(); } }; const wait = function () { const ready = window.checkoutFirewallWaitForEvidence; return typeof ready === 'function' ? ready() : undefined; }; const refresh = window.checkoutFirewallRefreshFlowProof; const prepared = typeof refresh === 'function' ? Promise.resolve( refresh() ) : Promise.resolve(); prepared.then( wait ).then( retry, retry ); },
+		onSolved: function ( token, state ) { setData( token, state ); if ( data.preflight ) { return; } const retry = function () { const button = document.querySelector( '.wc-block-components-checkout-place-order-button' ); if ( button ) { button.click(); } }; const wait = function () { const ready = window.checkoutFirewallWaitForEvidence; return typeof ready === 'function' ? ready() : undefined; }; const refresh = window.checkoutFirewallRefreshFlowProof; const prepared = typeof refresh === 'function' ? Promise.resolve( refresh() ) : Promise.resolve(); prepared.then( wait ).then( retry, retry ); },
 		onReset: function () { setData( '', '' ); }
 	} );
 	if ( window.wp.apiFetch && typeof window.wp.apiFetch.use === 'function' ) {
@@ -21,4 +22,9 @@
 	}
 	let previous = '';
 	window.wp.data.subscribe( function () { const selector = window.wp.data.select( store ); if ( ! selector || typeof selector.getCheckoutStatus !== 'function' ) { return; } const status = selector.getCheckoutStatus(); if ( status === 'idle' && previous && previous !== 'idle' && client.getState() === 'submitting' ) { client.reset(); } const payment = window.wp.data.select( paymentStore ); if ( payment && typeof payment.isExpressPaymentStarted === 'function' && payment.isExpressPaymentStarted() ) { client.reset(); } previous = status; } );
+	if ( data.preflight ) {
+		let attempts = 0;
+		const start = function () { if ( document.querySelector( '.wc-block-components-checkout-place-order-button' ) || attempts >= 40 ) { client.begin(); return; } ++attempts; window.setTimeout( start, 250 ); };
+		start();
+	}
 }( window, document ) );

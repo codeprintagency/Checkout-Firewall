@@ -29,6 +29,7 @@ final class Uninstaller {
 		'checkout_firewall_turnstile_enabled',
 		'checkout_firewall_turnstile_verification',
 		'checkout_firewall_challenge_provider',
+		'checkout_firewall_challenge_policy',
 		'checkout_firewall_challenge_provider_recovery',
 		'checkout_firewall_recaptcha_site_key',
 		'checkout_firewall_recaptcha_secret_key',

@@ -75,14 +75,23 @@ final class VelocityCandidateProvider {
 		}
 
 		$this->counters->increment( $identities, CounterType::CHECKOUT_ATTEMPT );
-		$trusted = $this->trusted();
-		$reduced = false;
+		$trusted    = $this->trusted();
+		$reduced    = false;
+		$challenged = null !== $this->turnstile && $this->turnstile->has( $context );
+		if ( ! $outage && ! $challenged && '' !== $gateway && $this->recent_failure_requires_challenge( $identities, $gateway ) ) {
+			$candidates[] = new DecisionCandidate(
+				DecisionAction::CHALLENGE,
+				ReasonCode::PAYMENT_FAILURE_CHALLENGE,
+				array( 'gateway' => $gateway )
+			);
+		}
 		foreach ( $identities as $type => $identity ) {
 			if ( IdentifierType::GATEWAY === $type ) {
 				continue;
 			}
 			$standard           = ProtectionPolicy::velocity( $type, false );
 			$policy             = ProtectionPolicy::velocity( $type, $trusted );
+			$throttle           = ProtectionPolicy::throttle( $type, $trusted );
 			$risk               = $this->one( $identity, CounterType::CHECKOUT_ATTEMPT, $policy['window'], '' );
 			$success            = $this->one( $identity, CounterType::PAYMENT_SUCCESS, $policy['window'], '' );
 			$effective          = ProtectionPolicy::effective( $risk, $success, 2 );
@@ -93,7 +102,22 @@ final class VelocityCandidateProvider {
 			if ( $trusted && $effective >= $standard['threshold'] && $effective < $policy['threshold'] ) {
 				$reduced = true;
 			}
-			if ( $decision_effective >= $policy['threshold'] && ( null === $this->turnstile || ! $this->turnstile->has( $context ) ) ) {
+			$throttle_risk      = $this->one( $identity, CounterType::CHECKOUT_ATTEMPT, $throttle['window'], '' );
+			$throttle_success   = $this->one( $identity, CounterType::PAYMENT_SUCCESS, $throttle['window'], '' );
+			$throttle_effective = ProtectionPolicy::effective( $throttle_risk, $throttle_success, 2 );
+			if ( $throttle_effective >= $throttle['threshold'] ) {
+				$candidates[] = new DecisionCandidate(
+					DecisionAction::BLOCK,
+					ReasonCode::VELOCITY_THROTTLED,
+					array(
+						'identity_type'  => $type,
+						'count'          => $throttle_effective,
+						'threshold'      => $throttle['threshold'],
+						'window_seconds' => $throttle['window'],
+						'trusted'        => $trusted,
+					)
+				);
+			} elseif ( $decision_effective >= $policy['threshold'] && ! $challenged ) {
 				$candidates[] = new DecisionCandidate(
 					DecisionAction::CHALLENGE,
 					$this->reason( $type ),
@@ -114,6 +138,26 @@ final class VelocityCandidateProvider {
 			$candidates[] = new DecisionCandidate( DecisionAction::ALLOW, ReasonCode::GATEWAY_OUTAGE_OVERRIDE, array( 'window_seconds' => ProtectionPolicy::OUTAGE_WINDOW ) );
 		}
 		return $candidates;
+	}
+
+	/**
+	 * Challenge the next attributable gateway attempt before the lockout limit.
+	 *
+	 * @param array<int,array<string,mixed>> $identities Keyed identities.
+	 */
+	private function recent_failure_requires_challenge( array $identities, string $gateway ): bool {
+		foreach ( array( IdentifierType::SESSION, IdentifierType::IP_EMAIL ) as $type ) {
+			if ( ! isset( $identities[ $type ] ) ) {
+				continue;
+			}
+			$identity = $identities[ $type ];
+			if ( $this->one( $identity, CounterType::GATEWAY_DECLINE, ProtectionPolicy::DECLINE_WINDOW, $gateway ) >= 1
+				|| $this->one( $identity, CounterType::OTHER_FAILURE, ProtectionPolicy::OTHER_WINDOW, $gateway ) >= 2
+			) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

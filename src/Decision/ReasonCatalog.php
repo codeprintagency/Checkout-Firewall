@@ -43,11 +43,14 @@ final class ReasonCatalog {
 			ReasonCode::FLOW_PROOF_REPLAYED        => DecisionAction::BLOCK,
 			ReasonCode::FLOW_PROOF_INVALID         => DecisionAction::BLOCK,
 			ReasonCode::PAYMENT_FAILURE_LOCKOUT    => DecisionAction::BLOCK,
+			ReasonCode::VELOCITY_THROTTLED         => DecisionAction::BLOCK,
 			ReasonCode::EMERGENCY_MODE             => DecisionAction::BLOCK,
 			ReasonCode::VELOCITY_COMBINED_EXCEEDED => DecisionAction::CHALLENGE,
 			ReasonCode::VELOCITY_SESSION_EXCEEDED  => DecisionAction::CHALLENGE,
 			ReasonCode::VELOCITY_EMAIL_EXCEEDED    => DecisionAction::CHALLENGE,
 			ReasonCode::VELOCITY_IP_EXCEEDED       => DecisionAction::CHALLENGE,
+			ReasonCode::PAYMENT_FAILURE_CHALLENGE  => DecisionAction::CHALLENGE,
+			ReasonCode::AUTOMATION_EVIDENCE        => DecisionAction::CHALLENGE,
 			ReasonCode::TURNSTILE_INVALID          => DecisionAction::CHALLENGE,
 			ReasonCode::TURNSTILE_REQUIRED         => DecisionAction::CHALLENGE,
 			ReasonCode::CHALLENGE_INVALID          => DecisionAction::CHALLENGE,
@@ -88,6 +91,8 @@ final class ReasonCatalog {
 				return __( 'The checkout-flow proof was invalid.', 'checkout-firewall' );
 			case ReasonCode::PAYMENT_FAILURE_LOCKOUT:
 				return __( 'Recent payment failures reached the local lockout policy.', 'checkout-firewall' );
+			case ReasonCode::VELOCITY_THROTTLED:
+				return __( 'Checkout velocity reached the temporary local throttle policy.', 'checkout-firewall' );
 			case ReasonCode::EMERGENCY_MODE:
 				return __( 'Merchant-enabled Emergency Mode denied this checkout.', 'checkout-firewall' );
 			case ReasonCode::VELOCITY_COMBINED_EXCEEDED:
@@ -98,6 +103,10 @@ final class ReasonCatalog {
 				return __( 'Email checkout velocity exceeded its threshold.', 'checkout-firewall' );
 			case ReasonCode::VELOCITY_IP_EXCEEDED:
 				return __( 'IP checkout velocity exceeded its threshold.', 'checkout-firewall' );
+			case ReasonCode::PAYMENT_FAILURE_CHALLENGE:
+				return __( 'Recent attributable payment failures requested an extra checkout check before the next gateway attempt.', 'checkout-firewall' );
+			case ReasonCode::AUTOMATION_EVIDENCE:
+				return __( 'Multiple bounded browser-automation signals requested an extra checkout check.', 'checkout-firewall' );
 			case ReasonCode::TURNSTILE_INVALID:
 				return __( 'The configured Turnstile challenge was invalid.', 'checkout-firewall' );
 			case ReasonCode::TURNSTILE_REQUIRED:
@@ -130,7 +139,7 @@ final class ReasonCatalog {
 	}
 
 	public static function customer_message( string $action, string $reason = '' ): string {
-		if ( ReasonCode::CHALLENGE_UNAVAILABLE === $reason ) {
+		if ( in_array( $reason, array( ReasonCode::CHALLENGE_UNAVAILABLE, ReasonCode::VELOCITY_THROTTLED ), true ) ) {
 			return __( 'Too many checkout attempts were made. Please wait a few minutes and try again.', 'checkout-firewall' );
 		}
 		if ( DecisionAction::CHALLENGE === $action ) {

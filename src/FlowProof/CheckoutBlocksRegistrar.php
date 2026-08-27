@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Codeprint\CheckoutFirewall\FlowProof;
 
 final class CheckoutBlocksRegistrar {
+	public function __construct( private ?\Codeprint\CheckoutFirewall\Challenge\PreflightPolicy $preflight = null ) {}
 	public function register(): void {
 		add_action( 'woocommerce_blocks_loaded', array( $this, 'register_schema' ) );
 		add_action( 'woocommerce_blocks_checkout_block_registration', array( $this, 'register_integration' ) );
@@ -107,7 +108,7 @@ final class CheckoutBlocksRegistrar {
 	 */
 	public function register_integration( $registry ): void {
 		if ( is_object( $registry ) && method_exists( $registry, 'register' ) ) {
-			$registry->register( new CheckoutBlocksIntegration() );
+			$registry->register( new CheckoutBlocksIntegration( $this->preflight ) );
 		}
 	}
 }

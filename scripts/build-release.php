@@ -10,7 +10,7 @@ declare(strict_types=1);
 const CHECKOUT_FIREWALL_PUBLIC_MIRROR_MTIME = 315532800;
 
 $root   = dirname(__DIR__);
-$output = $argv[1] ?? $root . '/dist/checkout-firewall-1.0.0.zip';
+$output = $argv[1] ?? $root . '/dist/checkout-firewall-1.0.2.zip';
 
 if (! class_exists(ZipArchive::class)) {
 	fwrite(STDERR, "The PHP Zip extension is required.\n");

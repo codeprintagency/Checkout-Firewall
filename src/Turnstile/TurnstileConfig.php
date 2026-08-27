@@ -95,25 +95,35 @@ final class TurnstileConfig {
 	/**
 	 * Persist a bounded draft pair and invalidate prior health.
 	 *
-	 * @throws \InvalidArgumentException When either supplied key is invalid.
+	 * @throws \InvalidArgumentException When either supplied key is invalid or incomplete.
+	 * @throws \RuntimeException When WordPress does not persist the complete pair.
 	 */
 	public function save( string $site_key, ?string $secret_key ): void {
+		$current  = $this->credentials();
 		$site_key = defined( 'CHECKOUT_FIREWALL_TURNSTILE_SITE_KEY' ) ? self::normalize( CHECKOUT_FIREWALL_TURNSTILE_SITE_KEY, 128 ) : self::normalize( $site_key, 128 );
 		if ( '' === $site_key ) {
 			throw new \InvalidArgumentException( 'Turnstile site key is invalid.' );
 		}
-		$normalized_secret = null;
+		$normalized_secret = defined( 'CHECKOUT_FIREWALL_TURNSTILE_SECRET_KEY' ) ? $current['secret_key'] : null;
 		if ( ! defined( 'CHECKOUT_FIREWALL_TURNSTILE_SECRET_KEY' ) && null !== $secret_key && '' !== trim( $secret_key ) ) {
 			$normalized_secret = self::normalize( $secret_key, 256 );
 			if ( '' === $normalized_secret ) {
 				throw new \InvalidArgumentException( 'Turnstile secret key is invalid.' );
 			}
 		}
+		$effective_secret = null === $normalized_secret ? $current['secret_key'] : $normalized_secret;
+		if ( '' === $effective_secret ) {
+			throw new \InvalidArgumentException( 'Turnstile credentials are incomplete.' );
+		}
 		if ( ! defined( 'CHECKOUT_FIREWALL_TURNSTILE_SITE_KEY' ) ) {
 			self::write_option( self::SITE_OPTION, $site_key );
 		}
-		if ( null !== $normalized_secret ) {
+		if ( ! defined( 'CHECKOUT_FIREWALL_TURNSTILE_SECRET_KEY' ) && null !== $normalized_secret ) {
 			self::write_option( self::SECRET_OPTION, $normalized_secret );
+		}
+		$stored = $this->credentials();
+		if ( ! hash_equals( $site_key, $stored['site_key'] ) || ! hash_equals( $effective_secret, $stored['secret_key'] ) ) {
+			throw new \RuntimeException( 'Turnstile credentials could not be persisted.' );
 		}
 		$this->invalidate();
 	}

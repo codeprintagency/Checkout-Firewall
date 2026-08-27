@@ -56,22 +56,31 @@ final class RecaptchaConfig {
 	}
 
 	public function save( string $site_key, ?string $secret_key ): void {
+		$current  = $this->credentials();
 		$site_key = defined( 'CHECKOUT_FIREWALL_RECAPTCHA_SITE_KEY' ) ? self::normalize( CHECKOUT_FIREWALL_RECAPTCHA_SITE_KEY, 128 ) : self::normalize( $site_key, 128 );
 		if ( '' === $site_key ) {
 			throw new \InvalidArgumentException( 'reCAPTCHA site key is invalid.' );
 		}
-		$secret = null;
+		$secret = defined( 'CHECKOUT_FIREWALL_RECAPTCHA_SECRET_KEY' ) ? $current['secret_key'] : null;
 		if ( ! defined( 'CHECKOUT_FIREWALL_RECAPTCHA_SECRET_KEY' ) && null !== $secret_key && '' !== trim( $secret_key ) ) {
 			$secret = self::normalize( $secret_key, 256 );
 			if ( '' === $secret ) {
 				throw new \InvalidArgumentException( 'reCAPTCHA secret key is invalid.' );
 			}
 		}
+		$effective_secret = null === $secret ? $current['secret_key'] : $secret;
+		if ( '' === $effective_secret ) {
+			throw new \InvalidArgumentException( 'reCAPTCHA credentials are incomplete.' );
+		}
 		if ( ! defined( 'CHECKOUT_FIREWALL_RECAPTCHA_SITE_KEY' ) ) {
 			self::write_option( self::SITE_OPTION, $site_key );
 		}
-		if ( null !== $secret ) {
+		if ( ! defined( 'CHECKOUT_FIREWALL_RECAPTCHA_SECRET_KEY' ) && null !== $secret ) {
 			self::write_option( self::SECRET_OPTION, $secret );
+		}
+		$stored = $this->credentials();
+		if ( ! hash_equals( $site_key, $stored['site_key'] ) || ! hash_equals( $effective_secret, $stored['secret_key'] ) ) {
+			throw new \RuntimeException( 'reCAPTCHA credentials could not be persisted.' );
 		}
 		$this->invalidate();
 	}

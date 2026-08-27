@@ -18,6 +18,8 @@ final class CounterType {
 	public const INTERVENTION_BLOCK     = 6;
 	public const OBSERVED_CHALLENGE     = 7;
 	public const OBSERVED_BLOCK         = 8;
+	public const FLOW_PROOF_MINT        = 9;
+	public const CHALLENGE_DESCRIPTOR   = 10;
 
 	/**
 	 * Return every registered counter type.
@@ -25,7 +27,7 @@ final class CounterType {
 	 * @return list<int>
 	 */
 	public static function all(): array {
-		return array( self::CHECKOUT_ATTEMPT, self::GATEWAY_DECLINE, self::OTHER_FAILURE, self::PAYMENT_SUCCESS, self::INTERVENTION_CHALLENGE, self::INTERVENTION_BLOCK, self::OBSERVED_CHALLENGE, self::OBSERVED_BLOCK );
+		return array( self::CHECKOUT_ATTEMPT, self::GATEWAY_DECLINE, self::OTHER_FAILURE, self::PAYMENT_SUCCESS, self::INTERVENTION_CHALLENGE, self::INTERVENTION_BLOCK, self::OBSERVED_CHALLENGE, self::OBSERVED_BLOCK, self::FLOW_PROOF_MINT, self::CHALLENGE_DESCRIPTOR );
 	}
 
 	public static function is_valid( int $type ): bool {

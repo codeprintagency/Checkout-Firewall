@@ -3,7 +3,7 @@
  * Plugin Name: Checkout Firewall for WooCommerce
  * Plugin URI: https://checkoutfirewall.com
  * Description: Helps protect WooCommerce checkout from automated abuse before payment processing.
- * Version: 1.0.0
+ * Version: 1.0.2
  * Requires at least: 6.8
  * Requires PHP: 8.0
  * Author: Codeprint
@@ -43,7 +43,7 @@ try {
 	}
 
 	$checkout_firewall_commercial_config = \Codeprint\CheckoutFirewall\Commercial\FreemiusConfig::load( __DIR__ );
-	defined( 'CHECKOUT_FIREWALL_VERSION' ) || define( 'CHECKOUT_FIREWALL_VERSION', '1.0.0' );
+	defined( 'CHECKOUT_FIREWALL_VERSION' ) || define( 'CHECKOUT_FIREWALL_VERSION', '1.0.2' );
 	defined( 'CHECKOUT_FIREWALL_PLUGIN_FILE' ) || define( 'CHECKOUT_FIREWALL_PLUGIN_FILE', $checkout_firewall_plugin_file );
 	defined( 'CHECKOUT_FIREWALL_PLUGIN_BASENAME' ) || define( 'CHECKOUT_FIREWALL_PLUGIN_BASENAME', $checkout_firewall_plugin_basename );
 	defined( 'CHECKOUT_FIREWALL_CODE_TYPE' ) || define( 'CHECKOUT_FIREWALL_CODE_TYPE', $checkout_firewall_commercial_config->code_type() );
